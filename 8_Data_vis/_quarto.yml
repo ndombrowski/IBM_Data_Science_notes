@@ -1,0 +1,68 @@
+# Book settings
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Data analysis with python"
+  author: "Nina Dombrowski"
+  date: "`r Sys.Date()`"
+  logo: images/tree_of_life.png
+  chapters:
+    - index.qmd
+    - code/1_intro.qmd
+    - code/2_basic_vis_tools.qmd
+    - code/3_advanced_vis_tools.qmd
+    - code/4_dashbords.qmd
+
+format:
+  html:
+    theme: cosmo
+    code-overflow: wrap
+    fig-width: 3.5
+    fig-height: 3.5
+  pdf:
+    documentclass: scrreprt
+    pdf-engine: pdflatex
+    fig-width: 3.5
+    fig-height: 3.5
+    geometry:
+    #  - top=25mm
+    #  - right=20mm
+    #  - left=10mm
+    #  - bottom=4mm
+    #  - textwidth=4.5in
+      - heightrounded
+    highlight-style: github
+    pandoc_args: --listings
+    header-includes:
+        \usepackage{fvextra}
+        \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+    colorlinks: true
+    code-block-bg: D3D3D3
+
+execute:
+    warning : false
+    freeze: auto
+#   enable: true
+
+#knitr:
+#  opts_chunk:
+#    collapse: true
+
+### code block spacing ###
+space-before-code-block: 10pt
+space-after-code-block: 8pt
+
+### linespacing ###
+linespacing: 22pt plus2pt # 22pt is official for submission & library copies
+frontmatter-linespacing: 17pt plus1pt minus1pt #spacing in roman-numbered pages (acknowledgments, table of contents, etc.)
+
+### title page
+title-size: 22pt
+title-size-linespacing: 28pt
+gap-before-crest: 25mm
+gap-after-crest: 25mm
+
+#set how our path is set
+execute-dir: file

@@ -1,0 +1,17 @@
+{
+  "index.qmd": {
+    "index.html": "05216275"
+  },
+  "code/1_intro.qmd": {
+    "1_intro.html": "6a9aedca"
+  },
+  "code/2_basic_vis_tools.qmd": {
+    "2_basic_vis_tools.html": "6c772355"
+  },
+  "code/3_advanced_vis_tools.qmd": {
+    "3_advanced_vis_tools.html": "2b9733af"
+  },
+  "code/4_dashbords.qmd": {
+    "4_dashbords.html": "c12f379b"
+  }
+}

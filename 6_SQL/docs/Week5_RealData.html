@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.168">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introduction to SQL - 6&nbsp; Working with real world data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Week4_Python_a_IBM.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Working with real world data</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./" class="sidebar-logo-link">
+      <img src="./images/tree_of_life.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to SQL</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preamble</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week1-Notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Basic SQL</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week2-Notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Relational databases</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week3-Notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Using String Patterns</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week4_Python_a_IBM.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SQL and python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week5_RealData.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Working with real world data</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#queries" id="toc-queries" class="nav-link active" data-scroll-target="#queries"><span class="toc-section-number">6.1</span>  Queries</a></li>
+  <li><a href="#getting-table-and-column-details" id="toc-getting-table-and-column-details" class="nav-link" data-scroll-target="#getting-table-and-column-details"><span class="toc-section-number">6.2</span>  Getting table and column details</a>
+  <ul class="collapse">
+  <li><a href="#get-a-list-of-available-tables" id="toc-get-a-list-of-available-tables" class="nav-link" data-scroll-target="#get-a-list-of-available-tables"><span class="toc-section-number">6.2.1</span>  Get a list of available tables</a></li>
+  <li><a href="#get-a-list-of-available-columns-in-a-table" id="toc-get-a-list-of-available-columns-in-a-table" class="nav-link" data-scroll-target="#get-a-list-of-available-columns-in-a-table"><span class="toc-section-number">6.2.2</span>  Get a list of available columns in a table</a></li>
+  </ul></li>
+  <li><a href="#loading-data" id="toc-loading-data" class="nav-link" data-scroll-target="#loading-data"><span class="toc-section-number">6.3</span>  Loading data</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Working with real world data</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="queries" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="queries"><span class="header-section-number">6.1</span> Queries</h2>
+<ul>
+<li>many real world data files are avail. as csv files</li>
+<li>The header row contains the names of the attributes</li>
+<li>querying column names with mixed (upper and lower) cases. The database parser assumes uppercase names by default, however lets assume we have Id as column name, then with <code>select ID from table</code> we would run into trouble. To deal with this we can use double quotes”</li>
+</ul>
+<pre><code>select "Id" from dogs</code></pre>
+<ul>
+<li><p>querying column names with spaces and other characters. If in the csv the names have spaces, by default, spaces are mapped to underscores. Same is true for special characters, such as `(). Beware, this sometimes can results in two underscores.</p></li>
+<li><p>Using quotes in jupyter notebooks.</p>
+<ul>
+<li>Assign queries to variables, i.e.&nbsp;<code>selectQuery = 'select "Id" from dogs'</code> .</li>
+<li>In case the query contains single quotes, we need to use the backslash <code>\</code> to escape characters, i.e.&nbsp;<code>selectQuery = 'select * from dogs where "Name_of_Dog"= \'Huggy\' '</code></li>
+<li>In case of very long queries we can use the backslash to split the query into mutliple lines:</li>
+</ul>
+<pre><code>%sql select "Id", "Name_of_Dog", \
+from dogs \
+where "Name_of_Dog"='Huggy'</code></pre>
+<ul>
+<li>If we use the %%sql in the first row of our cell, no backslash is needed, as it implies that the rest of the cell should be interpreted as sql magic</li>
+</ul>
+<pre><code>%%sql 
+select "Id", "Name_of_Dog", 
+from dogs 
+where "Name_of_Dog"='Huggy'</code></pre>
+<ul>
+<li>Restrict the number of rows retrieved</li>
+</ul>
+<pre><code>select * from data_table Limit 3</code></pre></li>
+</ul>
+</section>
+<section id="getting-table-and-column-details" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="getting-table-and-column-details"><span class="header-section-number">6.2</span> Getting table and column details</h2>
+<section id="get-a-list-of-available-tables" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="get-a-list-of-available-tables"><span class="header-section-number">6.2.1</span> Get a list of available tables</h3>
+<ul>
+<li>Getting a list of tables that are part in our databases and remind ourselves about the exact names. Database systems typically contain system or catalog tables, from where you can query the list of tables and get their properties. In DB2 this catalog is called syscat tables. In SQL Server, it’s information_schema.tables, and in Oracle it’s all_tables or user_tables</li>
+</ul>
+<p>Db2 (and getting all table properties):</p>
+<pre><code>select * from syscat.tables</code></pre>
+<p>Db2 (but filtered):</p>
+<pre><code>select tabschema,tabname,create_time * from syscat.tables
+where tabschema = 'ABC1234'</code></pre>
+<p>SQlite:</p>
+<pre><code>SELECT * FROM sqlite_master WHERE type='table'</code></pre>
+<p>or in SQlite interactive mode:</p>
+<pre><code>.tables</code></pre>
+</section>
+<section id="get-a-list-of-available-columns-in-a-table" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="get-a-list-of-available-columns-in-a-table"><span class="header-section-number">6.2.2</span> Get a list of available columns in a table</h3>
+<p>Using DB2:</p>
+<pre><code>select * from syscat.columns
+where tabname = 'Dogs'</code></pre>
+<p>Using DB2 and retrieving specific column properties:</p>
+<pre><code>select distinct(name), coltype, length from sysibm.syscolumns
+where tabname = 'Dogs'</code></pre>
+<p>Using SQLite:</p>
+<pre><code>pragma table_info(people);</code></pre>
+<p>Using SQLite (interactive):</p>
+<pre><code>.schema &lt;table&gt;</code></pre>
+<p>Using SQLite (jupyter):</p>
+<pre><code>cursor = conn.execute('select * from mytable')
+cursor.description</code></pre>
+</section>
+</section>
+<section id="loading-data" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="loading-data"><span class="header-section-number">6.3</span> Loading data</h2>
+<p>When loading data ifrom a CSV file you need to ensure the data in the dataset maps to the correct datatype and format in the database. One area that can be particularly problematic is DATEs, TIMEs, and TIMESTAMPs because their formats can vary significantly.</p>
+<p>In case the database does not automatically recognize the datatype or format correctly, or the default setting does not match, you will need to manually correct it before loading otherwise you may see an error like the one below when you try to LOAD: The syntax of a datetime value is incorrect.</p>
+<p>In order to prevent such errors when loading data, in the Db2 console you can preview the datatype and format of the automatically identified values with the values in the datasets in the LOAD screen such as the one below. If there is an issue, it is usually identified with an Warning icon (red triangle with an exclamation mark) next to the datatype of the column (e.g.&nbsp;DATE column in the example below). To correct this, you may first need to click on the “Clock” icon next to the “Time and Date format” to see the formats, if they are not already visible.</p>
+<p>First check if there is a pre-defined format in the drop down list that matches the format the date/time/timestamp is in the source dataset. If not, type the correct format. Upon doing so, the Mismatch Warning (and exclamation sign) should disappear. In this example below we changed/overwrote the default Timestamp format of <strong>YYYY-MM-DD HH:MM:SS </strong>to MM/DD/YYYY HH:MM:SS TT to match the value of 08/28/2004 05:50:56 PM in the dataset.</p>
+<p>Final exercise:</p>
+<ol start="3" type="1">
+<li>Write and execute queries</li>
+</ol>
+<p>Perform this step in the Jupyter notebook provided in the previous section. Carefully read and understand each problem. Compose and execute the appropriate SQL queries to answer each of the problems. Take a screenshot of each query and its results and save it as a jpg file..</p>
+<p>Problem 1: Find the total number of crimes recorded in the CRIME table.</p>
+<p>Problem 2: List community areas with per capita income less than 11000.</p>
+<p>Problem 3: List all case numbers for crimes involving minors?</p>
+<p>Problem 4: List all kidnapping crimes involving a child?(children are not considered minors for the purposes of crime analysis)</p>
+<p>Problem 5: What kind of crimes were recorded at schools?</p>
+<p>Problem 6: List the average safety score for all types of schools.</p>
+<p>Problem 7: List 5 community areas with highest % of households below poverty line.</p>
+<p>Problem 8: Which community area(number) is most crime prone?</p>
+<p>Problem 9: Use a sub-query to find the name of the community area with highest hardship index.</p>
+<p>Problem 10: Use a sub-query to determine the Community Area Name with most number of crimes?</p>
+<p>How to submit:</p>
+<p>A screenshot in JPEG format is required to be submitted for solution to each of the problems. The screenshot for each problem should clearly show the SQL query and results for the query. The screenshots will be uploaded in the following sections.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Week4_Python_a_IBM.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SQL and python</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

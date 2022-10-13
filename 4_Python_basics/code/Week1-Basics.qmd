@@ -1,0 +1,219 @@
+# Python Basics
+
+## Types
+
+- A type is how Python represents different types of data
+- Types can be types of the following.:
+  - Integers, like 11 (an example of the datatype **int**, integer)
+  - Real numbers, like 21.21 (an example of the datatype  **float**)
+  - Words, like "Hello, world" (an example of the datatype  **str**, string)
+- We can identify the type of our data with the `type()` command
+
+
+```
+type(11)
+type(2.1)
+type("Hello")
+```
+
+### Integers
+
+- int, i.e. 1,2,3
+- can be negative or positive
+- there is a finite, but large range of integers
+
+
+### Floats
+
+- Include integers but also numbers in between integers, i.e. 0.3 or 0.33
+- There is limit, but it is quite small
+
+
+### Boolean
+
+- Boolean can take on two values: True and False (beware, first letter is upper case)
+- `int(True)` gives 1
+- `int(False)` gives 0
+
+
+### Changing type
+
+- We can change the type of our data
+- this is also called type casting
+- Convert an int to a float: `float(2)` gives 2.0
+- Convert an integer to a float: 
+  - `int(1.1)` gives 1
+  - However, **beware**  we loose some information here
+  - also `int(3.99)` gives 3 , so , the conversion truncates towards zero, i.e.you just get rid of the numbers after the decimal place
+- convert an int to a string: `str(1)` becomes "1"
+
+
+## Expressions and variables
+
+### Expressions
+
+- Expressions: a type of operation the computers perform & operations that python performs, i.e. `32 + 10` results in 42. The numbers in the expression are called **operands** and the math symbols are called **operators**. 
+- The symbol `\\` means integer symbol and results in results being rounded down. I.e. `11\\2` becomes 5
+
+
+### Variables
+
+- We use variables to store values, i.e. `my_variable=1`. Here, the value of 1 is assigned to the variable my_variable. By typing the exact name of the variable, we can use it elsewhere in the code.
+- If we do `my_variable=10`, then we assign a new value to my_variable and the old value is lost
+- We can store also the results of expressions in a value and perform operations on variables
+- Use meaningful variable names
+  - commonly an underscore is used to mark the beginning of a new word, i.e. total_min
+
+
+## Exercise:
+
+Check the lab **PY0101EN-1-1-Write_your_first_python_code.ipynb**
+
+In addition to writing code, note that it's always a good idea to add comments to your code. It will help others understand what you were trying to accomplish (the reason why you wrote a given snippet of code). Not only does this help other people understand your code, it can also serve as a reminder to you when you come back to it weeks or months later.
+
+To write comments in Python, use the number symbol # before writing your comment. When you run your code, Python will ignore everything past the # on a given line. After executing the cell above, you should notice that `Try your first Python output` a string did not appear in the output, because it was a comment (and thus ignored by Python).
+
+```{python}
+# Try your first Python output
+print('Hello, Python!')
+```
+
+
+###  What version of Python are we using?
+
+There are two popular versions of the Python programming language in use today: Python 2 and Python 3. The Python community has decided to move on from Python 2 to Python 3, and many popular libraries have announced that they will no longer support Python 2.
+
+Since Python 3 is the future, in this course we will be using it exclusively. How do we know that our notebook is executed by a Python 3 runtime? We can look in the top-right hand corner of this notebook and see "Python 3".
+
+We can also ask Python directly and obtain a detailed answer. Try executing the following code:
+
+```{python}
+# Check the Python Version
+import sys
+print(sys.version)
+```
+
+**sys** is a built-in module that contains many system-specific parameters and functions, including the Python version in use. Before using it, we must explictly import it.
+
+
+### Errors in Python
+
+Everyone makes mistakes. For many types of mistakes, Python will tell you that you have made a mistake by giving you an error message. It is important to read error messages carefully to really understand where you made a mistake and how you may go about correcting it.
+
+For example, if you spell print as frint, Python will display an error message. Give it a try:
+
+```
+# Try your first Python output
+frint('Hello, Python!')
+```
+
+The error message tells you:
+
+where the error occurred (more useful in large notebook cells or scripts), and
+what kind of error it was (NameError)
+Here, Python attempted to run the function frint, but could not determine what frint is since it's not a built-in function and it has not been previously defined by us either.
+
+You'll notice that if we make a different type of mistake, by forgetting to close the string, we'll obtain a different error (i.e., a SyntaxError). Try it below:
+
+```
+# Try your first Python output
+print("Hello, Python!)
+```
+
+
+### Does Python know about your error before it runs your code?
+
+Python is what is called an interpreted language. Compiled languages examine your entire program at compile time, and are able to warn you about a whole class of errors prior to execution. In contrast, Python interprets your script line by line as it executes it. Python will stop executing the entire program when it encounters an error (unless the error is expected and handled by the programmer, a more advanced subject that we'll cover later on in this course).
+
+Try to run the code in the cell below and see what happens:
+
+```
+print("This will be printed")
+frint("This will cause an error")
+print("This will NOT be printed")
+```
+
+
+### learn more about the specifics of floats for your runtime environment
+
+
+```{python}
+sys.float_info
+```
+
+
+## String operations
+
+- A sequence of characters, which are contained withing two quotes. I.e. "Hello world" or 'Hello world'
+- A string can be spaces or digits, i.e. "1 2 3"
+- A string can also be special characters
+- A string can be bound in a variable and each part can be accessed by its index, i.e. "Hello world" would have the indexes 012345(space)678910. We can for example access the H with `variable[0]`
+- We can also use negative indexing and the last index is given with negative 1, i.e.  -11-10-9-8-7-6(space)-5-4-3-2-1. Here, `variable[-1]0` gives d
+- We can also perform a sequence operation"
+  - variable[0-3] gives Hell
+  - variable[::2] gives every 2nd variable
+  - variable[0:5:2]: we perform slicing and return every 2nd variable up to index 4
+  - len(variable) gives the length of the string
+  - We can concatenate or combine strings, i.e. `variable + "everyone"`
+  - We can replicate values of a string, i.e. `3* variable`
+- String are immutable, i.e this does not work 
+- Tip]: When taking the slice, the first number means the index (start at 0), and the second number means the length from the index to the last element you want (start at 1)
+
+```
+name = "hello world"
+name[0] = "J"
+```
+
+but we can create a new string like this:
+
+```
+name = name + "everyone"
+```
+
+- Backslashes, '\' indicate the beginning of escape sequences. 
+  - Escape sequences = strings that might be difficult to input
+  - i.e. ```print("Hello \n world")```, here ```\n``` represents a new line
+  - '\t' represents a tab
+  - If we want to use an actual backslash in the string we do it like this `Hello \\ world`
+  - `print(r"Hello \ World")` is an alternative way to use the literal backslash
+
+
+## String methods
+
+- Strings are sequences and as such have apply methods that work on list and tubles = **Sequence methods**
+- Strings also have a set of methods that just work on strings: **String methods**
+- When we apply a method to a string A, we get a new string B
+- Lets start with defining a string with mixed cases
+
+```
+A = "Hello World"
+```
+
+- the method 'upper()' converts lower case to upper case characters, HELLO WORLD
+
+```
+B = A.upper()
+```
+
+- the method 'replace()' changes part of the string to another ; Hello People
+
+```
+B = A.replace("World", "People")
+```
+
+- the 'find()' method finds substrings and uses the argument which substring we want to find; i.e. the output is the first index of the sequence; i.e. 2. If the sub-string is not in the string then the output is a negative one. For example, the string 'Jasdfasdasdf' is not a substring:
+
+```
+B = A.find(ll)
+```
+
+
+### Excercise
+
+```{python}
+x=1/1
+type(x)
+```
+
+
+

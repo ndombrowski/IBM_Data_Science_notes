@@ -1,0 +1,23 @@
+{
+  "index.qmd": {
+    "index.html": "66d66f4f"
+  },
+  "1_importing_data.qmd": {
+    "1_importing_data.html": "efb37464"
+  },
+  "code/1_importing_data.qmd": {
+    "1_importing_data.html": "851f3984"
+  },
+  "code/2_preprocessing_of_data.qmd": {
+    "2_preprocessing_of_data.html": "88255e85"
+  },
+  "code/3_exploratory_data_analysis.qmd": {
+    "3_exploratory_data_analysis.html": "14c44eec"
+  },
+  "code/4_model_dev.qmd": {
+    "4_model_dev.html": "eddea7aa"
+  },
+  "code/5_model_eval_and_refinement.qmd": {
+    "5_model_eval_and_refinement.html": "5d633cd0"
+  }
+}

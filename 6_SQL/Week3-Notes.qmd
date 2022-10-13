@@ -1,0 +1,747 @@
+# Using String Patterns
+
+- What if we don't know exactly what to specify in the where clause?
+- A where clause always requires a predicate, i.e. an expression that evaluates to true, false or unknown
+- We can use the `LIKE` predicate with string patterns for searching a pattern in a column
+- For example we only remember that the authors first name starts with R we can do
+
+```
+select firstname from Author
+where firstname LIKE R%
+```
+
+# Using Ranges
+
+- The percent sign (a wildcard character used to substitute other characters) can be placed before the pattern, after the pattern, or both before and after the pattern
+- Now lets retrieve the list of books whose number of pages is more than 290, but less than 300 to find a range 
+
+```
+select title,pages from Author
+where pages >=290 AND pages <= 300
+```
+
+- Alternatively, we can use a range of numbers to specify a condition
+
+```
+select title,pages from Author
+where pages between 290 AND 300
+```
+
+# Using a set of values
+
+- In some cases, there are data values that cannot be grouped under ranges
+- I.e. retrieve authors from AU or Brasil
+
+```
+select firstname,lastname,country from Author
+where country='AU' OR country='BR'
+```
+
+- How to we retrieve authors from india, australia and china without having a where clause that becomes too long? For this we can use the `IN` operator that allows us to specifiy a list of expressions
+
+
+```
+select firstname,lastname,country from Author
+where country IN ('AU','BR')
+```
+
+# Sorting result sets
+
+- We can for example display the results of a search in alphabetical order to make it easier to read via the `order by` clause
+- By default ascending order is used
+
+```
+select title from Book
+Order by title
+```
+
+- descending order using the `DESC` keyword
+
+```
+select title from Book
+Order by title DESC
+```
+
+- Order by column sequence number, i.e. select by the 2nd column 
+
+```
+select title,pages from Book
+Order by 2
+```
+
+
+# Grouping result sets
+
+## Eliminating duplicates using the DISTINCT clause
+
+- This would list all countries our authors come from but including duplicates
+
+```
+select country from Author
+Order by 1
+```
+
+- This would list all countries our authors without duplocates
+
+```
+select distinct(country) from Author
+```
+
+## Grouping results with the Group by clause
+
+- How many authors come from the same country?
+
+```
+select country, count(country) from author
+Group by country
+```
+
+- we can assign a column name to the result set. We do this using the "as" keyword
+
+```
+select country, count(country) as Count from author
+Group by country
+```
+
+## Restricting the results set using the HAVING clause
+
+- Lets check if there are more than 4 authors from the same country
+
+```
+select country, count(country) from author
+Group by country
+Having count(country) > 4
+```
+
+# Exercise
+
+1. Load hr_data database
+
+```{r setup}
+library(DBI)
+library(RSQLite)
+db = dbConnect(RSQLite::SQLite(), dbname ="Week3/tables/employees.db")
+
+#set connection for each chunk, other wise we would need `{sql, connection="db"}`
+knitr::opts_chunk$set(connection = "db", max.print = 10)
+```
+
+2. Retrieve all employees whose address is in Elgin,IL. view the table as is too see how to do this
+
+```{sql, connection="db"}
+select * from employees
+```
+
+```{sql}
+select * from employees
+where address like "%Elgin,IL"
+```
+
+2. Retrieve all employees who were born during the 1970's.
+
+```{sql}
+select * from employees
+where b_date like '%/197%'
+```
+
+3. Retrieve all employees in department 5 whose salary is between 60000 and 70000.
+
+```{sql}
+select * from employees
+where dep_id = 5 and (salary between 60000 and 70000)
+```
+
+4. Retrieve a list of employees ordered by department ID.
+
+```{sql}
+select f_name,dep_id from employees
+order by dep_id
+```
+5. Retrieve a list of employees ordered in descending order by department ID and within each department ordered alphabetically in descending order by last name.
+
+```{sql}
+select f_name,l_name,dep_id from employees
+order by dep_id DESC, l_name desc
+```
+6. Retrieve a list of employees ordered in descending order by department ID and within each department ordered alphabetically in descending order by last name. BUT  use department name instead of department ID. Retrieve a list of employees ordered by department name, and within each department ordered alphabetically in descending order by last name.
+
+**Notice** In the SQL Query above, D and E are aliases for the table names. Once you define an alias like D in your query, you can simply write D.COLUMN_NAME rather than the full form DEPARTMENTS.COLUMN_NAME.
+
+```{sql}
+select d.dep_name,e.f_name,e.l_name from employees as E, departments as D
+where e.dep_id = d.dep_id
+```
+7. For each department ID retrieve the number of employees in the department.
+
+select country, count(country) from author
+Group by country
+
+```{sql}
+select dep_id, count(*) from employees
+group by dep_id
+```
+
+8. For each department retrieve the number of employees in the department, and the average employee salary in the department..
+
+```{sql}
+select dep_id, count(f_name),avg(salary) from employees
+group by dep_id
+```
+
+9. Label the computed columns in the result set of SQL problem 8 as NUM_EMPLOYEES and AVG_SALARY.
+
+```{sql}
+select dep_id, count(f_name) as "num_employees" ,avg(salary) as "avg_salary" from employees
+group by dep_id
+```
+
+
+
+10. In SQL problem 9., order the result set by Average Salary..
+
+```{sql}
+select dep_id, count(f_name) as "num_employees" ,avg(salary) as "avg_salary" from employees
+group by dep_id
+order by avg_salary
+```
+
+11. In SQL problem 10, limit the result to departments with fewer than 4 employees.
+
+```{sql}
+select dep_id, count(f_name) as "num_employees" ,avg(salary) as "avg_salary" from employees
+group by dep_id
+having count(*) < 4
+```
+
+# Build in database functions
+
+- Database functions can reduce the amount of data that needs to be retrieved and thus reducing network traffic and bandwidth use
+- Its also possible to define your own functions
+
+## Aggregate or Column functions
+
+- An aggregate function takes a collection of like values, such as all of the values in a column, as input, and returns a single value or null
+- Examples for an aggregate function: 
+  - sum(): add up all values i.e. to add all values in the cost column
+  
+  ```
+  select SUM(cost) from petrescue
+  ```
+
+  ```
+  #use `as` to name the resulting output column 
+  select SUM(cost) as sum_of_cost
+  from petrescue
+  ```
+  
+  - min(): returns the lowest value
+  - max(): returns the highest value; i.e. lets get the maximum quantity of an animal:
+  
+  ```
+  select Max(quantity) from petrescue
+  ```
+
+  ```
+  #get the min value off the ID column for only a subset of the data, i.e. only dogs
+  select min(id) from petrescue
+  where Animal='dog'
+  ```
+  
+  - avg(): return the average or mean value; i.e. specify the average cost
+  
+  ```
+  select avg(cost) from petrescue
+  ```
+  
+  ```
+  #we can also perform math operations between columns
+  #i.e. we can calulate the avg cost per dog
+  select avg(cost) from petrescue
+  select avg(cost/quantity) from petrescue
+  where animal='dog'
+  ```
+  
+  - etc(): 
+
+
+
+## Scalar and string functions
+
+
+- Scalar: perform operations on every input value
+- Examples:
+  - round(): ie. round up/down every  value in the cost column we do:
+  
+  ```
+  select round(cost) from petrescue
+  ```
+  
+  - length(): for example retrieve the length of each value in the animal column. If we have strings, we perform a string function.
+  
+  ```
+  select length(animal) from petrescue
+  ```
+  
+  - ucase/lcase(): return upper or lower case values of string. I.e. if we want to retrieve the values in the animal column in uppercase:
+  
+  ```
+  select upcase(animal) from petrescue
+  ```
+
+  ```
+  #if we want to lower case value for the cat in the animal column, we can add a where clause
+  select * from petrescue
+  where lcase(animal)='cat'
+  ```
+
+  ```
+  #use disting to get unique values for the animal colum
+  select distinct(ucase(animal)) from petrescue
+  ```
+
+## Date and time build-in functions
+
+- Most databases contain special datatypes for dates and times
+- I.e. DB2 contains types for:
+  - Date: YYYYMMDD
+  - Time: HHMMSS
+  - Timestamp: YYYYXXDDHHMMSSZZZZZZ
+- Functions to extract dates/times:
+  - year()
+  - month() 
+  - day() 
+  - dayofmonth()     
+  - dayofweek() 
+  - dayofyear() 
+  - week() 
+  - hour() 
+  - minute() 
+  - second() 
+
+I.e. get the day portion from each rescue date
+
+```
+select day(rescuedate) from petrescue
+where animal = 'cat'
+```
+
+I.e. get the number of rescues during the month of may
+
+```
+select count(*) from petrescue
+where month(rescuedate)='05'
+```
+
+I.e. what date is it 3d after each rescue date
+
+```
+select (rescuedate + 3 days) from petrescue
+```
+
+- Special registers:
+  - current_date
+  - current_time
+  - i.e. find out how many days have passed since each rescuedate till now. The result will be in YMMDD
+  
+  ```
+  select (current_date - rescuedate) from petrescue
+  ```
+
+
+## Exercise
+
+1. Load hr_data database
+
+```{r}
+db3 <- dbConnect(RSQLite::SQLite(), ":memory:")
+```
+
+```{sql, connection="db3"}
+-- Create the PETRESCUE table
+create table PETRESCUE (
+        ID INTEGER NOT NULL,
+        ANIMAL VARCHAR(20),
+        QUANTITY INTEGER,
+        COST DECIMAL(6,2),
+        RESCUEDATE DATE,
+        PRIMARY KEY (ID)
+        );
+```
+
+```{sql, connection="db3"}
+-- Insert sample data into PETRESCUE table
+insert into PETRESCUE values
+        (1,'Cat',9,450.09,'2018-05-29'),
+        (2,'Dog',3,666.66,'2018-06-01'),
+        (3,'Dog',1,100.00,'2018-06-04'),
+        (4,'Parrot',2,50.00,'2018-06-04'),
+        (5,'Dog',1,75.75,'2018-06-10'),
+        (6,'Hamster',6,60.60,'2018-06-11'),
+        (7,'Cat',1,44.44,'2018-06-11'),
+        (8,'Goldfish',24,48.48,'2018-06-14'),
+        (9,'Dog',2,222.22,'2018-06-15')
+
+;
+```
+
+```{sql, connection="db3"}
+select * from petrescue
+```
+
+2. Enter a function that calculates the total cost of all animal rescues in the PETRESCUE table.
+
+```{sql, connection="db3"}
+select sum(cost) from petrescue
+```
+
+
+2. Enter a function that displays the total cost of all animal rescues in the PETRESCUE table in a column called SUM_OF_COST.
+
+```{sql, connection="db3"}
+select sum(cost) as SUM_OF_COST from petrescue
+```
+
+3. Enter a function that displays the maximum quantity of animals rescued.
+
+```{sql, connection="db3"}
+select max(quantity) from petrescue
+```
+
+4. Enter a function that displays the average cost of animals rescued
+
+```{sql, connection="db3"}
+select avg(cost) from petrescue
+```
+
+5. Enter a function that displays the average cost of rescuing a dog.
+
+```{sql, connection="db3"}
+select AVG(COST/QUANTITY) from PETRESCUE
+where animal='Dog'
+```
+
+6. Enter a function that displays the rounded cost of each rescue.
+
+```{sql, connection="db3"}
+select round(cost) from petrescue
+```
+
+6. Enter a function that displays the length of each animal name.
+
+```{sql, connection="db3"}
+select distinct(animal), length(animal) from petrescue
+```
+
+7. Enter a function that displays the animal name in each rescue in uppercase.
+
+**Notice: ucase becomes upper in SQlite**
+
+```{sql, connection="db3"}
+select upper(animal) from petrescue
+```
+
+8. Enter a function that displays the animal name in each rescue in uppercase without duplications.
+
+**Notice: ucase becomes upper in SQlite**
+
+```{sql, connection="db3"}
+select distinct(upper(animal)) from petrescue
+```
+
+9. Enter a query that displays all the columns from the PETRESCUE table, where the animal(s) rescued are cats. Use cat in lower case in the query.
+
+**Notice: lcase becomes lower in SQlite**
+
+```{sql, connection="db3"}
+select * from petrescue
+where lower(animal)='cat'
+```
+
+
+
+10. Enter a function that displays the day of the month when cats have been rescued.
+
+**Notice: SQlite uses a different syntax for finding time**
+
+```
+select day(rescuedate) from petrescue
+where lower(animal)='cat'
+```
+
+```{sql, connection="db3"}
+select strftime('%d', RESCUEDATE)  from petrescue
+where lower(animal)='cat'
+```
+
+
+11. Enter a function that displays the number of rescues on the 5th month.
+**Notice: SQlite uses a different syntax for finding time**
+
+```
+select sum(quantity) from petrescue
+where month(rescuedate)='05'
+```
+
+```{sql, connection="db3"}
+select sum(quantity) from petrescue
+where strftime('%m', RESCUEDATE)='05'
+```
+12. Enter a function that displays the number of rescues on the 14th day of the month.
+
+**Notice: SQlite uses a different syntax for finding time**
+
+```
+select count(*) from petrescue
+where day(rescuedate)='14'
+```
+
+```{sql, connection="db3"}
+select sum(quantity) from petrescue
+where strftime('%d', RESCUEDATE)='14'
+```
+13. Animals rescued should see the vet within three days of arrivals. Enter a function that displays the third day from each rescue.
+
+**Notice: SQlite uses a different syntax for finding time**
+
+```
+select (rescuedate+3) from petrescue
+```
+
+```{sql, connection="db3"}
+select id,date(rescuedate, '+3 day') from petrescue
+```
+
+14. Enter a function that displays the length of time the animals have been rescued; the difference between today’s date and the rescue date.
+
+**Notice: SQlite uses a different syntax for finding time**
+
+```
+select (current_date - rescuedate) from petrescue
+```
+
+```{sql, connection="db3"}
+select date(rescuedate - 'now' ) from PETRESCUE
+```
+
+# Sub-queries and nested selects
+
+- Sub-query: a query inside a query
+
+```
+select column1 from table
+where column2 = select(max(column2) from table)
+```
+
+i.e. retrieve the list of employees who earn more than the avg salary. For this we can not use `where salary > avg(salary)` since aggregate functions can not always be used in a where clause. However, we can use a sub-select experession
+
+```
+select emp_id, f_name,salary from employees
+where salary <(select avg(salary) from employees)
+```
+
+The sub-select clause doesn't have to be in the where clause, we can also use it on the list of columns to be selected. **Column expressions** =  substitute column names with a sub-query. I.e. compare the salary of each employee with the average salary
+
+```
+select emp_id,salary, (select avg(salary) from employees) as avg_salary from employees
+```
+
+We can also make sub-queries a part of the FROM clause to substitute the table name with a sub-query = **derived tables or table expressions**.  I.e. lets make a derived table with only 3 columns
+
+```
+select * from (select emp_id, f_name, l_name from employees) as EMP4ALL
+```
+
+# Nested select statement
+
+```
+SELECT column_name [, column_name ]
+FROM table1 [, table2 ]
+WHERE column_name OPERATOR
+   (SELECT column_name [, column_name ]
+   FROM table1 [, table2 ]
+   WHERE condition);
+```
+
+## Examples
+
+```{sql}
+select * from employees
+```
+
+
+1. Execute a failing query (i.e. one which gives an error) to retrieve all employees records whose salary is lower than the average salary.
+
+```
+select * from employees
+where salary < avg(salary)
+```
+
+2. Execute a working query using a sub-select to retrieve all employees records whose salary is lower than the average salary.
+
+```{sql}
+select * from employees
+where salary <(select avg(salary) from employees)
+```
+
+3. Execute a Column Expression that retrieves all employees records with EMP_ID, SALARY and maximum salary as MAX_SALARY in every row.
+
+```{sql}
+select emp_id,salary,(select max(salary)from employees) as max_salary from employees
+```
+4. Execute a Table Expression for the EMPLOYEES table that excludes columns with sensitive employee data (i.e. does not include columns: SSN, B_DATE, SEX, ADDRESS, SALARY).
+
+
+```{sql}
+select * from ( select EMP_ID, F_NAME, L_NAME from employees) AS EMP4ALL;
+```
+
+# Working with multiple tables
+
+Ways to access multiple tables in the same query are:
+1. Sub-queries
+2. Implicit join
+3. Join operators, such as inner join, outer join, ...
+
+
+
+## Accessing tables using sub-queries
+
+- I.e. lets only retrieve employee records for which a dep_id exists in the Departments table
+
+```
+select * from employee
+where dep_id in (select dep_id from departments)
+```
+
+
+- I.e. lets only retrieve employees from a specific location via the location id found in the departments table
+
+```
+select * from employee
+where dep_id in (select dep_id from departments where loc_id="L0002")
+```
+
+
+
+- I.e. lets retrieve the dep_id and name for employees who earn more than 70,000 dollars
+
+```
+select dep_id,dep_name from departments
+where dep_id in (select dep_id from employees where salary > 70000)
+```
+
+
+## Accessing tables with an implicit join
+
+- I.e. we can specify two tables in the FROM clause as shown below. This results in a table join without using the join operator. This action below is called a full join, or a cartesian join, because every row in the first table is joined with every row in the 2nd table
+
+```
+select * from employees,departments
+```
+
+
+- We can use additional operands to limit the results set. I.e. only show rows with matching dep_ids. Below we prefix the name of the column with the name of the table, i.e. we use employees.dep_id. 
+
+```
+select * from employees, department
+where employees.dep_id = departments.dep_id
+```
+
+- If the table names are long we also can use aliases. I.e. we can use the alias E for the employee table and then use these aliases in the where clause
+
+```
+select * from employees E, department D
+where E.dep_id = D.dep_id
+```
+
+- lets now see the department name for each employee 
+
+```
+select emp_id, dep_name from employees E, department D
+where E.dep_id = D.dep_id
+```
+
+- We can also for the example above fix the column names using aliases
+
+```
+select e.emp_id, d.dep_name from employees E, department D
+where E.dep_id = D.dep_id
+```
+
+## Exercise
+
+1. Retrieve only the EMPLOYEES records that correspond to jobs in the JOBS table.
+
+```{sql}
+select * from jobs
+```
+
+```{sql}
+select * from employees
+where job_id in (select job_id from jobs)
+```
+2. Retrieve only the list of employees whose JOB_TITLE is Jr. Designer.
+
+```{sql}
+select * from employees
+where job_id in (select job_id from jobs where job_title="Jr. Designer")
+```
+
+
+3. Retrieve JOB information and who earn more than $70,000.
+
+```{sql}
+select * from jobs
+where job_id in (select job_id from employees where salary > 70000)
+```
+
+4. Retrieve JOB information and whose birth year is after 1976.
+
+Mysql
+
+```
+select * from jobs
+where job_id in (select job_id from employees where year(b_date)>1976)
+```
+
+SQlite
+
+```{sql}
+select * from jobs
+where job_id in (select job_id from employees where strftime('%Y', employees.b_date) > '1976')
+```
+5. Retrieve JOB information for female employees whose birth year is after 1976.
+
+Mysql 
+
+```
+select JOB_TITLE, MIN_SALARY,MAX_SALARY,JOB_IDENT from jobs 
+where JOB_IDENT IN (select JOB_ID from employees where YEAR(B_DATE)>1976 and SEX='F' );
+```
+
+
+SQlite 
+
+```{sql}
+select JOB_TITLE, min_sal,max_sal,job_id from jobs 
+where job_id IN (select JOB_ID from employees where strftime('%Y', employees.b_date) < '1961'  and SEX='F' );
+```
+
+6. Perform an implicit cartesian/cross join between EMPLOYEES and JOBS tables.
+
+```{sql}
+select * from employees,jobs
+```
+
+7. Retrieve only the EMPLOYEES records that correspond to jobs in the JOBS table.
+
+```{sql}
+select * from employees e,jobs j
+where e.job_id = j.job_id
+```
+8. Redo the previous query, but retrieve only the Employee ID, Employee Name and Job Title.
+
+```{sql}
+select e.emp_id,e.f_name,j.job_title from employees e,jobs j
+where e.job_id = j.job_id
+```

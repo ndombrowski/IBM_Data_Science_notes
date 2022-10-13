@@ -1,0 +1,27 @@
+# Preamble
+
+This is a python basics tutorial
+
+```{python}
+#|  echo: false
+
+#in terminal set python path for R:
+#nano $HOME/.Renviron
+#RETICULATE_PYTHON="/opt/anaconda3/bin/python3.7"
+
+#set reticulate py version
+#ibrary("reticulate")
+#repl_python()
+
+#make sure in the global options -> markdown -> to set the wdir to project
+#also make the mark at show output inline for all r markdown docs to be able to execute bash/sql
+
+#install for R internal py
+#/Users/ninadombrowski/Library/r-miniconda/envs/r-reticulate/bin/python -m pip install -U seaborn
+
+#default retculate:
+#/Users/ninadombrowski/Library/r-miniconda/envs/r-reticulate/bin/python
+
+#install via terminal
+#/opt/anaconda3/bin/python3.7 -m pip install -U seaborn
+```

@@ -1,0 +1,65 @@
+# Book settings
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Introduction to SQL"
+  author: "Nina Dombrowski"
+  date: "`r Sys.Date()`"
+  logo: images/tree_of_life.png
+  chapters:
+    - index.qmd
+    - Week1-Notes.qmd
+    - Week2-Notes.qmd    
+    - Week3-Notes.qmd  
+    - Week4_Python_a_IBM.qmd
+    - Week5_RealData.qmd
+    
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    code-overflow: wrap
+  pdf:
+    documentclass: scrreprt
+    pdf-engine: pdflatex
+    geometry:
+    #  - top=25mm
+    #  - right=20mm
+    #  - left=10mm
+    #  - bottom=4mm
+    #  - textwidth=4.5in
+      - heightrounded      
+    highlight-style: github
+    pandoc_args: --listings
+    header-includes:
+        \usepackage{fvextra}
+        \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}} 
+    colorlinks: true
+    code-block-bg: D3D3D3  
+    
+#execute:
+#   enable: true
+
+#knitr:
+#  opts_chunk: 
+#    collapse: true
+    
+### code block spacing ###
+space-before-code-block: 10pt
+space-after-code-block: 8pt
+
+### linespacing ###
+linespacing: 22pt plus2pt # 22pt is official for submission & library copies
+frontmatter-linespacing: 17pt plus1pt minus1pt #spacing in roman-numbered pages (acknowledgments, table of contents, etc.)
+
+### title page
+title-size: 22pt
+title-size-linespacing: 28pt
+gap-before-crest: 25mm
+gap-after-crest: 25mm
+
+#set how our path is set
+execute-dir: file

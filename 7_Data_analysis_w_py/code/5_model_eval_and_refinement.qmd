@@ -1,0 +1,521 @@
+# Model Evaluation and Refinement
+
+## Training and Testing
+
+Let's first prepare our environment: 
+
+```{python}
+#load libs
+import pandas as pd
+import numpy as np
+
+#libs for plotting
+from ipywidgets import interact, interactive, fixed, interact_manual
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+#for model training
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_predict
+from sklearn.preprocessing import PolynomialFeatures
+```
+
+```{python}
+#load data
+df = pd.read_csv("../data/module_5_auto.csv")
+
+#only use numeric data
+df=df._get_numeric_data()
+df.head()
+```
+
+```{python}
+#define functions for plotting
+def DistributionPlot(RedFunction, BlueFunction, RedName, BlueName, Title):
+    width = 8
+    height = 6
+    plt.figure(figsize=(width, height))
+
+    ax1 = sns.distplot(RedFunction, hist=False, color="r", label=RedName)
+    ax2 = sns.distplot(BlueFunction, hist=False, color="b", label=BlueName, ax=ax1)
+
+    plt.title(Title)
+    plt.xlabel('Price (in dollars)')
+    plt.ylabel('Proportion of Cars')
+
+    plt.show()
+    plt.close()
+```
+
+
+```{python}
+#| warning: false
+
+def PollyPlot(xtrain, xtest, y_train, y_test, lr,poly_transform):
+    width = 8
+    height = 6
+    plt.figure(figsize=(width, height))
+    
+    #training data 
+    #testing data 
+    # lr:  linear regression object 
+    #poly_transform:  polynomial transformation object 
+    xmax=max([xtrain.values.max(), xtest.values.max()])
+    xmin=min([xtrain.values.min(), xtest.values.min()])
+    x=np.arange(xmin, xmax, 0.1)
+
+    plt.plot(xtrain, y_train, 'ro', label='Training Data')
+    plt.plot(xtest, y_test, 'go', label='Test Data')
+    plt.plot(x, lr.predict(poly_transform.fit_transform(x.reshape(-1, 1))), label='Predicted Function')
+    plt.ylim([-10000, 60000])
+    plt.ylabel('Price')
+    plt.legend()
+```
+```{python}
+def f(order, test_data):
+    x_train, x_test, y_train, y_test = train_test_split(x_data, y_data, test_size=test_data, random_state=0)
+    pr = PolynomialFeatures(degree=order)
+    x_train_pr = pr.fit_transform(x_train[['horsepower']])
+    x_test_pr = pr.fit_transform(x_test[['horsepower']])
+    poly = LinearRegression()
+    poly.fit(x_train_pr,y_train)
+    PollyPlot(x_train[['horsepower']], x_test[['horsepower']], y_train,y_test, poly, pr)
+```
+
+
+An important step in testing your model is to split your data into training and testing data. We will place the target data price in a separate dataframe y_data and Drop price data in dataframe x_data:
+
+```{python}
+#prepare the df
+y_data = df['price']
+x_data=df.drop('price',axis=1)
+```
+
+Now, we randomly split our data into training and testing data using the function train_test_split
+
+```{python}
+from sklearn.model_selection import train_test_split
+
+#split data
+x_train, x_test, y_train, y_test = train_test_split(x_data, y_data, test_size=0.10, random_state=1)
+
+#see if this worked
+print("number of test samples :", x_test.shape[0])
+print("number of training samples:",x_train.shape[0])
+```
+
+We see that the test_size parameter sets the proportion of data that is split into the testing set. In the above, the testing set is 10% of the total dataset.
+
+Now, lets prepare the model"
+
+```{python}
+#load libs
+from sklearn.linear_model import LinearRegression
+
+#create regression object
+lre = LinearRegression()
+
+#fit the model using the feature `horsepower`
+lre.fit(x_train[['horsepower']], y_train)
+
+#calculate the R2 on the test data
+print(lre.score(x_test[['horsepower']], y_test))
+
+#compare the R2 of the training data
+print(lre.score(x_train[['horsepower']], y_train))
+```
+
+We can see the R^2 is much smaller using the test data compared to the training data.
+
+
+## Model evaluation
+
+Model evaluation tells us how our model performs in the real world. 
+
+- In-sample evaluation tells us how well our model fits the data already given to train it
+- However, the problem is that it does not give us an estimate of how well the train model can predict new data
+- The solution is to split our data up, use the in-sample data or training data to train the model. The rest of the data, called Test Data, is used as out-of-sample data. This data is then used to approximate, how the model performs in the real world
+- When we split a dataset, usually the larger portion of data is used for training and a smaller part is used for testing
+-  When we have completed testing our model, we should use all the data to train the model
+
+
+### Generalization performance
+
+- Generalization error is a measure how well our data does at predicting previously unseen data
+- The error we obtain using our testing data is an approximation of this error
+- Using a lot of data for training,gives us an accurate means of determining how well our model will perform in the real world. But the precision of the performance will be low
+- If we use fewer data points to train the model and more to test the model, the accuracy of the generalization performance will be less, but the model will have good precision.
+
+To overcome this problem, we use cross-validation.
+
+
+
+### Cross validation
+
+- One of the most common out of sample evaluation metrics is cross-validation
+- More effective use of data, as each observation is used for both training and testing
+- In this method, the dataset is split into K equal groups. Each group is referred to as a fold.
+- Some of the folds can be used as a training set which we use to train the model and the remaining parts are used as a test set, which we use to test the model. For example, we can use three folds for training, then use one fold for testing
+- This is repeated until each partition is used for both training and testing 
+- At the end, we use the average results as the estimate of out-of-sample error
+
+
+```{python}
+#load lib
+from sklearn.model_selection import cross_val_score
+```
+
+For cross-validation we  input the object, the feature ("horsepower"), and the target data (y_data). The parameter 'cv' determines the number of folds. In this case, it is 4.
+
+
+```{python}
+#cross validate
+Rcross = cross_val_score(lre, x_data[['horsepower']], y_data, cv = 4)
+```
+
+The default scoring is R^2. Each element in the array has the average R^2 value for the fold:
+
+```{python}
+#view data
+Rcross
+```
+
+We can calculate the average and standard deviation of our estimate:
+
+```{python}
+print("The mean of the folds are", Rcross.mean(), "and the standard deviation is" , Rcross.std())
+```
+
+We can use negative squared error as a score by setting the parameter 'scoring' metric to 'neg_mean_squared_error'.
+
+
+```{python}
+-1 * cross_val_score(lre,x_data[['horsepower']], y_data,cv=4,scoring='neg_mean_squared_error')
+```
+
+You can also use the function 'cross_val_predict' to predict the output. The function splits up the data into the specified number of folds, with one fold for testing and the other folds are used for training. First, import the function:
+
+We input the object, the feature "horsepower", and the target data y_data. The parameter 'cv' determines the number of folds. In this case, it is 4. We can produce an output:
+
+```{python}
+#load lib
+from sklearn.model_selection import cross_val_predict
+
+#predict the output
+yhat = cross_val_predict(lre,x_data[['horsepower']], y_data,cv=4)
+yhat[0:5]
+```
+
+
+
+## Overfitting, Underfitting and Model Selection
+
+It turns out that the test data, sometimes referred to as the "out of sample data", is a much better measure of how well your model performs in the real world. One reason for this is overfitting.
+
+Let's go over some examples. It turns out these differences are more apparent in Multiple Linear Regression and Polynomial Regression so we will explore overfitting in that context.
+
+In this section, we will discuss how to pick the best polynomial order and problems that arise when selecting the wrong order polynomial.
+
+- **Underfitting**: the model is too simple to fit the data
+- **Overfitting** : the estimated function oscillates but doesn't track the function
+
+For Model selection we can compare the mean square error and the polynomial order:
+
+- The training error decreases with the order of the polynomial
+- The test error is a better means to estimate the error of the polynomial. The error decreases 'till the best order of the polynomial is determined. Then the error begins to increase. We select the order that minimizes the test error.Anything on the left would be considered underfitting. Anything on the right is overfitting
+- If we select the best order of the polynomial, we will still have some errors, i.e. due to random noise or our polynomial assumption may be wrong 
+
+
+Let's create Multiple Linear Regression objects and train the model using 'horsepower', 'curb-weight', 'engine-size' and 'highway-mpg' as features.
+
+```{python}
+lr = LinearRegression()
+lr.fit(x_train[['horsepower', 'curb-weight', 'engine-size', 'highway-mpg']], y_train)
+```
+
+Next, we run the prediction using training data:
+
+```{python}
+yhat_train = lr.predict(x_train[['horsepower', 'curb-weight', 'engine-size', 'highway-mpg']])
+yhat_train[0:5]
+```
+
+Next, we run the prediction using test data:
+
+```{python}
+yhat_test = lr.predict(x_test[['horsepower', 'curb-weight', 'engine-size', 'highway-mpg']])
+yhat_test[0:5]
+```
+
+Let's perform some model evaluation using our training and testing data separately. First, we import the seaborn and matplotlib library for plotting.
+
+```{python}
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
+
+Let's examine the distribution of the predicted values of the training data.
+
+```{python}
+Title = 'Distribution  Plot of  Predicted Value Using Training Data vs Training Data Distribution'
+DistributionPlot(y_train, yhat_train, "Actual Values (Train)", "Predicted Values (Train)", Title)
+```
+
+
+So far, the model seems to be doing well in learning from the training dataset. But what happens when the model encounters new data from the testing dataset? When the model generates new values from the test data, we see the distribution of the predicted values is much different from the actual target values.
+
+```{python}
+Title='Distribution  Plot of  Predicted Value Using Test Data vs Data Distribution of Test Data'
+DistributionPlot(y_test,yhat_test,"Actual Values (Test)","Predicted Values (Test)",Title)
+```
+
+Comparing Figure 1 and Figure 2, it is evident that the distribution of the test data in Figure 1 is much better at fitting the data. This difference in Figure 2 is apparent in the range of 5000 to 15,000. This is where the shape of the distribution is extremely different. Let's see if polynomial regression also exhibits a drop in the prediction accuracy when analysing the test dataset.
+
+
+### Overfitting
+
+Overfitting occurs when the model fits the noise, but not the underlying process. Therefore, when testing your model using the test set, your model does not perform as well since it is modelling noise, not the underlying process that generated the relationship. Let's create a degree 5 polynomial model.
+
+Let's use 55 percent of the data for training and the rest for testing:
+
+```{python}
+#load lib
+from sklearn.preprocessing import PolynomialFeatures
+
+#use 55 percent of the data for training and the rest for testing
+x_train, x_test, y_train, y_test = train_test_split(x_data, y_data, test_size=0.45, random_state=0)
+
+#perform a degree 5 polynomial transformation on the feature 'horsepower'
+pr = PolynomialFeatures(degree=5)
+x_train_pr = pr.fit_transform(x_train[['horsepower']])
+x_test_pr = pr.fit_transform(x_test[['horsepower']])
+pr
+```
+
+Now, let's create a Linear Regression model "poly" and train it.
+
+```{python}
+poly = LinearRegression()
+poly.fit(x_train_pr, y_train)
+```
+
+We can see the output of our model using the method "predict." We assign the values to "yhat".
+
+```{python}
+yhat = poly.predict(x_test_pr)
+yhat[0:5]
+```
+
+
+Let's take the first five predicted values and compare it to the actual targets.
+
+```{python}
+print("Predicted values:", yhat[0:4])
+print("True values:", y_test[0:4].values)
+```
+
+We will use the function "PollyPlot" that we defined at the beginning of the lab to display the training data, testing data, and the predicted function.
+
+```{python}
+PollyPlot(x_train[['horsepower']], x_test[['horsepower']], y_train, y_test, poly,pr)
+```
+
+Figure 3: A polynomial regression model where red dots represent training data, green dots represent test data, and the blue line represents the model prediction.
+
+We see that the estimated function appears to track the data but around 200 horsepower, the function begins to diverge from the data points.
+
+R^2 of the training data:
+
+```{python}
+poly.score(x_train_pr, y_train)
+```
+
+
+R^2 of the test data:
+
+```{python}
+poly.score(x_test_pr, y_test)
+```
+
+We see the R^2 for the training data is 0.5567 while the R^2 on the test data was -29.87. The lower the R^2, the worse the model. A negative R^2 is a sign of overfitting.
+
+Let's see how the R^2 changes on the test data for different order polynomials and then plot the results:
+
+```{python}
+Rsqu_test = []
+
+order = [1, 2, 3, 4]
+for n in order:
+    pr = PolynomialFeatures(degree=n)
+    
+    x_train_pr = pr.fit_transform(x_train[['horsepower']])
+    
+    x_test_pr = pr.fit_transform(x_test[['horsepower']])    
+    
+    lr.fit(x_train_pr, y_train)
+    
+    Rsqu_test.append(lr.score(x_test_pr, y_test))
+
+plt.plot(order, Rsqu_test)
+plt.xlabel('order')
+plt.ylabel('R^2')
+plt.title('R^2 Using Test Data')
+plt.text(3, 0.75, 'Maximum R^2 ')    
+plt.show()
+plt.close()
+
+```
+
+We see the R^2 gradually increases until an order three polynomial is used. Then, the R^2 dramatically decreases at an order four polynomial.
+
+The following interface allows you to experiment with different polynomial orders and different amounts of data.
+
+```{python}
+interact(f, order=(0, 6, 1), test_data=(0.05, 0.95, 0.05))
+```
+
+
+
+## Ridge regression
+
+Ridge regression is a regression that is employed in a Multiple regression model when Multicollinearity occurs. Multicollinearity is when there is a strong relationship among the independent variables. Ridge regression is very common with polynomial regression and is used to regularize and reduce the standard errors to avoid over-fitting a regression model.
+
+Let's perform a degree two polynomial transformation on our data.
+
+```{python}
+pr=PolynomialFeatures(degree=2)
+x_train_pr=pr.fit_transform(x_train[['horsepower', 'curb-weight', 'engine-size', 'highway-mpg','normalized-losses','symboling']])
+x_test_pr=pr.fit_transform(x_test[['horsepower', 'curb-weight', 'engine-size', 'highway-mpg','normalized-losses','symboling']])
+```
+
+```{python}
+#load lib
+from sklearn.linear_model import Ridge
+
+#create a ridge regression object
+RigeModel=Ridge(alpha=1)
+
+#fit the model using the method fit.
+RigeModel.fit(x_train_pr, y_train)
+
+#obtain a prediction
+yhat = RigeModel.predict(x_test_pr)
+
+#Let's compare the first five predicted samples to our test set:
+print('predicted:', yhat[0:4])
+print('test set :', y_test[0:4].values)
+```
+
+We select the value of alpha that minimizes the test error. To do so, we can use a for loop. We have also created a progress bar to see how many iterations we have completed so far.
+
+```{python}
+#| warning: false
+#| error: false
+
+from tqdm import tqdm
+
+Rsqu_test = []
+Rsqu_train = []
+dummy1 = []
+Alpha = 10 * np.array(range(0,1000))
+pbar = tqdm(Alpha)
+
+for alpha in pbar:
+    RigeModel = Ridge(alpha=alpha) 
+    RigeModel.fit(x_train_pr, y_train)
+    test_score, train_score = RigeModel.score(x_test_pr, y_test), RigeModel.score(x_train_pr, y_train)
+    
+    pbar.set_postfix({"Test Score": test_score, "Train Score": train_score})
+
+    Rsqu_test.append(test_score)
+    Rsqu_train.append(train_score)
+```
+
+We can plot out the value of R^2 for different alphas:
+
+```{python}
+width = 5
+height = 8
+plt.figure(figsize=(width, height))
+
+plt.plot(Alpha,Rsqu_test, label='validation data  ')
+plt.plot(Alpha,Rsqu_train, 'r', label='training Data ')
+plt.xlabel('alpha')
+plt.ylabel('R^2')
+plt.legend()
+
+plt.show()
+plt.close()
+```
+
+Figure 4: The blue line represents the R^2 of the validation data, and the red line represents the R^2 of the training data. The x-axis represents the different values of Alpha.
+
+Here the model is built and tested on the same data, so the training and test data are the same.
+
+The red line in Figure 4 represents the R^2 of the training data. As alpha increases the R^2 decreases. Therefore, as alpha increases, the model performs worse on the training data
+
+The blue line represents the R^2 on the validation data. As the value for alpha increases, the R^2 increases and converges at a point.
+
+
+
+
+## Grid Search
+
+Grid Search allows us to scan through multiple free parameters with few lines of code.
+
+Parameters like the alpha term in Ridge regression are not part of the fitting or training process. These values are called **hyperparameters**.
+
+Scikit-learn has a means of automatically iterating over these hyperparameters using cross-validation. This method is called **Grid Search**. Grid Search takes the model or objects you would like to train and different values of the hyperparameters. It then calculates the mean square error or R-squared for various hyperparameter values, allowing you to choose the best values based on the set of parameters that minimize the error.
+
+To select the hyperparameter, we split our dataset into three parts:
+
+- The **training set** in which we train the model for different hyperparameters.
+- We select the hyperparameter that minimizes the mean squared error or maximizes the R-squared on the **validation set**. 
+- Finally, we test our model set using the **test set**
+
+```{python}
+#load lib
+from sklearn.model_selection import GridSearchCV
+
+#create a dic of the parameter values
+parameters1= [{'alpha': [0.001,0.1,1, 10, 100, 1000, 10000, 100000, 100000]}]
+parameters1
+```
+
+
+```{python}
+#lCreate a Ridge regression object:
+RR=Ridge()
+RR
+```
+
+
+```{python}
+#Create a ridge grid search object:
+Grid1 = GridSearchCV(RR, parameters1,cv=4)
+```
+
+
+```{python}
+#fit the model
+Grid1.fit(x_data[['horsepower', 'curb-weight', 'engine-size', 'highway-mpg']], y_data)
+```
+
+The object finds the best parameter values on the validation data. We can obtain the estimator with the best parameters and assign it to the variable BestRR as follows:
+
+
+```{python}
+BestRR=Grid1.best_estimator_
+BestRR
+```
+
+We now test our model on the test data:
+
+```{python}
+BestRR.score(x_test[['horsepower', 'curb-weight', 'engine-size', 'highway-mpg']], y_test)
+```
+
+
+

@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.168">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Python basics - 6&nbsp; APIs and Data collection</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../code/Week4_Files_Pandas_Numpy.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">APIs and Data collection</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../" class="sidebar-logo-link">
+      <img src="../images/tree_of_life.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Python basics</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preamble</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/Week1-Basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python Basics</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/Week2-Lists_Tuples.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python: Lists and Tuples</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/Week3_Conditions_a_branching.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Conditions and branching</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/Week4_Files_Pandas_Numpy.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Working with data in python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/Week5_API_and_Data_collection.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">APIs and Data collection</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#simple-application-programmming-interaces-apis" id="toc-simple-application-programmming-interaces-apis" class="nav-link active" data-scroll-target="#simple-application-programmming-interaces-apis"><span class="toc-section-number">6.1</span>  Simple Application Programmming Interaces (APIs)</a></li>
+  <li><a href="#rest-apis" id="toc-rest-apis" class="nav-link" data-scroll-target="#rest-apis"><span class="toc-section-number">6.2</span>  REST APIs</a></li>
+  <li><a href="#pycoingeckp" id="toc-pycoingeckp" class="nav-link" data-scroll-target="#pycoingeckp"><span class="toc-section-number">6.3</span>  Pycoingeckp</a></li>
+  <li><a href="#watson-text-to-speech-api" id="toc-watson-text-to-speech-api" class="nav-link" data-scroll-target="#watson-text-to-speech-api"><span class="toc-section-number">6.4</span>  Watson Text to Speech API</a></li>
+  <li><a href="#rest-apis-http-requests" id="toc-rest-apis-http-requests" class="nav-link" data-scroll-target="#rest-apis-http-requests"><span class="toc-section-number">6.5</span>  REST APIs &amp; HTTP Requests</a>
+  <ul class="collapse">
+  <li><a href="#status-codes" id="toc-status-codes" class="nav-link" data-scroll-target="#status-codes"><span class="toc-section-number">6.5.1</span>  Status codes</a></li>
+  <li><a href="#requests" id="toc-requests" class="nav-link" data-scroll-target="#requests"><span class="toc-section-number">6.5.2</span>  Requests</a></li>
+  <li><a href="#http-methods" id="toc-http-methods" class="nav-link" data-scroll-target="#http-methods"><span class="toc-section-number">6.5.3</span>  HTTP methods</a></li>
+  <li><a href="#response" id="toc-response" class="nav-link" data-scroll-target="#response"><span class="toc-section-number">6.5.4</span>  Response</a></li>
+  <li><a href="#the-python-requests-library" id="toc-the-python-requests-library" class="nav-link" data-scroll-target="#the-python-requests-library"><span class="toc-section-number">6.5.5</span>  The python requests library</a></li>
+  </ul></li>
+  <li><a href="#html-for-webscraping" id="toc-html-for-webscraping" class="nav-link" data-scroll-target="#html-for-webscraping"><span class="toc-section-number">6.6</span>  HTML for webscraping</a></li>
+  <li><a href="#webscraping" id="toc-webscraping" class="nav-link" data-scroll-target="#webscraping"><span class="toc-section-number">6.7</span>  Webscraping</a>
+  <ul class="collapse">
+  <li><a href="#tags" id="toc-tags" class="nav-link" data-scroll-target="#tags"><span class="toc-section-number">6.7.1</span>  Tags</a></li>
+  <li><a href="#children-parents-and-sibilings" id="toc-children-parents-and-sibilings" class="nav-link" data-scroll-target="#children-parents-and-sibilings"><span class="toc-section-number">6.7.2</span>  Children, Parents and Sibilings</a></li>
+  <li><a href="#html-attributes" id="toc-html-attributes" class="nav-link" data-scroll-target="#html-attributes"><span class="toc-section-number">6.7.3</span>  HTML attributes</a></li>
+  <li><a href="#navigable-string" id="toc-navigable-string" class="nav-link" data-scroll-target="#navigable-string"><span class="toc-section-number">6.7.4</span>  Navigable string</a></li>
+  <li><a href="#filter" id="toc-filter" class="nav-link" data-scroll-target="#filter"><span class="toc-section-number">6.7.5</span>  Filter</a></li>
+  <li><a href="#downloading-and-scraping-from-a-web-paste" id="toc-downloading-and-scraping-from-a-web-paste" class="nav-link" data-scroll-target="#downloading-and-scraping-from-a-web-paste"><span class="toc-section-number">6.7.6</span>  Downloading and scraping from a web paste</a></li>
+  <li><a href="#working-with-different-file-formats" id="toc-working-with-different-file-formats" class="nav-link" data-scroll-target="#working-with-different-file-formats"><span class="toc-section-number">6.7.7</span>  Working with different file formats</a></li>
+  </ul></li>
+  <li><a href="#data-analysis" id="toc-data-analysis" class="nav-link" data-scroll-target="#data-analysis"><span class="toc-section-number">6.8</span>  Data analysis</a>
+  <ul class="collapse">
+  <li><a href="#identifying-and-handling-missing-values" id="toc-identifying-and-handling-missing-values" class="nav-link" data-scroll-target="#identifying-and-handling-missing-values"><span class="toc-section-number">6.8.1</span>  Identifying and handling missing values</a></li>
+  <li><a href="#data-vis" id="toc-data-vis" class="nav-link" data-scroll-target="#data-vis"><span class="toc-section-number">6.8.2</span>  Data vis</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">APIs and Data collection</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<pre class="{bash}"><code>pwd</code></pre>
+<section id="simple-application-programmming-interaces-apis" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="simple-application-programmming-interaces-apis"><span class="header-section-number">6.1</span> Simple Application Programmming Interaces (APIs)</h2>
+<p>An API lets two pieces of software talk to each other For example you have your program, you have some data, you have other software components. You use the api to communicate with the api via inputs and outputs.</p>
+<p>Just like a function, you don’t have to know how the API works, but just its inputs and outputs. Pandas is actually a set of software components, much of which are not even written in Python. You have some data. You have a set of software components. We use the pandas api to process the data by communicating with the other Software Components.</p>
+<p>An example:</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dict_ <span class="op">=</span> {<span class="st">"a"</span>:[<span class="dv">11</span>,<span class="dv">21</span>,<span class="dv">31</span>], <span class="st">"b"</span>:[<span class="dv">12</span>,<span class="dv">22</span>,<span class="dv">23</span>]}</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(dict_)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>When you create a dictionary, and then create a pandas object with the Dataframe constructor, in API lingo, this is an “instance.” The data in the dictionary is passed along to the pandas API. You then use the dataframe to communicate with the API. When you call the method head, the dataframe communicates with the API displaying the first few rows of the dataframe.</p>
+</section>
+<section id="rest-apis" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="rest-apis"><span class="header-section-number">6.2</span> REST APIs</h2>
+<p>REST APIs are another popular type of API; they allow you to communicate through the internet allowing you to take advantage of resources like storage, access more data, artificial intelligent algorithms, and much more.</p>
+<p>The RE stands for Representational, the S stands for State, the T stand for Transfer.</p>
+<p>In rest API’s your program is called the client. The API communicates with a web service you call through the internet. There is a set of rules regarding Communication, Input or Request, and Output or Response.</p>
+<p>You or your code can be thought of as a <strong>client</strong>. The web service is referred to as a <strong>resource</strong>. The client finds the service via an <strong>endpoint</strong>. The client sends requests to the resource and the response to the client.</p>
+<p>HTTP methods are a way of transmitting data over the internet We tell the Rest API’s what to do by sending a request. The request is usually communicated via an HTTP message. The HTTP message usually contains a JSON file. This contains instructions for what operation we would like the service to perform. This operation is transmitted to the webservice via the internet. The service performs the operation.In the similar manner, the webservice returns a response via an HTTP message, where the information is usually returned via a JSON file. This information is transmitted back to the client.</p>
+</section>
+<section id="pycoingeckp" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="pycoingeckp"><span class="header-section-number">6.3</span> Pycoingeckp</h2>
+<p>Crypto Currency data is excellent to be used in an API because it is being constantly updated and it is vital to CryptoCurrency Trading We will use the Py-Coin-Gecko Python Client/Wrapper for the Coin Gecko API, updated every minute by Coin-Gecko We use the Wrapper/Client because it is easy to use so you can focus on the task of collecting data, we will also introduce pandas time series functions for dealing with time series data</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import software</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pycoingecko <span class="im">import</span> CoinGeckoAPI</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#create a client</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>cg <span class="op">=</span> CoinGeckoAPI()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#use a fct to request data</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#getting data on bitcoin, in U.S. Dollars, for the past 30 days</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#we get a JSON expressed as a python dictionary of nested lists</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>bitcoin_data <span class="op">=</span> cg.get_coin_market_chart_by_id(<span class="bu">id</span><span class="op">=</span><span class="st">"bitcoin"</span>, vs_currency<span class="op">=</span><span class="st">"usd"</span>,days<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#select only the prices</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>bitcoin_price_data <span class="op">=</span> bitcoin_data[<span class="st">'prices'</span>]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>bitcoin_price_data <span class="op">=</span> pd.DataFrame(bitcoin_price_data, columns<span class="op">=</span>[<span class="st">"TimeStamp"</span>, <span class="st">"Price"</span>])</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>bitcoin_price_data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Convert the timestamp to a more readable format usign the pythin function <em>to_datetime</em></p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#convert the timestamp</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>bitcoin_price_data[<span class="st">'Date'</span>] <span class="op">=</span> pd.to_datetime(bitcoin_price_data[<span class="st">'TimeStamp'</span>], unit <span class="op">=</span> <span class="st">'ms'</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>bitcoin_price_data.head()</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#an alternative way to do this</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#data['date'] = data['TimeStamp'].apply(lambda d: datetime.date.fromtimestamp(d/1000.0))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, we want to create a candlestick plot. To get the data for the daily candlesticks we will group by the date to find the minimum, maximum, first, and last price of each day Finally we will use plotly to create the candlestick chart and plot it.</p>
+<p>The plotly Python package exists to create, manipulate and render graphical figures (i.e.&nbsp;charts, plots, maps and diagrams) represented by data structures also referred to as figures.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#convert the timestamp</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>candlestick_data <span class="op">=</span> bitcoin_price_data.groupby(bitcoin_price_data.Date.dt.date).agg({<span class="st">'Price'</span>: [<span class="st">'min'</span>, <span class="st">'max'</span>, <span class="st">'first'</span>, <span class="st">'last'</span>]})</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>candlestick_data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> go.Figure(data<span class="op">=</span>[go.Candlestick(x<span class="op">=</span>candlestick_data.index,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>        <span class="bu">open</span><span class="op">=</span>candlestick_data[<span class="st">'Price'</span>][<span class="st">'first'</span>],</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        high<span class="op">=</span>candlestick_data[<span class="st">'Price'</span>][<span class="st">'max'</span>],</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        low<span class="op">=</span>candlestick_data[<span class="st">'Price'</span>][<span class="st">'min'</span>],</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        close<span class="op">=</span>candlestick_data[<span class="st">'Price'</span>][<span class="st">'last'</span>])</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        ])</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>fig.update_layout(xaxis_rangeslider_visible<span class="op">=</span><span class="va">False</span>, xaxis_title<span class="op">=</span><span class="st">"Date"</span>,yaxis_title<span class="op">=</span><span class="st">"Price in USD"</span>, title<span class="op">=</span><span class="st">'Bitcoin Candlestick Chart over Past 30 days'</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>fig.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="watson-text-to-speech-api" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="watson-text-to-speech-api"><span class="header-section-number">6.4</span> Watson Text to Speech API</h2>
+<p>We will transcribe an audio file using the Watson Text to Speech API. We will then translate the text to a new language using the Watson Language Translator API. In the API call, you will send a copy of the audio file to the API. This is sometimes called a POST request. Then the API will send the text transcription of what the individual is saying. Under the hood, the API is making a GET request. We then send the text we would like to translate into a second language to a second API. The API will translate the text and send the translation back to you. In this case, we translate English to Spanish. We then provide an overview of API keys and endpoints, Watson Speech to Text, and Watson Translate. First, we will review API keys and endpoints. They will give you access to the API.</p>
+</section>
+<section id="rest-apis-http-requests" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="rest-apis-http-requests"><span class="header-section-number">6.5</span> REST APIs &amp; HTTP Requests</h2>
+<p>The HTTP protocol can be thought of as a general protocol of transferring information through the web.</p>
+<p>REST API’s function by sending a request, and the request is communicated via HTTP message. The HTTP message usually contains a JSON file.</p>
+<p>When you, the client, use a web page your browser sends an  <strong>HTTP request</strong> to the server where the page is hosted. The server tries to find the desired resource by default “index.html”. If your request is successful, the server will send the object to the client in an <strong>HTTP response</strong>; this includes information like the type of the resource, the length of the resource, and other information.</p>
+<p>A <strong>Uniform Resource Locator (URL)</strong> is the most popular way to find resources on the web.</p>
+<p>We can break the URL into three parts.</p>
+<ul>
+<li>The <strong>scheme</strong>, i.e.&nbsp;the protocol, for this lab it will always be <em>http://</em></li>
+<li>The <strong>Internet address</strong> or Base URL which is used to find the location. I.e. www.gitlab.com</li>
+<li>The <strong>route</strong>, the location on the webserver, i.e.&nbsp;/images/images.png</li>
+</ul>
+<p>Together this gives something like: http://www.gitlab.com//images/images.png</p>
+<section id="status-codes" class="level3" data-number="6.5.1">
+<h3 data-number="6.5.1" class="anchored" data-anchor-id="status-codes"><span class="header-section-number">6.5.1</span> Status codes</h3>
+<p>The prefix indicates the class; for example, the 100s are informational responses; 100 indicates that everything is OK so far. The 200s are Successful responses: For example, 200 The request has succeeded. Anything in the 400s is bad news. 401 means the request is unauthorized. 500’s stands for server errors, like 501 for not Implemented.</p>
+</section>
+<section id="requests" class="level3" data-number="6.5.2">
+<h3 data-number="6.5.2" class="anchored" data-anchor-id="requests"><span class="header-section-number">6.5.2</span> Requests</h3>
+<p>The process can be broken into the request and response process. The request using the get method is partially illustrated below. In the start line we have the GET method, this is an HTTP method. Also the location of the resource /index.html and the HTTP version. The Request header passes additional information with an HTTP request:</p>
+</section>
+<section id="http-methods" class="level3" data-number="6.5.3">
+<h3 data-number="6.5.3" class="anchored" data-anchor-id="http-methods"><span class="header-section-number">6.5.3</span> HTTP methods</h3>
+<p>When an HTTP request is made, an  HTTP method is sent. This tells the server what action to perform. A list of several HTTP methods is shown below:</p>
+<ul>
+<li>GET: Retrieve data from the server</li>
+<li>POST: submits data to the server</li>
+<li>PUT: Updates data already on the server</li>
+<li>DELETE: Deletes data from the server</li>
+</ul>
+</section>
+<section id="response" class="level3" data-number="6.5.4">
+<h3 data-number="6.5.4" class="anchored" data-anchor-id="response"><span class="header-section-number">6.5.4</span> Response</h3>
+<p>The response start line contains the version number HTTP/1.0, a status code (200) meaning success, followed by a descriptive phrase (OK). The response header contains useful information. Finally, we have the response body containing the requested file, an HTML document. It should be noted that some requests have headers.</p>
+</section>
+<section id="the-python-requests-library" class="level3" data-number="6.5.5">
+<h3 data-number="6.5.5" class="anchored" data-anchor-id="the-python-requests-library"><span class="header-section-number">6.5.5</span> The python requests library</h3>
+<section id="basics" class="level4" data-number="6.5.5.1">
+<h4 data-number="6.5.5.1" class="anchored" data-anchor-id="basics"><span class="header-section-number">6.5.5.1</span> Basics</h4>
+<p>The Requests Library a popular method for dealing with the HTTP protocol in Python. Requests is a python Library that allows you to send HTTP/1.1 requests easily.</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import the library </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#make a get request via the method get</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>url<span class="op">=</span><span class="st">"https://www.ibm.com/"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We have the response object ’r’ , this has information about the request, like the status of the request. We can view the status code using the attribute status_code, which is 200 for OK</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#view status of the request</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>r.status_code</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#view the request headers</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>r.request.headers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can view the request body in the following line. As there is no body for a GET request, we get a None or empty field.</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#view the request body</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>r.request.body</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check the encoding of the data</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>r.encoding</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#view the request header</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>header <span class="op">=</span> r.headers</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>header</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As shown above, we can view the HTTP response header using the attribute headers. This returns a python dictionary of HTTP response headers. We can look at the dictionary values. We can obtain the date the request was sent by using the key Date.</p>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#obtain the date a request was send</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(header[<span class="st">'date'</span>])</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#print the type of data obtained</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(header[<span class="st">'Content-Type'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As the Content-Type is text/html, we can use the attribute text to display the HTML in the body. We can review the first 100 characters.</p>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>r.text[<span class="dv">0</span>:<span class="dv">100</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can load other types of data for non-text requests, like images. Consider the URL of the following image:</p>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>url<span class="op">=</span><span class="st">'https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0101EN-SkillsNetwork/IDSNlogo.png'</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#make a request</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>r<span class="op">=</span>requests.get(url)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#look at the response header </span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r.headers)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#look at the content type</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r.headers[<span class="st">'Content-Type'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>An image is a response object that contains the image as a bytes-like object. As a result, we must save it using a file object. First, we specify the file path and name</p>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load some libraries</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">#specify the file path and name</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>path<span class="op">=</span>os.path.join(os.getcwd() <span class="op">+</span> <span class="st">'/data/image.png'</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>path</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We save the file, in order to access the body of the response we use the attribute content then save it using the open function and write method</p>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"/Users/ninadombrowski/Desktop/WorkingDir/Notebooks/IBM_Data_Science/4_Python_basics/data/image.png"</span>,<span class="st">'wb'</span>) <span class="im">as</span> f:</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    f.write(r.content)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#view image</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>Image.<span class="bu">open</span>(<span class="st">"/Users/ninadombrowski/Desktop/WorkingDir/Notebooks/IBM_Data_Science/4_Python_basics/data/image.png"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="get-request-with-url-parameters" class="level4" data-number="6.5.5.2">
+<h4 data-number="6.5.5.2" class="anchored" data-anchor-id="get-request-with-url-parameters"><span class="header-section-number">6.5.5.2</span> GET request with URL parameters</h4>
+<p>You can use the GET method to modify the results of your query. For example, retrieving data from an API.</p>
+<p>We send a GET request to the server. Like before, we have the Base URL in the Route and to this we append /get to indicate that we want to perform a get request: <em>http://httpbin.org/get</em></p>
+<p>After GET is requested we have the query string. This is a part of a uniform resource locator (URL) and this sends other information to the web server. The start of the query is a <em>?</em>, followed by a series of parameter and value pairs: <em>http://httpbin.org/get?Name=Joseph&amp;ID=123</em></p>
+<p>Here, Name and ID are parameters and Joseph and 123 the search value pair.</p>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#set the base url with appending get</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>url_get<span class="op">=</span><span class="st">"http://httpbin.org/get"</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#create a query string via a dictionary</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#the keys = parameter names</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">#the values = the value of the query string</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>payload<span class="op">=</span>{<span class="st">"name"</span>:<span class="st">"Joseph"</span>, <span class="st">"ID"</span>: <span class="st">"123"</span>}</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> requests.get(url_get, params <span class="op">=</span> payload)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#check response</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r.status_code)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">#check the url</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r.url)</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co">#view the response as text</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r.text)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co">#look at the content type</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r.headers[<span class="st">"Content-Type"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As the content ‘Content-Type’ is in the JSON, we format it using the method json() . It returns a Python dict: The key ‘args’ has the name and values for the  query string.</p>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>r.json()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="post-request" class="level4" data-number="6.5.5.3">
+<h4 data-number="6.5.5.3" class="anchored" data-anchor-id="post-request"><span class="header-section-number">6.5.5.3</span> POST request</h4>
+<p>Like a GET request a POST request is used to send data to a server, but the POST request sends the data in a request body, not the url.</p>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#prepare to send a post request</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#this endpoint will expect data </span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#and as such is an easy way to configure an http request to send data to a server</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>url_post <span class="op">=</span> <span class="st">"http://httpbin.org/post"</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">#define our dictionary</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>payload<span class="op">=</span>{<span class="st">"name"</span>:<span class="st">"Joseph"</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">"ID"</span>: <span class="st">"123"</span>}</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#make a post request</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>r_post <span class="op">=</span> requests.post(url_post, data <span class="op">=</span> payload)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#compare the requests</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Post request URL: "</span>, r_post.url)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Get request URL: "</span>, r.url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can compare the POST and GET request body, we see only the POST request has a body:</p>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"POST request body:"</span>,r_post.request.body)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"GET request body:"</span>,r.request.body)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We see the POST request has no name or value pairs in it’s url. We can compare the POST and GET request body. We see only the POST request has a body.</p>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#view the key form to get the payload</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>r_post.json()[<span class="st">"form"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="html-for-webscraping" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="html-for-webscraping"><span class="header-section-number">6.6</span> HTML for webscraping</h2>
+<p>Let’s say you were asked to find the name and salary of players in a National Basketball League from a web page.</p>
+<p align="left">
+<img width="300," height="400," src="../images/html_example.png">
+</p>
+<p>The web page is comprised of HTML that consists of text surrounded by a series of blue text elements enclosed in angle brackets called <strong>tags</strong>. The tags tells the browser how to display the content.</p>
+<p>The first portion contains the “DOCTYPE html” which declares this document is an HTML document.</p>
+
+<p> element is the root element of an HTML page</p>
+
+<p> element contains meta information about the HTML page.</p>
+<p>Next, we have the body, this is what’s displayed on the web page. This is usually the data we are interested in, we see the elements with an “h3”, this means type 3 heading, makes the text larger and bold. These tags have the names of the players, notice the data is enclosed in the elements.It starts with a h3 in brackets and ends in a slash h3 in brackets.</p>
+<p>There is also a different tag “p”, this means paragraph, each p tag contains a player’s salary.</p>
+<p>Each HTML document can actually be referred to as a document tree. The tag HTML tag contains the head and body tag. The Head and body tag are the descendants of the html tag. In particular they are the children of the HTML tag. HTML tag is their parent.The head and body tag are siblings as they are on the same level. Title tag is the child of the head tag and its parent is the head tag. The title tag is a descendant of the HTML tag but not its child.</p>
+</section>
+<section id="webscraping" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="webscraping"><span class="header-section-number">6.7</span> Webscraping</h2>
+<p>Webscraping is a process that can be used to automatically extract information from a website, and can easily be accomplished within a matter of minutes and not hours.</p>
+<p>To get started we just need a little Python code and the help of two modules named Requests and Beautiful Soup and the method find_all</p>
+<p>The requests method is used to download the webpage</p>
+<p>BeautifulSoup represents HTML as a set of Tree like objects with methods used to parse the HTML.</p>
+<p>Find_all is a filter, you can use filters to filter based on a tag’s name, it’s attributes, the text of a string, or on some combination of these.</p>
+<p>Let’s say we were asked to find the name and salary of players in a National Basketball League:</p>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import libs for the webscraping and downloading the web page</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Beautiful Soup is a Python library for pulling data out of HTML and XML files, we will focus on HTML files. This is accomplished by representing the HTML as a set of objects with methods used to parse the HTML. We can navigate the HTML as a tree and/or filter out what we are looking for.</p>
+<p>Consider the following HTML:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Page Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h3&gt;&lt;b id='boldest'&gt;Lebron James&lt;/b&gt;&lt;/h3&gt;
+&lt;p&gt; Salary: $ 92,000,000 &lt;/p&gt;
+&lt;h3&gt; Stephen Curry&lt;/h3&gt;
+&lt;p&gt; Salary: $85,000, 000 &lt;/p&gt;
+&lt;h3&gt; Kevin Durant &lt;/h3&gt;
+&lt;p&gt; Salary: $73,200, 000&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Renders to:</p>
+&lt;!DOCTYPE html&gt;
+
+
+<title>
+Page Title
+</title>
+
+
+<h3 class="anchored">
+<b id="boldest">Lebron James</b>
+</h3>
+<p>
+Salary: $ 92,000,000
+</p>
+<h3 class="anchored">
+Stephen Curry
+</h3>
+<p>
+Salary: $85,000, 000
+</p>
+<h3 class="anchored">
+Kevin Durant
+</h3>
+<p>
+Salary: $73,200, 000
+</p>
+
+
+<p>We can store this html as a string varialbe:</p>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>html<span class="op">=</span><span class="st">"&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;title&gt;Page Title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h3&gt;&lt;b id='boldest'&gt;Lebron James&lt;/b&gt;&lt;/h3&gt;&lt;p&gt; Salary: $ 92,000,000 &lt;/p&gt;&lt;h3&gt; Stephen Curry&lt;/h3&gt;&lt;p&gt; Salary: $85,000, 000 &lt;/p&gt;&lt;h3&gt; Kevin Durant &lt;/h3&gt;&lt;p&gt; Salary: $73,200, 000&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To parse a document, pass it into the BeautifulSoup constructor, the BeautifulSoup object, which represents the document as a nested data structure:</p>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(html, <span class="st">"html.parser"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>First, the document is converted to Unicode, (similar to ASCII), and HTML entities are converted to Unicode characters. Beautiful Soup transforms a complex HTML document into a complex tree of Python objects. The BeautifulSoup object can create other types of objects. In this lab, we will cover BeautifulSoup and Tag objects that for the purposes of this lab are identical, and NavigableString objects.</p>
+<p>We can use the method prettify() to display the HTML in the nested structure:</p>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(soup.prettify())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="tags" class="level3" data-number="6.7.1">
+<h3 data-number="6.7.1" class="anchored" data-anchor-id="tags"><span class="header-section-number">6.7.1</span> Tags</h3>
+<p>Let’s say we want the title of the page and the name of the top paid player we can use the Tag. The Tag object corresponds to an HTML tag in the original document, for example, the tag title.</p>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>tag_object <span class="op">=</span> soup.title</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"tag object:"</span>, tag_object)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can extract the tag type like this:</p>
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>tag_object <span class="op">=</span> soup.title</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"tag object type:"</span>, <span class="bu">type</span>(tag_object))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If there is more than one Tag with the same name, the first element with that Tag name is called, here, this corresponds to the most paid player:</p>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>tag_object<span class="op">=</span>soup.h3</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>tag_object</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="children-parents-and-sibilings" class="level3" data-number="6.7.2">
+<h3 data-number="6.7.2" class="anchored" data-anchor-id="children-parents-and-sibilings"><span class="header-section-number">6.7.2</span> Children, Parents and Sibilings</h3>
+<p>As stated above the Tag object is a tree of objects we can access the child of the tag or navigate down the branch as follows:</p>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>tag_child <span class="op">=</span>tag_object.b</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>tag_child</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can access the parent with the parent</p>
+<div class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>parent_tag <span class="op">=</span> tag_child.parent</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>parent_tag</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>tag_object parent is the body element.</p>
+<div class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>tag_object.parent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>tag_object sibling is the paragraph element</p>
+<div class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>sibling_1<span class="op">=</span>tag_object.next_sibling</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>sibling_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>sibling_2 is the header element which is also a sibling of both sibling_1 and tag_object</p>
+<div class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>sibling_2<span class="op">=</span>sibling_1.next_sibling</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>sibling_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="html-attributes" class="level3" data-number="6.7.3">
+<h3 data-number="6.7.3" class="anchored" data-anchor-id="html-attributes"><span class="header-section-number">6.7.3</span> HTML attributes</h3>
+<p>If the tag has attributes, the tag id=“boldest” has an attribute id whose value is boldest. You can access a tag’s attributes by treating the tag like a dictionary:</p>
+<div class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>tag_child[<span class="st">'id'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can access that dictionary directly as attrs:</p>
+<div class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>tag_child.attrs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can also work with Multi-valued attribute check out <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/?utm_medium=Exinfluencer&amp;utm_source=Exinfluencer&amp;utm_content=000026UJ&amp;utm_term=10006555&amp;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkPY0220ENSkillsNetwork23455606-2021-01-01">this page</a> for more.</p>
+<p>We can also obtain the content if the attribute of the tag using the Python get() method.</p>
+<div class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>tag_child.get(<span class="st">'id'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="navigable-string" class="level3" data-number="6.7.4">
+<h3 data-number="6.7.4" class="anchored" data-anchor-id="navigable-string"><span class="header-section-number">6.7.4</span> Navigable string</h3>
+<p>A string corresponds to a bit of text or content within a tag. Beautiful Soup uses the NavigableString class to contain this text. In our HTML we can obtain the name of the first player by extracting the sting of the Tag object tag_child as follows:</p>
+<div class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>tag_string <span class="op">=</span> tag_child.string</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>tag_string</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A NavigableString is just like a Python string or Unicode string, to be more precise. The main difference is that it also supports some BeautifulSoup features. We can covert it to sting object in Python:</p>
+<div class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>unicode_string <span class="op">=</span> <span class="bu">str</span>(tag_child.string)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>unicode_string</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="filter" class="level3" data-number="6.7.5">
+<h3 data-number="6.7.5" class="anchored" data-anchor-id="filter"><span class="header-section-number">6.7.5</span> Filter</h3>
+<p>Filters allow you to find complex patterns, the simplest filter is a string. In this section we will pass a string to a different filter method and Beautiful Soup will perform a match against that exact string. Consider the following HTML of rocket launchs:</p>
+<pre><code>&lt;table&gt;
+  &lt;tr&gt;
+    &lt;td id='flight' &gt;Flight No&lt;/td&gt;
+    &lt;td&gt;Launch site&lt;/td&gt; 
+    &lt;td&gt;Payload mass&lt;/td&gt;
+   &lt;/tr&gt;
+  &lt;tr&gt; 
+    &lt;td&gt;1&lt;/td&gt;
+    &lt;td&gt;&lt;a href='https://en.wikipedia.org/wiki/Florida'&gt;Florida&lt;/a&gt;&lt;/td&gt;
+    &lt;td&gt;300 kg&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;2&lt;/td&gt;
+    &lt;td&gt;&lt;a href='https://en.wikipedia.org/wiki/Texas'&gt;Texas&lt;/a&gt;&lt;/td&gt;
+    &lt;td&gt;94 kg&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;3&lt;/td&gt;
+    &lt;td&gt;&lt;a href='https://en.wikipedia.org/wiki/Florida'&gt;Florida&lt;a&gt; &lt;/td&gt;
+    &lt;td&gt;80 kg&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+
+<table>
+<tbody><tr>
+<td id="flight">
+Flight No
+</td>
+<td>
+Launch site
+</td>
+<td>
+Payload mass
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+<a href="https://en.wikipedia.org/wiki/Florida">Florida</a>
+</td>
+<td>
+300 kg
+</td>
+</tr>
+<tr>
+<td>
+2
+</td>
+<td>
+<a href="https://en.wikipedia.org/wiki/Texas">Texas</a>
+</td>
+<td>
+94 kg
+</td>
+</tr>
+<tr>
+<td>
+3
+</td>
+<td>
+<a href="https://en.wikipedia.org/wiki/Florida">Florida</a><a>
+</a></td>
+<td>
+80 kg
+</td>
+</tr>
+
+</tbody></table>
+<p>We can store it as a string in the variable table:</p>
+<div class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>table<span class="op">=</span><span class="st">"&lt;table&gt;&lt;tr&gt;&lt;td id='flight'&gt;Flight No&lt;/td&gt;&lt;td&gt;Launch site&lt;/td&gt; &lt;td&gt;Payload mass&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt; &lt;td&gt;1&lt;/td&gt;&lt;td&gt;&lt;a href='https://en.wikipedia.org/wiki/Florida'&gt;Florida&lt;a&gt;&lt;/td&gt;&lt;td&gt;300 kg&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;&lt;a href='https://en.wikipedia.org/wiki/Texas'&gt;Texas&lt;/a&gt;&lt;/td&gt;&lt;td&gt;94 kg&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;&lt;a href='https://en.wikipedia.org/wiki/Florida'&gt;Florida&lt;a&gt; &lt;/td&gt;&lt;td&gt;80 kg&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;"</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>table_bs <span class="op">=</span> BeautifulSoup(table, <span class="st">"html.parser"</span>)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>table_bs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="find_all" class="level4" data-number="6.7.5.1">
+<h4 data-number="6.7.5.1" class="anchored"><span class="header-section-number">6.7.5.1</span> Find_all</h4>
+<p>The find_all() method looks through a tag’s descendants and retrieves all descendants that match your filters.</p>
+<p>The Method signature for find_all(name, attrs, recursive, string, limit, **kwargs)</p>
+<section id="name" class="level5" data-number="6.7.5.1.1">
+<h5 data-number="6.7.5.1.1" class="anchored" data-anchor-id="name"><span class="header-section-number">6.7.5.1.1</span> Name</h5>
+<p>When we set the name parameter to a tag name, the method will extract all the tags with that name and its children.</p>
+<div class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>table_rows <span class="op">=</span> table_bs.find_all(<span class="st">'tr'</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>table_rows</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The result is a Python Iterable just like a list, each element is a tag object:</p>
+<div class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>first_row <span class="op">=</span>table_rows[<span class="dv">0</span>]</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>first_row</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>we can obtain the child with:</p>
+<div class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>first_row.td</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we iterate through the list, each element corresponds to a row in the table:</p>
+<div class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, row <span class="kw">in</span> <span class="bu">enumerate</span>(table_rows):</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"row"</span>, i, <span class="st">"is"</span>, row)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As row is a cell object, we can apply the method find_all to it and extract table cells in the object cells using the tag td, this is all the children with the name td. The result is a list, each element corresponds to a cell and is a Tag object, we can iterate through this list as well. We can extract the content using the string attribute.</p>
+<div class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, row <span class="kw">in</span> <span class="bu">enumerate</span>(table_rows):</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"row"</span>, i)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    cells <span class="op">=</span> row.find_all(<span class="st">'td'</span>)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, cell <span class="kw">in</span> <span class="bu">enumerate</span>(cells):</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"column"</span>, j, <span class="st">"cell"</span>, cell)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we use a list we can match against any item in that list.</p>
+<div class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>list_input<span class="op">=</span>table_bs .find_all(name<span class="op">=</span>[<span class="st">"tr"</span>, <span class="st">"td"</span>])</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>list_input</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="attributes" class="level5" data-number="6.7.5.1.2">
+<h5 data-number="6.7.5.1.2" class="anchored" data-anchor-id="attributes"><span class="header-section-number">6.7.5.1.2</span> Attributes</h5>
+<p>If the argument is not recognized it will be turned into a filter on the tag’s attributes. For example the id argument, Beautiful Soup will filter against each tag’s id attribute. For example, the first td elements have a value of id of flight, therefore we can filter based on that id value.</p>
+<div class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>table_bs.find_all(<span class="bu">id</span><span class="op">=</span><span class="st">"flight"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can find all the elements that have links to the Florida Wikipedia page:</p>
+<div class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>list_input<span class="op">=</span>table_bs.find_all(href<span class="op">=</span><span class="st">"https://en.wikipedia.org/wiki/Florida"</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>list_input</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we set the href attribute to True, regardless of what the value is, the code finds all tags with href value:</p>
+<div class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>table_bs.find_all(href<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There are other methods for dealing with attributes and other related methods; Check out the following <a href="href='https://www.crummy.com/software/BeautifulSoup/bs4/doc/?utm_medium=Exinfluencer&amp;utm_source=Exinfluencer&amp;utm_content=000026UJ&amp;utm_term=10006555&amp;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkPY0220ENSkillsNetwork23455606-2021-01-01#css-selectors">link</a></p>
+</section>
+<section id="strings" class="level5" data-number="6.7.5.1.3">
+<h5 data-number="6.7.5.1.3" class="anchored" data-anchor-id="strings"><span class="header-section-number">6.7.5.1.3</span> Strings</h5>
+<p>With string you can search for strings instead of tags, where we find all the elments with Florida:</p>
+<div class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>table_bs.find_all(string <span class="op">=</span> <span class="st">"Florida"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="find" class="level5" data-number="6.7.5.1.4">
+<h5 data-number="6.7.5.1.4" class="anchored"><span class="header-section-number">6.7.5.1.4</span> find</h5>
+<p>The find_all() method scans the entire document looking for results, it’s if you are looking for one element you can use the find() method to find the first element in the document. Consider the following two tables:</p>
+<h3 class="anchored" data-anchor-id="find">
+Rocket Launch
+</h3>
+<p>
+
+</p><table class="rocket">
+<tbody><tr>
+<td>
+Flight No
+</td>
+<td>
+Launch site
+</td>
+<td>
+Payload mass
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+Florida
+</td>
+<td>
+300 kg
+</td>
+</tr>
+<tr>
+<td>
+2
+</td>
+<td>
+Texas
+</td>
+<td>
+94 kg
+</td>
+</tr>
+<tr>
+<td>
+3
+</td>
+<td>
+Florida
+</td>
+<td>
+80 kg
+</td>
+</tr>
+
+</tbody></table>
+<p></p>
+<p>
+</p><h3 class="anchored">
+Pizza Party
+</h3>
+<p>
+
+</p><table class="pizza">
+<tbody><tr>
+<td>
+Pizza Place
+</td>
+<td>
+Orders
+</td>
+<td>
+Slices
+</td>
+</tr>
+<tr>
+<td>
+Domino’s Pizza
+</td>
+<td>
+10
+</td>
+<td>
+100
+</td>
+</tr>
+<tr>
+<td>
+Little Caesars
+</td>
+<td>
+12
+</td>
+<td>
+144
+</td>
+</tr>
+<tr>
+<td>
+Papa John’s
+</td>
+<td>
+15
+</td>
+<td>
+165
+</td>
+</tr>
+
+</tbody></table>
+<p></p>
+<p>
+</p><div class="cell" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>two_tables<span class="op">=</span><span class="st">"&lt;h3&gt;Rocket Launch &lt;/h3&gt;&lt;p&gt;&lt;table class='rocket'&gt;&lt;tr&gt;&lt;td&gt;Flight No&lt;/td&gt;&lt;td&gt;Launch site&lt;/td&gt; &lt;td&gt;Payload mass&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;Florida&lt;/td&gt;&lt;td&gt;300 kg&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;Texas&lt;/td&gt;&lt;td&gt;94 kg&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;Florida &lt;/td&gt;&lt;td&gt;80 kg&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/p&gt;&lt;p&gt;&lt;h3&gt;Pizza Party  &lt;/h3&gt;&lt;table class='pizza'&gt;&lt;tr&gt;&lt;td&gt;Pizza Place&lt;/td&gt;&lt;td&gt;Orders&lt;/td&gt; &lt;td&gt;Slices &lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Domino's Pizza&lt;/td&gt;&lt;td&gt;10&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Little Caesars&lt;/td&gt;&lt;td&gt;12&lt;/td&gt;&lt;td &gt;144 &lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Papa John's &lt;/td&gt;&lt;td&gt;15 &lt;/td&gt;&lt;td&gt;165&lt;/td&gt;&lt;/tr&gt;"</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>two_tables_bs<span class="op">=</span> BeautifulSoup(two_tables, <span class="st">'html.parser'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Access the first table with the tag name <code>table</code>:</p>
+<div class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>two_tables_bs.find(<span class="st">"table"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can filter on the class attribute to find the second table, but because class is a keyword in Python, we add an underscore.</p>
+<div class="cell" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>two_tables_bs.find(<span class="st">"table"</span>,class_<span class="op">=</span><span class="st">'pizza'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="downloading-and-scraping-from-a-web-paste" class="level3" data-number="6.7.6">
+<h3 data-number="6.7.6" class="anchored" data-anchor-id="downloading-and-scraping-from-a-web-paste"><span class="header-section-number">6.7.6</span> Downloading and scraping from a web paste</h3>
+<div class="cell" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co">#download the contents from a webpage</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"http://www.ibm.com"</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="co">#use get to download the contents of the webpage in text format and store in a variable called data:</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> requests.get(url).text</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a><span class="co">#create a beautiful soup object</span></span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(data,<span class="st">"html.parser"</span>)</span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a><span class="co">#scrape all links (in html anchor/link is represented by the tag &lt;a&gt;)</span></span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> link <span class="kw">in</span> soup.find_all(<span class="st">'a'</span>, href <span class="op">=</span> <span class="va">True</span>):</span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(link.get(<span class="st">'href'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can also Scrape all images Tags</p>
+<div class="cell" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> link <span class="kw">in</span> soup.find_all(<span class="st">'img'</span>):</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(link)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(link.get(<span class="st">'src'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="scrape-data-from-html-tables" class="level4" data-number="6.7.6.1">
+<h4 data-number="6.7.6.1" class="anchored" data-anchor-id="scrape-data-from-html-tables"><span class="header-section-number">6.7.6.1</span> Scrape data from html tables</h4>
+<div class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co">#The below url contains an html table with data about colors and color codes.</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DA0321EN-SkillsNetwork/labs/datasets/HTMLColorCodes.html"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Before proceeding to scrape a web site, you need to examine the contents, and the way data is organized on the website. Open the above url in your browser and check how many rows and columns (32 and 6) are there in the color table.</p>
+<div class="cell" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the contents of the webpage in text format and store in a variable called data</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>data  <span class="op">=</span> requests.get(url).text</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="co">#convert to a soup object</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(data,<span class="st">"html.parser"</span>)</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="co">#find a table in the html webpage via the table tag</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> soup.find(<span class="st">'table'</span>)</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a><span class="co">#get all rows from the table via the tr tag</span></span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> table.find_all(<span class="st">'tr'</span>):</span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">#get all columns for each row using the td tag</span></span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>    cols <span class="op">=</span> row.find_all(<span class="st">'td'</span>)</span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">#store the value in column3 as color name</span></span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a>    color_name <span class="op">=</span> cols[<span class="dv">2</span>].string</span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">#store the color code in column 4 as color_code</span></span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a>    color_code <span class="op">=</span> cols[<span class="dv">3</span>].string</span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="sc">{}</span><span class="st">---&gt;</span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(color_name, color_code))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get all rows from the table</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> table.find_all(<span class="st">'tr'</span>): <span class="co"># in html table row is represented by the tag &lt;tr&gt;</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get all columns in each row.</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>    cols <span class="op">=</span> row.find_all(<span class="st">'td'</span>) <span class="co"># in html a column is represented by the tag &lt;td&gt;</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>    color_name <span class="op">=</span> cols[<span class="dv">2</span>].string <span class="co"># store the value in column 3 as color_name</span></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>    color_code <span class="op">=</span> cols[<span class="dv">3</span>].string <span class="co"># store the value in column 4 as color_code</span></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="sc">{}</span><span class="st">---&gt;</span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(color_name,color_code))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="scrape-data-from-html-tables-into-a-dataframe-using-beautifulsoup-and-pandas" class="level4" data-number="6.7.6.2">
+<h4 data-number="6.7.6.2" class="anchored" data-anchor-id="scrape-data-from-html-tables-into-a-dataframe-using-beautifulsoup-and-pandas"><span class="header-section-number">6.7.6.2</span> Scrape data from HTML tables into a DataFrame using BeautifulSoup and Pandas</h4>
+<div class="cell" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="co">#The below url contains html tables with data about world population.</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://en.wikipedia.org/wiki/World_population"</span></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a><span class="co">#get the contents and convert</span></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> requests.get(url).text</span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(data, <span class="st">"html.parser"</span>)</span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a><span class="co">#find all html tables</span></span>
+<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>tables <span class="op">=</span> soup.find_all(<span class="st">'table'</span>)</span>
+<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a><span class="co">#see how many tables we got</span></span>
+<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(tables)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Assume that we are looking for the 10 most densly populated countries table, we can look through the tables list and find the right one we are look for based on the data in each table or we can search for the table name if it is in the table but this option might not always work.</p>
+<div class="cell" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index,table <span class="kw">in</span> <span class="bu">enumerate</span>(tables):</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="st">"10 most densely populated countries"</span> <span class="kw">in</span> <span class="bu">str</span>(table)):</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>        table_index <span class="op">=</span> index</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(table_index)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>See if you can locate the table name of the table, 10 most densly populated countries, below.</p>
+<div class="cell" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co">#print(tables[table_index].prettify())</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, we can extract data</p>
+<div class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>population_data <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>[<span class="st">"Rank"</span>, <span class="st">"Country"</span>, <span class="st">"Population"</span>, <span class="st">"Area"</span>, <span class="st">"Density"</span>])</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> tables[table_index].tbody.find_all(<span class="st">"tr"</span>):</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>    col <span class="op">=</span> row.find_all(<span class="st">"td"</span>)</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (col <span class="op">!=</span> []):</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>        rank <span class="op">=</span> col[<span class="dv">0</span>].text</span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>        country <span class="op">=</span> col[<span class="dv">1</span>].text</span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>        population <span class="op">=</span> col[<span class="dv">2</span>].text.strip()</span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>        area <span class="op">=</span> col[<span class="dv">3</span>].text.strip()</span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a>        density <span class="op">=</span> col[<span class="dv">4</span>].text.strip()</span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>        population_data <span class="op">=</span> population_data.append({<span class="st">"Rank"</span>:rank, <span class="st">"Country"</span>:country, <span class="st">"Population"</span>:population, <span class="st">"Area"</span>:area, <span class="st">"Density"</span>:density}, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a>population_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="scrape-data-from-html-tables-into-a-dataframe-using-beautifulsoup-and-read_html" class="level4" data-number="6.7.6.3">
+<h4 data-number="6.7.6.3" class="anchored" data-anchor-id="scrape-data-from-html-tables-into-a-dataframe-using-beautifulsoup-and-read_html"><span class="header-section-number">6.7.6.3</span> Scrape data from HTML tables into a DataFrame using BeautifulSoup and read_html</h4>
+<p>Using the same url, data, soup, and tables object as in the last section we can use the read_html function to create a DataFrame.</p>
+<p>Remember the table we need is located in tables[table_index]</p>
+<p>We can now use the pandas function read_html and give it the string version of the table as well as the flavor which is the parsing engine bs4.</p>
+<div class="cell" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co">#pd.read_html(str(tables[5]))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The function read_html always returns a list of DataFrames so we must pick the one we want out of the list.</p>
+<div class="cell" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>population_data_read_html <span class="op">=</span> pd.read_html(<span class="bu">str</span>(tables[<span class="dv">5</span>]), flavor<span class="op">=</span><span class="st">'bs4'</span>)[<span class="dv">0</span>]</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="co">#population_data_read_html</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="scrape-data-from-html-tables-into-a-dataframe-using-read_html" class="level4" data-number="6.7.6.4">
+<h4 data-number="6.7.6.4" class="anchored" data-anchor-id="scrape-data-from-html-tables-into-a-dataframe-using-read_html"><span class="header-section-number">6.7.6.4</span> Scrape data from HTML tables into a dataframe using read_html</h4>
+<p>We can also use the read_html function to directly get DataFrames from a url.</p>
+<div class="cell" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>dataframe_list <span class="op">=</span> pd.read_html(url)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="co">#check if we find the tables again</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(dataframe_list))</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a><span class="co">#get the data we need</span></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a><span class="co">#dataframe_list[5]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can also use the match parameter to select the specific table we want. If the table contains a string matching the text it will be read.</p>
+<div class="cell" data-execution_count="66">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_html(url, match<span class="op">=</span><span class="st">"10 most densely populated countries"</span>)[<span class="dv">0</span>]</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="co">#df</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="working-with-different-file-formats" class="level3" data-number="6.7.7">
+<h3 data-number="6.7.7" class="anchored" data-anchor-id="working-with-different-file-formats"><span class="header-section-number">6.7.7</span> Working with different file formats</h3>
+<p>Data engineering is one of the most critical and foundational skills in any data scientist’s toolkit.</p>
+<p>There are several steps in Data Engineering process.</p>
+<ol type="1">
+<li><p>Extract - Data extraction is getting data from multiple sources. Ex. Data extraction from a website using Web scraping or gathering information from the data that are stored in different formats(JSON, CSV, XLSX etc.).</p></li>
+<li><p>Transform - Tarnsforming the data means removing the data that we don’t need for further analysis and converting the data in the format that all the data from the multiple sources is in the same format.</p></li>
+<li><p>Load - Loading the data inside a data warehouse. Data warehouse essentially contains large volumes of data that are accessed to gather insights.</p></li>
+</ol>
+<p>A <strong>file format</strong> is a standard way in which information is encoded for storage in a file. First, the file format specifies whether the file is a binary or ASCII file. Second, it shows how the information is organized. For example, the comma-separated values (CSV) file format stores tabular data in plain text.</p>
+<p>To identify a file format, you can usually look at the file extension to get an idea. For example, a file saved with name “Data” in “CSV” format will appear as “Data.csv”. By noticing the “.csv” extension, we can clearly identify that it is a “CSV” file and the data is stored in a tabular format.</p>
+<section id="csv" class="level4" data-number="6.7.7.1">
+<h4 data-number="6.7.7.1" class="anchored" data-anchor-id="csv"><span class="header-section-number">6.7.7.1</span> csv</h4>
+<p>The Comma-separated values file format falls under a spreadsheet file format.</p>
+<p>In a spreadsheet file format, data is stored in cells. Each cell is organized in rows and columns. A column in the spreadsheet file can have different types. For example, a column can be of string type, a date type, or an integer type.</p>
+<p>Each line in CSV file represents an observation, or commonly called a record. Each record may contain one or more fields which are separated by a comma.</p>
+<p>We use pandas.read_csv() function to read the csv file. In the parentheses, we put the file path along with a quotation mark as an argument, so that pandas will read the file into a data frame from that address. The file path can be either a URL or your local file address.</p>
+<div class="cell" data-execution_count="67">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"../data/addresses.csv"</span>, header<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can also add column headers:</p>
+<div class="cell" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> [<span class="st">"FirstName"</span>, <span class="st">"LastName"</span>, <span class="st">"Location"</span>, <span class="st">"City"</span>, <span class="st">"State"</span>, <span class="st">"AreaCode"</span>]</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co">#df</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="pandas-transform-function" class="level4" data-number="6.7.7.2">
+<h4 data-number="6.7.7.2" class="anchored" data-anchor-id="pandas-transform-function"><span class="header-section-number">6.7.7.2</span> Pandas transform function</h4>
+<p>Python’s <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.transform.html?utm_medium=Exinfluencer&amp;utm_source=Exinfluencer&amp;utm_content=000026UJ&amp;utm_term=10006555&amp;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkPY0101ENSkillsNetwork19487395-2021-01-01">Transform function</a> returns a self-produced dataframe with transformed values after applying the function specified in its parameter.</p>
+<div class="cell" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create a test df</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.DataFrame(np.array([[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>], [<span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>]]), columns<span class="op">=</span>[<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'c'</span>])</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a><span class="co">#add 10 to each element in a dataframe</span></span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.transform(func <span class="op">=</span> <span class="kw">lambda</span> x : x <span class="op">+</span> <span class="dv">10</span>)</span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df)</span>
+<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a><span class="co">#to find the square root to each element of the dataframe</span></span>
+<span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> df.transform(func <span class="op">=</span> [<span class="st">"sqrt"</span>])</span>
+<span id="cb71-11"><a href="#cb71-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="json" class="level4" data-number="6.7.7.3">
+<h4 data-number="6.7.7.3" class="anchored" data-anchor-id="json"><span class="header-section-number">6.7.7.3</span> Json</h4>
+<p>JSON (JavaScript Object Notation) is a lightweight data-interchange format. It is easy for humans to read and write.</p>
+<p>JSON is built on two structures:</p>
+<ol type="1">
+<li>A collection of name/value pairs. In various languages, this is realized as an object, record, struct, dictionary, hash table, keyed list, or associative array.</li>
+<li>An ordered list of values. In most languages, this is realized as an array, vector, list, or sequence.</li>
+</ol>
+<p>JSON is a language-independent data format. It was derived from JavaScript, but many modern programming languages include code to generate and parse JSON-format data. It is a very common data format with a diverse range of applications.</p>
+<p>The text in JSON is done through quoted string which contains the values in key-value mappings within { }. It is similar to the dictionary in Python.</p>
+<section id="writing-json-to-a-file" class="level5" data-number="6.7.7.3.1">
+<h5 data-number="6.7.7.3.1" class="anchored" data-anchor-id="writing-json-to-a-file"><span class="header-section-number">6.7.7.3.1</span> Writing JSON to a file</h5>
+<p>This is usually called serialization. It is the process of converting an object into a special format which is suitable for transmitting over the network or storing in file or database.</p>
+<p>To handle the data flow in a file, the JSON library in Python uses the dump() or dumps() function to convert the Python objects into their respective JSON object. This makes it easy to write data to files.</p>
+<div class="cell" data-execution_count="70">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>person <span class="op">=</span> {</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'first_name'</span> : <span class="st">'Mark'</span>,</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'last_name'</span> : <span class="st">'abc'</span>,</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'age'</span> : <span class="dv">27</span>,</span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'address'</span>: {</span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"streetAddress"</span>: <span class="st">"21 2nd Street"</span>,</span>
+<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"city"</span>: <span class="st">"New York"</span>,</span>
+<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"state"</span>: <span class="st">"NY"</span>,</span>
+<span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"postalCode"</span>: <span class="st">"10021-3100"</span></span>
+<span id="cb72-12"><a href="#cb72-12" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb72-13"><a href="#cb72-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb72-14"><a href="#cb72-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-15"><a href="#cb72-15" aria-hidden="true" tabindex="-1"></a>person</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>json.dump()</strong> method can be used for writing to JSON file.</p>
+<p>Syntax: json.dump(dict, file_pointer)</p>
+<p>Parameters:</p>
+<ol type="1">
+<li>dictionary – name of the dictionary which should be converted to JSON object.</li>
+<li>file pointer – pointer of the file opened in write or append mode.</li>
+</ol>
+<div class="cell" data-execution_count="71">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'../data/person.json'</span>, <span class="st">'w'</span>) <span class="im">as</span> f:  <span class="co"># writing JSON object</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>    json.dump(person, f)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>json.dumps()</strong> that helps in converting a dictionary to a JSON object.</p>
+<p>It takes two parameters:</p>
+<ol type="1">
+<li>dictionary – name of the dictionary which should be converted to JSON object.</li>
+<li>indent – defines the number of units for indentation</li>
+</ol>
+<div class="cell" data-execution_count="72">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Serializing json  </span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>json_object <span class="op">=</span> json.dumps(person, indent <span class="op">=</span> <span class="dv">4</span>) </span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Writing to sample.json </span></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../data/sample.json"</span>, <span class="st">"w"</span>) <span class="im">as</span> outfile: </span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>    outfile.write(json_object) </span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(json_object)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="reading-json-to-a-file" class="level5" data-number="6.7.7.3.2">
+<h5 data-number="6.7.7.3.2" class="anchored" data-anchor-id="reading-json-to-a-file"><span class="header-section-number">6.7.7.3.2</span> Reading JSON to a file</h5>
+<p>This process is usually called Deserialization - it is the reverse of serialization. It converts the special format returned by the serialization back into a usable object.</p>
+<p>Using json.load() The JSON package has json.load() function that loads the json content from a json file into a dictionary.</p>
+<p>It takes one parameter:</p>
+<p>File pointer: A file pointer that points to a JSON file.</p>
+<div class="cell" data-execution_count="73">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co">#open a json file</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'../data/sample.json'</span>, <span class="st">'r'</span>) <span class="im">as</span> openfile:</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>    json_object <span class="op">=</span> json.load(openfile)</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(json_object) </span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(json_object)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="reading-xlsx-to-a-file" class="level4" data-number="6.7.7.4">
+<h4 data-number="6.7.7.4" class="anchored" data-anchor-id="reading-xlsx-to-a-file"><span class="header-section-number">6.7.7.4</span> Reading XLSX to a file</h4>
+<div class="cell" data-execution_count="74">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_excel(<span class="st">"../data/file_example_XLSX_10.xlsx"</span>, engine<span class="op">=</span><span class="st">'openpyxl'</span>)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="xml-format" class="level4" data-number="6.7.7.5">
+<h4 data-number="6.7.7.5" class="anchored" data-anchor-id="xml-format"><span class="header-section-number">6.7.7.5</span> XML format</h4>
+<p>XML is also known as Extensible Markup Language. As the name suggests, it is a markup language. It has certain rules for encoding data. XML file format is a human-readable and machine-readable file format.</p>
+<p>Pandas does not include any methods to read and write XML files. Here, we will take a look at how we can use other modules to read data from an XML file, and load it into a Pandas DataFrame.</p>
+<section id="writing-with-xml.etree.elementtree" class="level5" data-number="6.7.7.5.1">
+<h5 data-number="6.7.7.5.1" class="anchored" data-anchor-id="writing-with-xml.etree.elementtree"><span class="header-section-number">6.7.7.5.1</span> Writing with xml.etree.ElementTree</h5>
+<p>The xml.etree.ElementTree module comes built-in with Python. It provides functionality for parsing and creating XML documents. ElementTree represents the XML document as a tree. We can move across the document using nodes which are elements and sub-elements of the XML file.</p>
+<p>For more information please read the xml.etree.ElementTree documentation.</p>
+<div class="cell" data-execution_count="75">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xml.etree.ElementTree <span class="im">as</span> ET</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create the file structure</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>employee <span class="op">=</span> ET.Element(<span class="st">'employee'</span>)</span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>details <span class="op">=</span> ET.SubElement(employee, <span class="st">'details'</span>)</span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>first <span class="op">=</span> ET.SubElement(details, <span class="st">'firstname'</span>)</span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>second <span class="op">=</span> ET.SubElement(details, <span class="st">'lastname'</span>)</span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a>third <span class="op">=</span> ET.SubElement(details, <span class="st">'age'</span>)</span>
+<span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a>first.text <span class="op">=</span> <span class="st">'Shiv'</span></span>
+<span id="cb77-10"><a href="#cb77-10" aria-hidden="true" tabindex="-1"></a>second.text <span class="op">=</span> <span class="st">'Mishra'</span></span>
+<span id="cb77-11"><a href="#cb77-11" aria-hidden="true" tabindex="-1"></a>third.text <span class="op">=</span> <span class="st">'23'</span></span>
+<span id="cb77-12"><a href="#cb77-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-13"><a href="#cb77-13" aria-hidden="true" tabindex="-1"></a><span class="co"># create a new XML file with the results</span></span>
+<span id="cb77-14"><a href="#cb77-14" aria-hidden="true" tabindex="-1"></a>mydata1 <span class="op">=</span> ET.ElementTree(employee)</span>
+<span id="cb77-15"><a href="#cb77-15" aria-hidden="true" tabindex="-1"></a><span class="co"># myfile = open("items2.xml", "wb")</span></span>
+<span id="cb77-16"><a href="#cb77-16" aria-hidden="true" tabindex="-1"></a><span class="co"># myfile.write(mydata)</span></span>
+<span id="cb77-17"><a href="#cb77-17" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../data/new_sample.xml"</span>, <span class="st">"wb"</span>) <span class="im">as</span> files:</span>
+<span id="cb77-18"><a href="#cb77-18" aria-hidden="true" tabindex="-1"></a>    mydata1.write(files)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="reading-with-xml.etree.elementtree" class="level5" data-number="6.7.7.5.2">
+<h5 data-number="6.7.7.5.2" class="anchored" data-anchor-id="reading-with-xml.etree.elementtree"><span class="header-section-number">6.7.7.5.2</span> Reading with xml.etree.ElementTree¶</h5>
+<p>You would need to firstly parse an XML file and create a list of columns for data frame, then extract useful information from the XML file and add to a pandas data frame.</p>
+<p>Here is a sample code that you can use.:</p>
+<div class="cell" data-execution_count="76">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xml.etree.ElementTree <span class="im">as</span> etree</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>tree <span class="op">=</span> etree.parse(<span class="st">"../data/Sample-employee-XML-file.xml"</span>)</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>root <span class="op">=</span> tree.getroot()</span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>columns <span class="op">=</span> [<span class="st">"firstname"</span>, <span class="st">"lastname"</span>, <span class="st">"title"</span>, <span class="st">"division"</span>, <span class="st">"building"</span>,<span class="st">"room"</span>]</span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a>datatframe <span class="op">=</span> pd.DataFrame(columns <span class="op">=</span> columns)</span>
+<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> node <span class="kw">in</span> root: </span>
+<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a>    firstname <span class="op">=</span> node.find(<span class="st">"firstname"</span>).text</span>
+<span id="cb78-12"><a href="#cb78-12" aria-hidden="true" tabindex="-1"></a>    lastname <span class="op">=</span> node.find(<span class="st">"lastname"</span>).text </span>
+<span id="cb78-13"><a href="#cb78-13" aria-hidden="true" tabindex="-1"></a>    title <span class="op">=</span> node.find(<span class="st">"title"</span>).text </span>
+<span id="cb78-14"><a href="#cb78-14" aria-hidden="true" tabindex="-1"></a>    division <span class="op">=</span> node.find(<span class="st">"division"</span>).text </span>
+<span id="cb78-15"><a href="#cb78-15" aria-hidden="true" tabindex="-1"></a>    building <span class="op">=</span> node.find(<span class="st">"building"</span>).text</span>
+<span id="cb78-16"><a href="#cb78-16" aria-hidden="true" tabindex="-1"></a>    room <span class="op">=</span> node.find(<span class="st">"room"</span>).text</span>
+<span id="cb78-17"><a href="#cb78-17" aria-hidden="true" tabindex="-1"></a>    datatframe <span class="op">=</span> datatframe.append(pd.Series([firstname, lastname, title, division, building, room], index <span class="op">=</span> columns), ignore_index <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb78-18"><a href="#cb78-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-19"><a href="#cb78-19" aria-hidden="true" tabindex="-1"></a>datatframe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="reading-xml-file-using-pandas.read_xml-function" class="level5" data-number="6.7.7.5.3">
+<h5 data-number="6.7.7.5.3" class="anchored" data-anchor-id="reading-xml-file-using-pandas.read_xml-function"><span class="header-section-number">6.7.7.5.3</span> Reading xml file using pandas.read_xml function</h5>
+<p>We can also read the downloaded xml file using the read_xml function present in the pandas library which returns a Dataframe object.</p>
+<p>For more information read the pandas.read_xml documentation.</p>
+<div class="cell" data-execution_count="77">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Herein xpath we mention the set of xml nodes to be considered for migrating  to the dataframe which in this case is details node under employees.</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>df2<span class="op">=</span>pd.read_xml(<span class="st">"../data/Sample-employee-XML-file.xml"</span>) </span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>df2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="binary-file-format" class="level4" data-number="6.7.7.6">
+<h4 data-number="6.7.7.6" class="anchored" data-anchor-id="binary-file-format"><span class="header-section-number">6.7.7.6</span> Binary file format</h4>
+<p>“Binary” files are any files where the format isn’t made up of readable characters. It contain formatting information that only certain applications or processors can understand. While humans can read text files, binary files must be run on the appropriate software or processor before humans can read them.</p>
+<p>Binary files can range from image files like JPEGs or GIFs, audio files like MP3s or binary document formats like Word or PDF.</p>
+<p>Let’s see how to read an Image file.</p>
+<section id="reading-an-image-file" class="level5" data-number="6.7.7.6.1">
+<h5 data-number="6.7.7.6.1" class="anchored" data-anchor-id="reading-an-image-file"><span class="header-section-number">6.7.7.6.1</span> Reading an image file</h5>
+<p>Python supports very powerful tools when it comes to image processing. Let’s see how to process the images using the PIL library.</p>
+<p>PIL is the Python Imaging Library which provides the python interpreter with image editing capabilities.</p>
+<div class="cell" data-execution_count="78">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image </span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Read image </span></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">'../data/dog.jpg'</span>) </span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Output Images </span></span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>display(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+<section id="data-analysis" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="data-analysis"><span class="header-section-number">6.8</span> Data analysis</h2>
+<p>In this section, you will learn how to approach data acquisition in various ways and obtain necessary insights from a dataset. By the end of this lab, you will successfully load the data into Jupyter Notebook and gain some fundamental insights via the Pandas Library.</p>
+<p>In our case, the Diabetes Dataset is an online source and it is in CSV (comma separated value) format. Let’s use this dataset as an example to practice data reading.</p>
+<p>Context: This dataset is originally from the National Institute of Diabetes and Digestive and Kidney Diseases. The objective of the dataset is to diagnostically predict whether or not a patient has diabetes, based on certain diagnostic measurements included in the dataset. Several constraints were placed on the selection of these instances from a larger database. In particular, all patients here are females at least 21 years of age of Pima Indian heritage.</p>
+<p>Content: The datasets consists of several medical predictor variables and one target variable, Outcome. Predictor variables includes the number of pregnancies the patient has had, their BMI, insulin level, age, and so on.</p>
+<p>We have 768 rows and 9 columns. The first 8 columns represent the features and the last column represent the target/label.</p>
+<div class="cell" data-execution_count="79">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"../data/diabetes.csv"</span>)</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This method prints information about a DataFrame including the index dtype and columns, non-null values and memory usage</p>
+<div class="cell" data-execution_count="80">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>df.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Pandas describe() is used to view some basic statistical details like percentile, mean, standard deviation, etc. of a data frame or a series of numeric values. When this method is applied to a series of strings, it returns a different output</p>
+<div class="cell" data-execution_count="81">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="identifying-and-handling-missing-values" class="level3" data-number="6.8.1">
+<h3 data-number="6.8.1" class="anchored" data-anchor-id="identifying-and-handling-missing-values"><span class="header-section-number">6.8.1</span> Identifying and handling missing values</h3>
+<p>We use Python’s built-in functions to identify these missing values. There are two methods to detect missing data:</p>
+<p>.isnull()</p>
+<p>.notnull()</p>
+<p>The output is a boolean value indicating whether the value that is passed into the argument is in fact missing data. “True” stands for missing value, while “False” stands for not missing value.</p>
+<div class="cell" data-execution_count="82">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>missing_data <span class="op">=</span> df.isnull()</span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>missing_data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Count missing values in each column Using a for loop in Python, we can quickly figure out the number of missing values in each column. As mentioned above, “True” represents a missing value, “False” means the value is present in the dataset. In the body of the for loop the method “.value_counts()” counts the number of “True” values.</p>
+<div class="cell" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> column <span class="kw">in</span> missing_data.columns.values.tolist():</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(column)</span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(missing_data[column].value_counts())</span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As you can see above, there is no missing values in the dataset.</p>
+<p>Correct data format Check all data is in the correct format (int, float, text or other).</p>
+<p>In Pandas, we use</p>
+<p>.dtype() to check the data type</p>
+<p>.astype() to change the data type</p>
+<p>Numerical variables should have type ‘float’ or ‘int’.</p>
+<div class="cell" data-execution_count="84">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>df.dtypes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="data-vis" class="level3" data-number="6.8.2">
+<h3 data-number="6.8.2" class="anchored" data-anchor-id="data-vis"><span class="header-section-number">6.8.2</span> Data vis</h3>
+<p>Visualization is one of the best way to get insights from the dataset. Seaborn and Matplotlib are two of Python’s most powerful visualization libraries.</p>
+<div class="cell" data-execution_count="85">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import libraries</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="co">#define categories</span></span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>labels<span class="op">=</span> <span class="st">'Diabetic'</span>,<span class="st">'Not Diabetic'</span></span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>plt.pie(df[<span class="st">'Outcome'</span>].value_counts(),labels<span class="op">=</span>labels,autopct<span class="op">=</span><span class="st">'%0.02f</span><span class="sc">%%</span><span class="st">'</span>)</span>
+<span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb87-10"><a href="#cb87-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="86">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>df.dtypes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../code/Week4_Files_Pandas_Numpy.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Working with data in python</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

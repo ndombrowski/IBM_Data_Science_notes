@@ -1,0 +1,274 @@
+# Importing datasets
+
+Data analysis and, in essence,data science, helps us unlock the information and insights from raw data to answer our questions. So data analysis plays an important role by helping us to discover useful information from the data, answer questions, and even predict the future or the unknown.
+
+There are various formats for a dataset: .csv, .json, .xlsx etc. The dataset can be stored in different places, on your local machine or sometimes online.
+
+In our case, the Automobile Dataset is an online source, and it is in a CSV (comma separated value) format. Let's use this dataset as an example to practice data reading.
+
+Data source: https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data
+Data type: csv
+
+
+## Understanding the data
+
+The dataset used in this course is an open csv dataset by Jeffrey C. Schlemmer.
+
+**Symboling** =  the insurance risk level of a car. Cars are initially assigned a risk factor symbol associated with their price. Then, if an automobile is more risky, this symbol is adjusted by moving it up the scale. A value of plus three indicates that the auto is risky. Minus three, that is probably pretty safe.
+
+**Normalized-losses** =  the relative average loss payment per insured vehicle year. This value is normalized for all autos within a particular size classification, two door small, station wagons, sports specialty, etc., and represents the average loss per car per year. 
+
+**Price** =  our target value or label. This means price is the value that we want to predict from the dataset and the predictors should be all the other variables listed like symboling, normalized-losses, make, and so on.
+
+
+## Python packages for data science
+
+A Python library is a collection of functions and methods that allow you to perform lots of actions without writing any code. The libraries usually contain built in modules providing different functionalities which you can use directly.
+
+### Scientific computing libs
+
+- Pandas:  offers data structure and tools for effective data manipulation and analysis. It provides facts, access to structured data. The primary instrument of Pandas is the two dimensional table consisting of column and row labels, which are called a data frame.
+- Numpy: uses arrays for its inputs and outputs. It can be extended to objects for matrices and with minor coding changes, developers can perform fast array processing.
+- SciPy: ncludes functions for some advanced math problems as listed on this slide, as well as data visualization.
+
+
+### Data vis libs
+
+- Matplotlib: great for making graphs and plots. The graphs are also highly customizable. 
+- Seaborn: based on Matplotlib. It's very easy to generate various plots such as heat maps, time series and violin plots.
+
+
+### Algorithm libs
+
+- Scikit-learn: contains tools statistical modeling, including regression, classification, clustering, and so on. 
+- Statsmodels: a Python module that allows users to explore data, estimate statistical models and perform statistical tests. 
+
+
+
+## Importing an exporting data in python
+
+Process of loading and reading data into python from various resources.
+
+Important properties:
+
+- Format
+- File path
+
+
+### Importing a csv in pandas
+
+```{python}
+#import lib
+import pandas as pd
+import numpy as np
+
+#store url were we want to retrieve our data in a variable
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data"
+
+#read in the data
+df = pd.read_csv(url, header = None)
+
+#view first rows of the data
+df.head(n=4)
+```
+
+### Add Headers
+
+Take a look at our dataset. Pandas automatically set the header with an integer starting from 0.
+
+To better describe our data, we can introduce a header. This information is available at: https://archive.ics.uci.edu/ml/datasets/Automobile.
+
+Thus, we have to add headers manually.
+
+First, we create a list "headers" that include all column names in order. Then, we use dataframe.columns = headers to replace the headers with the list we created.
+
+```{python}
+# create headers list
+headers = ["symboling","normalized-losses","make","fuel-type","aspiration", "num-of-doors","body-style",
+         "drive-wheels","engine-location","wheel-base", "length","width","height","curb-weight","engine-type",
+         "num-of-cylinders", "engine-size","fuel-system","bore","stroke","compression-ratio","horsepower",
+         "peak-rpm","city-mpg","highway-mpg","price"]
+
+print("headers\n", headers)
+```
+
+```{python}
+#replace the headers in our df
+df.columns = headers
+df.head(10)
+```
+
+We need to use `replace` to replace the "?" symbol with NaN so the `dropna()` can remove the missing values.
+
+In `dropna()` we use the following arguments:
+
+- axis: Determine if rows or columns which contain missing values are removed.
+    - 0, or ‘index’ : Drop rows which contain missing values.
+    - 1, or ‘columns’ : Drop columns which contain missing value.
+    - default = 0
+- subset: Labels along other axis to consider, e.g. if you are dropping rows these would be a list of columns to include.
+
+```{python}
+#replace the ? symbol
+df1 = df.replace('?', np.NaN)
+
+#drop missing values in the price column
+df = df1.dropna(subset=['price'], axis = 0)
+df.head(10)
+```
+
+```{python}
+#find the name of the columns in the dataframe
+df.columns   
+```
+
+
+### Save the dataset
+
+Correspondingly, Pandas enables us to save the dataset to csv. By using the dataframe.to_csv() method, you can add the file path and name along with quotation marks in the brackets.
+
+For example, if you would save the dataframe df as automobile.csv to your local machine, you may use the syntax below, where index = False means the row names will not be written.
+
+```{python}
+df.to_csv("../data/automobile.csv", index=False)
+```
+
+We can also read and save other file formats. We can use similar functions like pd.read_csv() and df.to_csv() for other data formats. The functions are listed in the following table:
+
+<h3>Read/Save Other Data Formats</h3>
+
+| Data Formate |        Read       |            Save |
+| ------------ | :---------------: | --------------: |
+| csv          |  `pd.read_csv()`  |   `df.to_csv()` |
+| json         |  `pd.read_json()` |  `df.to_json()` |
+| excel        | `pd.read_excel()` | `df.to_excel()` |
+| hdf          |  `pd.read_hdf()`  |   `df.to_hdf()` |
+| sql          |  `pd.read_sql()`  |   `df.to_sql()` |
+| ...          |        ...        |             ... |
+
+
+## Basic data analysis 
+
+Pandas has several built-in methods that can be used to understand the datatype or features or to look at the distribution of data within the dataset. Using these methods, gives an overview of the dataset and also point out potential issues such as the wrong data type of features which may need to be resolved later on. 
+
+### Data types
+
+Data has a variety of types.
+The main types stored in Pandas dataframes are object, float, int, bool and datetime64. In order to better learn about each attribute, it is always good for us to know the data type of each column. 
+
+Why check data type:
+
+- Pandas automatically assigns types based on the encoding it detects from the original data table. For a number of reasons, this assignment may be incorrect. For example, it should be awkward if the car price column which we should expect to contain continuous numeric numbers, is assigned the data type of object. It would be more natural for it to have the float type.
+- Allows a data scientists to see which Python functions can be applied to a specific column. For example, some math functions can only be applied to numerical data.
+
+As shown below, it is clear to see that the data type of "symboling" and "curb-weight" are int64, "normalized-losses" is object, and "wheel-base" is float64, etc.
+
+```{python}
+#check the datatypes
+print(df.dtypes)
+```
+
+### Describe
+
+Now, we would like to check the statistical summary of each column to learn about the distribution of data in each column. The statistical metrics can tell the data scientist if there are mathematical issues that may exist such as extreme outliers and large deviations.
+
+The data scientists may have to address these issues later. To get the quick statistics, we use the describe method. It returns the number of terms in the column as count, average column value as mean, column standard deviation as std, the maximum minimum values, as well as the boundary of each of the quartiles. 
+
+By default, this method will provide various summary statistics, excluding NaN (Not a Number) values.
+
+```{python}
+#return a statistical summary of each column to learn about data distribution
+print(df.describe())
+```
+
+This shows the statistical summary of all numeric-typed (int, float) columns.
+For example, the attribute "symboling" has 205 counts, the mean value of this column is 0.83, the standard deviation is 1.25, the minimum value is -2, 25th percentile is 0, 50th percentile is 1, 75th percentile is 2, and the maximum value is 3.
+
+However, what if we would also like to check all the columns including those that are of type object?
+
+You can add an argument include = "all" inside the bracket. Let's try it again.
+
+We can also do this on all datatype using `include = 'all'`. 
+
+```{python}
+#return a statistical summary of each column to learn about data distribution
+print(df.describe(include = 'all'))
+```
+
+We see that for the object type columns, a different set of statistics is evaluated, like unique, top, and frequency. Unique is the number of distinct objects in the column. Top is most frequently occurring object, and freq is the number of times the top object appears in the column. 
+
+Some values in the table are shown here as NaN which stands for not a number. This is because that particular statistical metric cannot be calculated for that specific column data type.
+
+
+### Selecting columns
+
+You can select the columns of a dataframe by indicating the name of each column. For example, you can select the three columns as follows:
+
+```
+dataframe[[' column 1 ',column 2', 'column 3']]
+```
+
+Where "column" is the name of the column, you can apply the method ".describe()" to get the statistics of those columns as follows:
+
+```
+dataframe[[' column 1 ',column 2', 'column 3'] ].describe()
+```
+
+For example, lets use the describe method to the columns length and compression-ratio
+
+```{python}
+df[['length','compression-ratio']].describe()
+```
+
+
+### info
+
+The info method provides a concise summary of your DataFrame.
+
+This method prints information about a DataFrame including the index dtype and columns, non-null values and memory usage.
+
+```{python}
+print(df.info())
+```
+
+## Accessing databases with python
+
+The Python code connects to the database using API calls. An application programming interface is a set of functions that you can call to get access to some type of service.
+
+### SQL API
+
+The SQL API consists of library function calls as an application programming interface, API, for the DBMS. 
+
+To pass SQL statements to the DBMS, an application program calls functions in the API, and it calls other functions to retrieve query results and status information from the DBMS. 
+
+<p align="left">
+  <img width=300, height=200, src="../images/sql_api.png">
+</p>
+
+- The application program begins its database access with one or more API calls that connect the program to the DBMS. 
+- To send the SQL statement to the DBMS, the program builds the statement as a text string in a buffer and then makes an API call to pass the buffer contents to the DBMS. 
+- The application program makes API calls to check the status of its DBMS request and to handle errors. 
+- The application program ends its database access with an API call that disconnects it from the database. 
+
+
+### What is a DB-API
+
+DB-API is Python's standard API for accessing relational databases. It is a standard that allows you to write a single program that works with multiple kinds of relational databases instead of writing a separate program for each one. So, if you learn the DB-API functions, then you can apply that knowledge to use any database with Python.
+
+The two main concepts in the Python DB-API are: 
+
+- **connection objects** that you use to connect to a database and manage your transactions.
+- **Cursor objects** are used to run queries. You open a cursor object and then run queries. The cursor works similar to a cursor in a text processing system where you scroll down in your result set and get your data into the application. Cursors are used to scan through the results of a database. 
+
+The methods used with connection objects are:
+
+- The `cursor()` method returns a new cursor object using the connection. 
+- The `commit()` method is used to commit any pending transaction to the database. 
+- The `rollback()` method causes the database to roll back to the start of any pending transaction. 
+- The `close()` method is used to close a database connection.
+
+As an example: First, you import your database module by using the connect API from that module. To open a connection to the database, you use the connection function and pass in the parameters that is, the database name, username, and password. The connect function returns connection object. After this, you create a cursor object on the connection object. The cursor is used to run queries and fetch results. After running the queries using the cursor, we also use the cursor to fetch the results of the query. Finally, when the system is done running the queries, it frees all resources by closing the connection.
+
+<p align="left">
+  <img width=300, height=200, src="../images/db_api.png">
+</p>

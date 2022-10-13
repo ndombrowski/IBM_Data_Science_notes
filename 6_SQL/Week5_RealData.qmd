@@ -1,0 +1,157 @@
+# Working with real world data
+
+## Queries
+
+- many real world data files are avail. as csv files
+- The header row contains the names of the attributes
+- querying column names with mixed (upper and lower) cases.  The database parser assumes uppercase names by default, however lets assume we have Id as column name, then with `select ID from table` we would run into trouble. To deal with this we can use double quotes"
+
+```
+select "Id" from dogs
+```
+
+- querying column names with spaces and other characters. If in the csv the names have spaces, by default, spaces are mapped to underscores. Same is true for special characters, such as `(). Beware, this sometimes can results in two underscores.
+
+- Using quotes in jupyter notebooks. 
+  - Assign queries to variables, i.e. `selectQuery = 'select "Id" from dogs'` .
+  - In case the query contains single quotes, we need to use the backslash `\` to escape characters, i.e. `selectQuery = 'select * from dogs where "Name_of_Dog"= \'Huggy\' '`
+  - In case of very long queries we can use the backslash to split the query into mutliple lines:
+  
+  ```
+  %sql select "Id", "Name_of_Dog", \
+  from dogs \
+  where "Name_of_Dog"='Huggy'
+  ```
+
+  - If we use the %%sql in the first row of our cell, no backslash is needed, as it implies that the rest of the cell should be interpreted as sql magic
+
+  ```
+  %%sql 
+  select "Id", "Name_of_Dog", 
+  from dogs 
+  where "Name_of_Dog"='Huggy'
+  ```
+
+  - Restrict the number of rows retrieved
+  
+  ```
+  select * from data_table Limit 3
+  ```
+
+## Getting table and column details
+
+### Get a list of available tables
+
+- Getting a list of tables that are part in our databases and remind ourselves about the exact names. Database systems typically contain system or catalog tables, from where you can query the list of tables and get their properties. In DB2 this catalog is called syscat tables. In SQL Server, it's information_schema.tables, and in Oracle it's all_tables or user_tables
+
+Db2 (and getting all table properties):
+
+```
+select * from syscat.tables
+```
+
+Db2 (but filtered):
+
+```
+select tabschema,tabname,create_time * from syscat.tables
+where tabschema = 'ABC1234'
+```
+
+
+SQlite:
+
+```
+SELECT * FROM sqlite_master WHERE type='table'
+```
+
+or in SQlite interactive mode:
+
+```
+.tables
+```
+
+### Get a list of available columns in a table
+
+Using DB2:
+
+```
+select * from syscat.columns
+where tabname = 'Dogs'
+```
+
+Using DB2 and retrieving specific column properties:
+
+```
+select distinct(name), coltype, length from sysibm.syscolumns
+where tabname = 'Dogs'
+```
+
+
+Using SQLite:
+
+```
+pragma table_info(people);
+```
+
+Using SQLite (interactive):
+
+```
+.schema <table>
+```
+
+Using SQLite (jupyter):
+
+```
+cursor = conn.execute('select * from mytable')
+cursor.description
+```
+
+
+
+## Loading data
+
+When loading data ifrom a CSV file you need to ensure the data in the dataset maps to the correct datatype and format in the database. One area that can be particularly problematic is DATEs, TIMEs, and TIMESTAMPs because their formats can vary significantly.
+
+In case the database does not automatically recognize the datatype or format correctly, or the default setting does not match, you will need to manually correct it before loading otherwise you may see an error like the one below when you try to LOAD: The syntax of a datetime value is incorrect.
+
+In order to prevent such errors when loading data, in the Db2 console you can preview the datatype and format of the automatically identified values with the values in the datasets in the LOAD screen such as the one below. If there is an issue, it is usually identified with an Warning icon (red triangle with an exclamation mark) next to the datatype of the column (e.g. DATE column in the example below). To correct this, you may first need to click on the "Clock" icon next to the "Time and Date format" to see the formats, if they are not already visible.
+
+First check if there is a pre-defined format in the drop down list that matches the format the date/time/timestamp is in the source dataset. If not, type the correct format. Upon doing so, the Mismatch Warning (and exclamation sign) should disappear. In this example below we changed/overwrote the default Timestamp format of **YYYY-MM-DD HH:MM:SS **to MM/DD/YYYY HH:MM:SS TT to match the value of 08/28/2004 05:50:56 PM in the dataset.
+
+
+
+Final exercise:
+
+3. Write and execute queries
+
+Perform this step in the Jupyter notebook provided in the previous section. Carefully read and understand each problem. Compose and execute the appropriate SQL queries to answer each of the problems. Take a screenshot of each query and its results and save it as a jpg file..
+
+Problem 1: Find the total number of crimes recorded in the CRIME table.
+
+Problem 2: List community areas with per capita income less than 11000.
+
+Problem 3: List all case numbers for crimes involving minors?
+
+Problem 4: List all kidnapping crimes involving a child?(children are not considered minors for the purposes of crime analysis)
+
+Problem 5: What kind of crimes were recorded at schools?
+
+Problem 6: List the average safety score for all types of schools.
+
+Problem 7: List 5 community areas with highest % of households below poverty line.
+
+Problem 8: Which community area(number) is most crime prone?
+
+Problem 9: Use a sub-query to find the name of the community area with highest hardship index.
+
+Problem 10: Use a sub-query to determine the Community Area Name with most number of crimes?
+
+How to submit:
+
+A screenshot in JPEG format is required to be submitted for solution to each of the problems. The screenshot for each problem should clearly show the SQL query and results for the query. The screenshots will be uploaded in the following sections.
+
+
+
+
+
+

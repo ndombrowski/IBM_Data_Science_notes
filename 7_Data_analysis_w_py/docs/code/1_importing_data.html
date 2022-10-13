@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Data analysis with python - 2&nbsp; Importing datasets</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../code/2_preprocessing_of_data.html" rel="next">
+<link href="../index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Importing datasets</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../" class="sidebar-logo-link">
+      <img src="../images/tree_of_life.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Data analysis with python</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data analysis with Python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/1_importing_data.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Importing datasets</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/2_preprocessing_of_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pre-processing of data in python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/3_exploratory_data_analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exploratory data analysis (EDA) in python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/4_model_dev.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model Development in python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/5_model_eval_and_refinement.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Model Evaluation and Refinement</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#understanding-the-data" id="toc-understanding-the-data" class="nav-link active" data-scroll-target="#understanding-the-data"><span class="toc-section-number">2.1</span>  Understanding the data</a></li>
+  <li><a href="#python-packages-for-data-science" id="toc-python-packages-for-data-science" class="nav-link" data-scroll-target="#python-packages-for-data-science"><span class="toc-section-number">2.2</span>  Python packages for data science</a>
+  <ul class="collapse">
+  <li><a href="#scientific-computing-libs" id="toc-scientific-computing-libs" class="nav-link" data-scroll-target="#scientific-computing-libs"><span class="toc-section-number">2.2.1</span>  Scientific computing libs</a></li>
+  <li><a href="#data-vis-libs" id="toc-data-vis-libs" class="nav-link" data-scroll-target="#data-vis-libs"><span class="toc-section-number">2.2.2</span>  Data vis libs</a></li>
+  <li><a href="#algorithm-libs" id="toc-algorithm-libs" class="nav-link" data-scroll-target="#algorithm-libs"><span class="toc-section-number">2.2.3</span>  Algorithm libs</a></li>
+  </ul></li>
+  <li><a href="#importing-an-exporting-data-in-python" id="toc-importing-an-exporting-data-in-python" class="nav-link" data-scroll-target="#importing-an-exporting-data-in-python"><span class="toc-section-number">2.3</span>  Importing an exporting data in python</a>
+  <ul class="collapse">
+  <li><a href="#importing-a-csv-in-pandas" id="toc-importing-a-csv-in-pandas" class="nav-link" data-scroll-target="#importing-a-csv-in-pandas"><span class="toc-section-number">2.3.1</span>  Importing a csv in pandas</a></li>
+  <li><a href="#add-headers" id="toc-add-headers" class="nav-link" data-scroll-target="#add-headers"><span class="toc-section-number">2.3.2</span>  Add Headers</a></li>
+  <li><a href="#save-the-dataset" id="toc-save-the-dataset" class="nav-link" data-scroll-target="#save-the-dataset"><span class="toc-section-number">2.3.3</span>  Save the dataset</a></li>
+  </ul></li>
+  <li><a href="#basic-data-analysis" id="toc-basic-data-analysis" class="nav-link" data-scroll-target="#basic-data-analysis"><span class="toc-section-number">2.4</span>  Basic data analysis</a>
+  <ul class="collapse">
+  <li><a href="#data-types" id="toc-data-types" class="nav-link" data-scroll-target="#data-types"><span class="toc-section-number">2.4.1</span>  Data types</a></li>
+  <li><a href="#describe" id="toc-describe" class="nav-link" data-scroll-target="#describe"><span class="toc-section-number">2.4.2</span>  Describe</a></li>
+  <li><a href="#selecting-columns" id="toc-selecting-columns" class="nav-link" data-scroll-target="#selecting-columns"><span class="toc-section-number">2.4.3</span>  Selecting columns</a></li>
+  <li><a href="#info" id="toc-info" class="nav-link" data-scroll-target="#info"><span class="toc-section-number">2.4.4</span>  info</a></li>
+  </ul></li>
+  <li><a href="#accessing-databases-with-python" id="toc-accessing-databases-with-python" class="nav-link" data-scroll-target="#accessing-databases-with-python"><span class="toc-section-number">2.5</span>  Accessing databases with python</a>
+  <ul class="collapse">
+  <li><a href="#sql-api" id="toc-sql-api" class="nav-link" data-scroll-target="#sql-api"><span class="toc-section-number">2.5.1</span>  SQL API</a></li>
+  <li><a href="#what-is-a-db-api" id="toc-what-is-a-db-api" class="nav-link" data-scroll-target="#what-is-a-db-api"><span class="toc-section-number">2.5.2</span>  What is a DB-API</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Importing datasets</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>Data analysis and, in essence,data science, helps us unlock the information and insights from raw data to answer our questions. So data analysis plays an important role by helping us to discover useful information from the data, answer questions, and even predict the future or the unknown.</p>
+<p>There are various formats for a dataset: .csv, .json, .xlsx etc. The dataset can be stored in different places, on your local machine or sometimes online.</p>
+<p>In our case, the Automobile Dataset is an online source, and it is in a CSV (comma separated value) format. Let’s use this dataset as an example to practice data reading.</p>
+<p>Data source: https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data Data type: csv</p>
+<section id="understanding-the-data" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="understanding-the-data"><span class="header-section-number">2.1</span> Understanding the data</h2>
+<p>The dataset used in this course is an open csv dataset by Jeffrey C. Schlemmer.</p>
+<p><strong>Symboling</strong> = the insurance risk level of a car. Cars are initially assigned a risk factor symbol associated with their price. Then, if an automobile is more risky, this symbol is adjusted by moving it up the scale. A value of plus three indicates that the auto is risky. Minus three, that is probably pretty safe.</p>
+<p><strong>Normalized-losses</strong> = the relative average loss payment per insured vehicle year. This value is normalized for all autos within a particular size classification, two door small, station wagons, sports specialty, etc., and represents the average loss per car per year.</p>
+<p><strong>Price</strong> = our target value or label. This means price is the value that we want to predict from the dataset and the predictors should be all the other variables listed like symboling, normalized-losses, make, and so on.</p>
+</section>
+<section id="python-packages-for-data-science" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="python-packages-for-data-science"><span class="header-section-number">2.2</span> Python packages for data science</h2>
+<p>A Python library is a collection of functions and methods that allow you to perform lots of actions without writing any code. The libraries usually contain built in modules providing different functionalities which you can use directly.</p>
+<section id="scientific-computing-libs" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="scientific-computing-libs"><span class="header-section-number">2.2.1</span> Scientific computing libs</h3>
+<ul>
+<li>Pandas: offers data structure and tools for effective data manipulation and analysis. It provides facts, access to structured data. The primary instrument of Pandas is the two dimensional table consisting of column and row labels, which are called a data frame.</li>
+<li>Numpy: uses arrays for its inputs and outputs. It can be extended to objects for matrices and with minor coding changes, developers can perform fast array processing.</li>
+<li>SciPy: ncludes functions for some advanced math problems as listed on this slide, as well as data visualization.</li>
+</ul>
+</section>
+<section id="data-vis-libs" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="data-vis-libs"><span class="header-section-number">2.2.2</span> Data vis libs</h3>
+<ul>
+<li>Matplotlib: great for making graphs and plots. The graphs are also highly customizable.</li>
+<li>Seaborn: based on Matplotlib. It’s very easy to generate various plots such as heat maps, time series and violin plots.</li>
+</ul>
+</section>
+<section id="algorithm-libs" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="algorithm-libs"><span class="header-section-number">2.2.3</span> Algorithm libs</h3>
+<ul>
+<li>Scikit-learn: contains tools statistical modeling, including regression, classification, clustering, and so on.</li>
+<li>Statsmodels: a Python module that allows users to explore data, estimate statistical models and perform statistical tests.</li>
+</ul>
+</section>
+</section>
+<section id="importing-an-exporting-data-in-python" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="importing-an-exporting-data-in-python"><span class="header-section-number">2.3</span> Importing an exporting data in python</h2>
+<p>Process of loading and reading data into python from various resources.</p>
+<p>Important properties:</p>
+<ul>
+<li>Format</li>
+<li>File path</li>
+</ul>
+<section id="importing-a-csv-in-pandas" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="importing-a-csv-in-pandas"><span class="header-section-number">2.3.1</span> Importing a csv in pandas</h3>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import lib</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#store url were we want to retrieve our data in a variable</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#read in the data</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url, header <span class="op">=</span> <span class="va">None</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#view first rows of the data</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>df.head(n<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>...</th>
+      <th>16</th>
+      <th>17</th>
+      <th>18</th>
+      <th>19</th>
+      <th>20</th>
+      <th>21</th>
+      <th>22</th>
+      <th>23</th>
+      <th>24</th>
+      <th>25</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3</td>
+      <td>?</td>
+      <td>alfa-romero</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>two</td>
+      <td>convertible</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>88.6</td>
+      <td>...</td>
+      <td>130</td>
+      <td>mpfi</td>
+      <td>3.47</td>
+      <td>2.68</td>
+      <td>9.0</td>
+      <td>111</td>
+      <td>5000</td>
+      <td>21</td>
+      <td>27</td>
+      <td>13495</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3</td>
+      <td>?</td>
+      <td>alfa-romero</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>two</td>
+      <td>convertible</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>88.6</td>
+      <td>...</td>
+      <td>130</td>
+      <td>mpfi</td>
+      <td>3.47</td>
+      <td>2.68</td>
+      <td>9.0</td>
+      <td>111</td>
+      <td>5000</td>
+      <td>21</td>
+      <td>27</td>
+      <td>16500</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>?</td>
+      <td>alfa-romero</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>two</td>
+      <td>hatchback</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>94.5</td>
+      <td>...</td>
+      <td>152</td>
+      <td>mpfi</td>
+      <td>2.68</td>
+      <td>3.47</td>
+      <td>9.0</td>
+      <td>154</td>
+      <td>5000</td>
+      <td>19</td>
+      <td>26</td>
+      <td>16500</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>164</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>99.8</td>
+      <td>...</td>
+      <td>109</td>
+      <td>mpfi</td>
+      <td>3.19</td>
+      <td>3.40</td>
+      <td>10.0</td>
+      <td>102</td>
+      <td>5500</td>
+      <td>24</td>
+      <td>30</td>
+      <td>13950</td>
+    </tr>
+  </tbody>
+</table>
+<p>4 rows × 26 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="add-headers" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="add-headers"><span class="header-section-number">2.3.2</span> Add Headers</h3>
+<p>Take a look at our dataset. Pandas automatically set the header with an integer starting from 0.</p>
+<p>To better describe our data, we can introduce a header. This information is available at: https://archive.ics.uci.edu/ml/datasets/Automobile.</p>
+<p>Thus, we have to add headers manually.</p>
+<p>First, we create a list “headers” that include all column names in order. Then, we use dataframe.columns = headers to replace the headers with the list we created.</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create headers list</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> [<span class="st">"symboling"</span>,<span class="st">"normalized-losses"</span>,<span class="st">"make"</span>,<span class="st">"fuel-type"</span>,<span class="st">"aspiration"</span>, <span class="st">"num-of-doors"</span>,<span class="st">"body-style"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>         <span class="st">"drive-wheels"</span>,<span class="st">"engine-location"</span>,<span class="st">"wheel-base"</span>, <span class="st">"length"</span>,<span class="st">"width"</span>,<span class="st">"height"</span>,<span class="st">"curb-weight"</span>,<span class="st">"engine-type"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>         <span class="st">"num-of-cylinders"</span>, <span class="st">"engine-size"</span>,<span class="st">"fuel-system"</span>,<span class="st">"bore"</span>,<span class="st">"stroke"</span>,<span class="st">"compression-ratio"</span>,<span class="st">"horsepower"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>         <span class="st">"peak-rpm"</span>,<span class="st">"city-mpg"</span>,<span class="st">"highway-mpg"</span>,<span class="st">"price"</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"headers</span><span class="ch">\n</span><span class="st">"</span>, headers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>headers
+ ['symboling', 'normalized-losses', 'make', 'fuel-type', 'aspiration', 'num-of-doors', 'body-style', 'drive-wheels', 'engine-location', 'wheel-base', 'length', 'width', 'height', 'curb-weight', 'engine-type', 'num-of-cylinders', 'engine-size', 'fuel-system', 'bore', 'stroke', 'compression-ratio', 'horsepower', 'peak-rpm', 'city-mpg', 'highway-mpg', 'price']</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#replace the headers in our df</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> headers</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>symboling</th>
+      <th>normalized-losses</th>
+      <th>make</th>
+      <th>fuel-type</th>
+      <th>aspiration</th>
+      <th>num-of-doors</th>
+      <th>body-style</th>
+      <th>drive-wheels</th>
+      <th>engine-location</th>
+      <th>wheel-base</th>
+      <th>...</th>
+      <th>engine-size</th>
+      <th>fuel-system</th>
+      <th>bore</th>
+      <th>stroke</th>
+      <th>compression-ratio</th>
+      <th>horsepower</th>
+      <th>peak-rpm</th>
+      <th>city-mpg</th>
+      <th>highway-mpg</th>
+      <th>price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3</td>
+      <td>?</td>
+      <td>alfa-romero</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>two</td>
+      <td>convertible</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>88.6</td>
+      <td>...</td>
+      <td>130</td>
+      <td>mpfi</td>
+      <td>3.47</td>
+      <td>2.68</td>
+      <td>9.0</td>
+      <td>111</td>
+      <td>5000</td>
+      <td>21</td>
+      <td>27</td>
+      <td>13495</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3</td>
+      <td>?</td>
+      <td>alfa-romero</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>two</td>
+      <td>convertible</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>88.6</td>
+      <td>...</td>
+      <td>130</td>
+      <td>mpfi</td>
+      <td>3.47</td>
+      <td>2.68</td>
+      <td>9.0</td>
+      <td>111</td>
+      <td>5000</td>
+      <td>21</td>
+      <td>27</td>
+      <td>16500</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>?</td>
+      <td>alfa-romero</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>two</td>
+      <td>hatchback</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>94.5</td>
+      <td>...</td>
+      <td>152</td>
+      <td>mpfi</td>
+      <td>2.68</td>
+      <td>3.47</td>
+      <td>9.0</td>
+      <td>154</td>
+      <td>5000</td>
+      <td>19</td>
+      <td>26</td>
+      <td>16500</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>164</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>99.8</td>
+      <td>...</td>
+      <td>109</td>
+      <td>mpfi</td>
+      <td>3.19</td>
+      <td>3.40</td>
+      <td>10.0</td>
+      <td>102</td>
+      <td>5500</td>
+      <td>24</td>
+      <td>30</td>
+      <td>13950</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>164</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>4wd</td>
+      <td>front</td>
+      <td>99.4</td>
+      <td>...</td>
+      <td>136</td>
+      <td>mpfi</td>
+      <td>3.19</td>
+      <td>3.40</td>
+      <td>8.0</td>
+      <td>115</td>
+      <td>5500</td>
+      <td>18</td>
+      <td>22</td>
+      <td>17450</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2</td>
+      <td>?</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>two</td>
+      <td>sedan</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>99.8</td>
+      <td>...</td>
+      <td>136</td>
+      <td>mpfi</td>
+      <td>3.19</td>
+      <td>3.40</td>
+      <td>8.5</td>
+      <td>110</td>
+      <td>5500</td>
+      <td>19</td>
+      <td>25</td>
+      <td>15250</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1</td>
+      <td>158</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>105.8</td>
+      <td>...</td>
+      <td>136</td>
+      <td>mpfi</td>
+      <td>3.19</td>
+      <td>3.40</td>
+      <td>8.5</td>
+      <td>110</td>
+      <td>5500</td>
+      <td>19</td>
+      <td>25</td>
+      <td>17710</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1</td>
+      <td>?</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>four</td>
+      <td>wagon</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>105.8</td>
+      <td>...</td>
+      <td>136</td>
+      <td>mpfi</td>
+      <td>3.19</td>
+      <td>3.40</td>
+      <td>8.5</td>
+      <td>110</td>
+      <td>5500</td>
+      <td>19</td>
+      <td>25</td>
+      <td>18920</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1</td>
+      <td>158</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>turbo</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>105.8</td>
+      <td>...</td>
+      <td>131</td>
+      <td>mpfi</td>
+      <td>3.13</td>
+      <td>3.40</td>
+      <td>8.3</td>
+      <td>140</td>
+      <td>5500</td>
+      <td>17</td>
+      <td>20</td>
+      <td>23875</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0</td>
+      <td>?</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>turbo</td>
+      <td>two</td>
+      <td>hatchback</td>
+      <td>4wd</td>
+      <td>front</td>
+      <td>99.5</td>
+      <td>...</td>
+      <td>131</td>
+      <td>mpfi</td>
+      <td>3.13</td>
+      <td>3.40</td>
+      <td>7.0</td>
+      <td>160</td>
+      <td>5500</td>
+      <td>16</td>
+      <td>22</td>
+      <td>?</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 26 columns</p>
+</div>
+</div>
+</div>
+<p>We need to use <code>replace</code> to replace the “?” symbol with NaN so the <code>dropna()</code> can remove the missing values.</p>
+<p>In <code>dropna()</code> we use the following arguments:</p>
+<ul>
+<li>axis: Determine if rows or columns which contain missing values are removed.
+<ul>
+<li>0, or ‘index’ : Drop rows which contain missing values.</li>
+<li>1, or ‘columns’ : Drop columns which contain missing value.</li>
+<li>default = 0</li>
+</ul></li>
+<li>subset: Labels along other axis to consider, e.g.&nbsp;if you are dropping rows these would be a list of columns to include.</li>
+</ul>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#replace the ? symbol</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> df.replace(<span class="st">'?'</span>, np.NaN)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#drop missing values in the price column</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df1.dropna(subset<span class="op">=</span>[<span class="st">'price'</span>], axis <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>symboling</th>
+      <th>normalized-losses</th>
+      <th>make</th>
+      <th>fuel-type</th>
+      <th>aspiration</th>
+      <th>num-of-doors</th>
+      <th>body-style</th>
+      <th>drive-wheels</th>
+      <th>engine-location</th>
+      <th>wheel-base</th>
+      <th>...</th>
+      <th>engine-size</th>
+      <th>fuel-system</th>
+      <th>bore</th>
+      <th>stroke</th>
+      <th>compression-ratio</th>
+      <th>horsepower</th>
+      <th>peak-rpm</th>
+      <th>city-mpg</th>
+      <th>highway-mpg</th>
+      <th>price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3</td>
+      <td>NaN</td>
+      <td>alfa-romero</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>two</td>
+      <td>convertible</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>88.6</td>
+      <td>...</td>
+      <td>130</td>
+      <td>mpfi</td>
+      <td>3.47</td>
+      <td>2.68</td>
+      <td>9.0</td>
+      <td>111</td>
+      <td>5000</td>
+      <td>21</td>
+      <td>27</td>
+      <td>13495</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3</td>
+      <td>NaN</td>
+      <td>alfa-romero</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>two</td>
+      <td>convertible</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>88.6</td>
+      <td>...</td>
+      <td>130</td>
+      <td>mpfi</td>
+      <td>3.47</td>
+      <td>2.68</td>
+      <td>9.0</td>
+      <td>111</td>
+      <td>5000</td>
+      <td>21</td>
+      <td>27</td>
+      <td>16500</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>NaN</td>
+      <td>alfa-romero</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>two</td>
+      <td>hatchback</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>94.5</td>
+      <td>...</td>
+      <td>152</td>
+      <td>mpfi</td>
+      <td>2.68</td>
+      <td>3.47</td>
+      <td>9.0</td>
+      <td>154</td>
+      <td>5000</td>
+      <td>19</td>
+      <td>26</td>
+      <td>16500</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>164</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>99.8</td>
+      <td>...</td>
+      <td>109</td>
+      <td>mpfi</td>
+      <td>3.19</td>
+      <td>3.40</td>
+      <td>10.0</td>
+      <td>102</td>
+      <td>5500</td>
+      <td>24</td>
+      <td>30</td>
+      <td>13950</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>164</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>4wd</td>
+      <td>front</td>
+      <td>99.4</td>
+      <td>...</td>
+      <td>136</td>
+      <td>mpfi</td>
+      <td>3.19</td>
+      <td>3.40</td>
+      <td>8.0</td>
+      <td>115</td>
+      <td>5500</td>
+      <td>18</td>
+      <td>22</td>
+      <td>17450</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2</td>
+      <td>NaN</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>two</td>
+      <td>sedan</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>99.8</td>
+      <td>...</td>
+      <td>136</td>
+      <td>mpfi</td>
+      <td>3.19</td>
+      <td>3.40</td>
+      <td>8.5</td>
+      <td>110</td>
+      <td>5500</td>
+      <td>19</td>
+      <td>25</td>
+      <td>15250</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1</td>
+      <td>158</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>105.8</td>
+      <td>...</td>
+      <td>136</td>
+      <td>mpfi</td>
+      <td>3.19</td>
+      <td>3.40</td>
+      <td>8.5</td>
+      <td>110</td>
+      <td>5500</td>
+      <td>19</td>
+      <td>25</td>
+      <td>17710</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1</td>
+      <td>NaN</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>four</td>
+      <td>wagon</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>105.8</td>
+      <td>...</td>
+      <td>136</td>
+      <td>mpfi</td>
+      <td>3.19</td>
+      <td>3.40</td>
+      <td>8.5</td>
+      <td>110</td>
+      <td>5500</td>
+      <td>19</td>
+      <td>25</td>
+      <td>18920</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1</td>
+      <td>158</td>
+      <td>audi</td>
+      <td>gas</td>
+      <td>turbo</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>105.8</td>
+      <td>...</td>
+      <td>131</td>
+      <td>mpfi</td>
+      <td>3.13</td>
+      <td>3.40</td>
+      <td>8.3</td>
+      <td>140</td>
+      <td>5500</td>
+      <td>17</td>
+      <td>20</td>
+      <td>23875</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2</td>
+      <td>192</td>
+      <td>bmw</td>
+      <td>gas</td>
+      <td>std</td>
+      <td>two</td>
+      <td>sedan</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>101.2</td>
+      <td>...</td>
+      <td>108</td>
+      <td>mpfi</td>
+      <td>3.50</td>
+      <td>2.80</td>
+      <td>8.8</td>
+      <td>101</td>
+      <td>5800</td>
+      <td>23</td>
+      <td>29</td>
+      <td>16430</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 26 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#find the name of the columns in the dataframe</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df.columns   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>Index(['symboling', 'normalized-losses', 'make', 'fuel-type', 'aspiration',
+       'num-of-doors', 'body-style', 'drive-wheels', 'engine-location',
+       'wheel-base', 'length', 'width', 'height', 'curb-weight', 'engine-type',
+       'num-of-cylinders', 'engine-size', 'fuel-system', 'bore', 'stroke',
+       'compression-ratio', 'horsepower', 'peak-rpm', 'city-mpg',
+       'highway-mpg', 'price'],
+      dtype='object')</code></pre>
+</div>
+</div>
+</section>
+<section id="save-the-dataset" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="save-the-dataset"><span class="header-section-number">2.3.3</span> Save the dataset</h3>
+<p>Correspondingly, Pandas enables us to save the dataset to csv. By using the dataframe.to_csv() method, you can add the file path and name along with quotation marks in the brackets.</p>
+<p>For example, if you would save the dataframe df as automobile.csv to your local machine, you may use the syntax below, where index = False means the row names will not be written.</p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"../data/automobile.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can also read and save other file formats. We can use similar functions like pd.read_csv() and df.to_csv() for other data formats. The functions are listed in the following table:</p>
+<h3 class="anchored">
+Read/Save Other Data Formats
+</h3>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Data Formate</th>
+<th style="text-align: center;">Read</th>
+<th style="text-align: right;">Save</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>csv</td>
+<td style="text-align: center;"><code>pd.read_csv()</code></td>
+<td style="text-align: right;"><code>df.to_csv()</code></td>
+</tr>
+<tr class="even">
+<td>json</td>
+<td style="text-align: center;"><code>pd.read_json()</code></td>
+<td style="text-align: right;"><code>df.to_json()</code></td>
+</tr>
+<tr class="odd">
+<td>excel</td>
+<td style="text-align: center;"><code>pd.read_excel()</code></td>
+<td style="text-align: right;"><code>df.to_excel()</code></td>
+</tr>
+<tr class="even">
+<td>hdf</td>
+<td style="text-align: center;"><code>pd.read_hdf()</code></td>
+<td style="text-align: right;"><code>df.to_hdf()</code></td>
+</tr>
+<tr class="odd">
+<td>sql</td>
+<td style="text-align: center;"><code>pd.read_sql()</code></td>
+<td style="text-align: right;"><code>df.to_sql()</code></td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td style="text-align: center;">…</td>
+<td style="text-align: right;">…</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="basic-data-analysis" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="basic-data-analysis"><span class="header-section-number">2.4</span> Basic data analysis</h2>
+<p>Pandas has several built-in methods that can be used to understand the datatype or features or to look at the distribution of data within the dataset. Using these methods, gives an overview of the dataset and also point out potential issues such as the wrong data type of features which may need to be resolved later on.</p>
+<section id="data-types" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="data-types"><span class="header-section-number">2.4.1</span> Data types</h3>
+<p>Data has a variety of types. The main types stored in Pandas dataframes are object, float, int, bool and datetime64. In order to better learn about each attribute, it is always good for us to know the data type of each column.</p>
+<p>Why check data type:</p>
+<ul>
+<li>Pandas automatically assigns types based on the encoding it detects from the original data table. For a number of reasons, this assignment may be incorrect. For example, it should be awkward if the car price column which we should expect to contain continuous numeric numbers, is assigned the data type of object. It would be more natural for it to have the float type.</li>
+<li>Allows a data scientists to see which Python functions can be applied to a specific column. For example, some math functions can only be applied to numerical data.</li>
+</ul>
+<p>As shown below, it is clear to see that the data type of “symboling” and “curb-weight” are int64, “normalized-losses” is object, and “wheel-base” is float64, etc.</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check the datatypes</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.dtypes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>symboling              int64
+normalized-losses     object
+make                  object
+fuel-type             object
+aspiration            object
+num-of-doors          object
+body-style            object
+drive-wheels          object
+engine-location       object
+wheel-base           float64
+length               float64
+width                float64
+height               float64
+curb-weight            int64
+engine-type           object
+num-of-cylinders      object
+engine-size            int64
+fuel-system           object
+bore                  object
+stroke                object
+compression-ratio    float64
+horsepower            object
+peak-rpm              object
+city-mpg               int64
+highway-mpg            int64
+price                 object
+dtype: object</code></pre>
+</div>
+</div>
+</section>
+<section id="describe" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="describe"><span class="header-section-number">2.4.2</span> Describe</h3>
+<p>Now, we would like to check the statistical summary of each column to learn about the distribution of data in each column. The statistical metrics can tell the data scientist if there are mathematical issues that may exist such as extreme outliers and large deviations.</p>
+<p>The data scientists may have to address these issues later. To get the quick statistics, we use the describe method. It returns the number of terms in the column as count, average column value as mean, column standard deviation as std, the maximum minimum values, as well as the boundary of each of the quartiles.</p>
+<p>By default, this method will provide various summary statistics, excluding NaN (Not a Number) values.</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#return a statistical summary of each column to learn about data distribution</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.describe())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        symboling  wheel-base      length       width      height  \
+count  201.000000  201.000000  201.000000  201.000000  201.000000   
+mean     0.840796   98.797015  174.200995   65.889055   53.766667   
+std      1.254802    6.066366   12.322175    2.101471    2.447822   
+min     -2.000000   86.600000  141.100000   60.300000   47.800000   
+25%      0.000000   94.500000  166.800000   64.100000   52.000000   
+50%      1.000000   97.000000  173.200000   65.500000   54.100000   
+75%      2.000000  102.400000  183.500000   66.600000   55.500000   
+max      3.000000  120.900000  208.100000   72.000000   59.800000   
+
+       curb-weight  engine-size  compression-ratio    city-mpg  highway-mpg  
+count   201.000000   201.000000         201.000000  201.000000   201.000000  
+mean   2555.666667   126.875622          10.164279   25.179104    30.686567  
+std     517.296727    41.546834           4.004965    6.423220     6.815150  
+min    1488.000000    61.000000           7.000000   13.000000    16.000000  
+25%    2169.000000    98.000000           8.600000   19.000000    25.000000  
+50%    2414.000000   120.000000           9.000000   24.000000    30.000000  
+75%    2926.000000   141.000000           9.400000   30.000000    34.000000  
+max    4066.000000   326.000000          23.000000   49.000000    54.000000  </code></pre>
+</div>
+</div>
+<p>This shows the statistical summary of all numeric-typed (int, float) columns. For example, the attribute “symboling” has 205 counts, the mean value of this column is 0.83, the standard deviation is 1.25, the minimum value is -2, 25th percentile is 0, 50th percentile is 1, 75th percentile is 2, and the maximum value is 3.</p>
+<p>However, what if we would also like to check all the columns including those that are of type object?</p>
+<p>You can add an argument include = “all” inside the bracket. Let’s try it again.</p>
+<p>We can also do this on all datatype using <code>include = 'all'</code>.</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#return a statistical summary of each column to learn about data distribution</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.describe(include <span class="op">=</span> <span class="st">'all'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         symboling normalized-losses    make fuel-type aspiration  \
+count   201.000000               164     201       201        201   
+unique         NaN                51      22         2          2   
+top            NaN               161  toyota       gas        std   
+freq           NaN                11      32       181        165   
+mean      0.840796               NaN     NaN       NaN        NaN   
+std       1.254802               NaN     NaN       NaN        NaN   
+min      -2.000000               NaN     NaN       NaN        NaN   
+25%       0.000000               NaN     NaN       NaN        NaN   
+50%       1.000000               NaN     NaN       NaN        NaN   
+75%       2.000000               NaN     NaN       NaN        NaN   
+max       3.000000               NaN     NaN       NaN        NaN   
+
+       num-of-doors body-style drive-wheels engine-location  wheel-base  ...  \
+count           199        201          201             201  201.000000  ...   
+unique            2          5            3               2         NaN  ...   
+top            four      sedan          fwd           front         NaN  ...   
+freq            113         94          118             198         NaN  ...   
+mean            NaN        NaN          NaN             NaN   98.797015  ...   
+std             NaN        NaN          NaN             NaN    6.066366  ...   
+min             NaN        NaN          NaN             NaN   86.600000  ...   
+25%             NaN        NaN          NaN             NaN   94.500000  ...   
+50%             NaN        NaN          NaN             NaN   97.000000  ...   
+75%             NaN        NaN          NaN             NaN  102.400000  ...   
+max             NaN        NaN          NaN             NaN  120.900000  ...   
+
+        engine-size  fuel-system  bore  stroke compression-ratio horsepower  \
+count    201.000000          201   197     197        201.000000        199   
+unique          NaN            8    38      36               NaN         58   
+top             NaN         mpfi  3.62    3.40               NaN         68   
+freq            NaN           92    23      19               NaN         19   
+mean     126.875622          NaN   NaN     NaN         10.164279        NaN   
+std       41.546834          NaN   NaN     NaN          4.004965        NaN   
+min       61.000000          NaN   NaN     NaN          7.000000        NaN   
+25%       98.000000          NaN   NaN     NaN          8.600000        NaN   
+50%      120.000000          NaN   NaN     NaN          9.000000        NaN   
+75%      141.000000          NaN   NaN     NaN          9.400000        NaN   
+max      326.000000          NaN   NaN     NaN         23.000000        NaN   
+
+        peak-rpm    city-mpg highway-mpg price  
+count        199  201.000000  201.000000   201  
+unique        22         NaN         NaN   186  
+top         5500         NaN         NaN  8921  
+freq          36         NaN         NaN     2  
+mean         NaN   25.179104   30.686567   NaN  
+std          NaN    6.423220    6.815150   NaN  
+min          NaN   13.000000   16.000000   NaN  
+25%          NaN   19.000000   25.000000   NaN  
+50%          NaN   24.000000   30.000000   NaN  
+75%          NaN   30.000000   34.000000   NaN  
+max          NaN   49.000000   54.000000   NaN  
+
+[11 rows x 26 columns]</code></pre>
+</div>
+</div>
+<p>We see that for the object type columns, a different set of statistics is evaluated, like unique, top, and frequency. Unique is the number of distinct objects in the column. Top is most frequently occurring object, and freq is the number of times the top object appears in the column.</p>
+<p>Some values in the table are shown here as NaN which stands for not a number. This is because that particular statistical metric cannot be calculated for that specific column data type.</p>
+</section>
+<section id="selecting-columns" class="level3" data-number="2.4.3">
+<h3 data-number="2.4.3" class="anchored" data-anchor-id="selecting-columns"><span class="header-section-number">2.4.3</span> Selecting columns</h3>
+<p>You can select the columns of a dataframe by indicating the name of each column. For example, you can select the three columns as follows:</p>
+<pre><code>dataframe[[' column 1 ',column 2', 'column 3']]</code></pre>
+<p>Where “column” is the name of the column, you can apply the method “.describe()” to get the statistics of those columns as follows:</p>
+<pre><code>dataframe[[' column 1 ',column 2', 'column 3'] ].describe()</code></pre>
+<p>For example, lets use the describe method to the columns length and compression-ratio</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">'length'</span>,<span class="st">'compression-ratio'</span>]].describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>length</th>
+      <th>compression-ratio</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>201.000000</td>
+      <td>201.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>174.200995</td>
+      <td>10.164279</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>12.322175</td>
+      <td>4.004965</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>141.100000</td>
+      <td>7.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>166.800000</td>
+      <td>8.600000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>173.200000</td>
+      <td>9.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>183.500000</td>
+      <td>9.400000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>208.100000</td>
+      <td>23.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="info" class="level3" data-number="2.4.4">
+<h3 data-number="2.4.4" class="anchored" data-anchor-id="info"><span class="header-section-number">2.4.4</span> info</h3>
+<p>The info method provides a concise summary of your DataFrame.</p>
+<p>This method prints information about a DataFrame including the index dtype and columns, non-null values and memory usage.</p>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.info())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+Int64Index: 201 entries, 0 to 204
+Data columns (total 26 columns):
+ #   Column             Non-Null Count  Dtype  
+---  ------             --------------  -----  
+ 0   symboling          201 non-null    int64  
+ 1   normalized-losses  164 non-null    object 
+ 2   make               201 non-null    object 
+ 3   fuel-type          201 non-null    object 
+ 4   aspiration         201 non-null    object 
+ 5   num-of-doors       199 non-null    object 
+ 6   body-style         201 non-null    object 
+ 7   drive-wheels       201 non-null    object 
+ 8   engine-location    201 non-null    object 
+ 9   wheel-base         201 non-null    float64
+ 10  length             201 non-null    float64
+ 11  width              201 non-null    float64
+ 12  height             201 non-null    float64
+ 13  curb-weight        201 non-null    int64  
+ 14  engine-type        201 non-null    object 
+ 15  num-of-cylinders   201 non-null    object 
+ 16  engine-size        201 non-null    int64  
+ 17  fuel-system        201 non-null    object 
+ 18  bore               197 non-null    object 
+ 19  stroke             197 non-null    object 
+ 20  compression-ratio  201 non-null    float64
+ 21  horsepower         199 non-null    object 
+ 22  peak-rpm           199 non-null    object 
+ 23  city-mpg           201 non-null    int64  
+ 24  highway-mpg        201 non-null    int64  
+ 25  price              201 non-null    object 
+dtypes: float64(5), int64(5), object(16)
+memory usage: 42.4+ KB
+None</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="accessing-databases-with-python" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="accessing-databases-with-python"><span class="header-section-number">2.5</span> Accessing databases with python</h2>
+<p>The Python code connects to the database using API calls. An application programming interface is a set of functions that you can call to get access to some type of service.</p>
+<section id="sql-api" class="level3" data-number="2.5.1">
+<h3 data-number="2.5.1" class="anchored" data-anchor-id="sql-api"><span class="header-section-number">2.5.1</span> SQL API</h3>
+<p>The SQL API consists of library function calls as an application programming interface, API, for the DBMS.</p>
+<p>To pass SQL statements to the DBMS, an application program calls functions in the API, and it calls other functions to retrieve query results and status information from the DBMS.</p>
+<p align="left">
+<img width="300," height="200," src="../images/sql_api.png">
+</p>
+<ul>
+<li>The application program begins its database access with one or more API calls that connect the program to the DBMS.</li>
+<li>To send the SQL statement to the DBMS, the program builds the statement as a text string in a buffer and then makes an API call to pass the buffer contents to the DBMS.</li>
+<li>The application program makes API calls to check the status of its DBMS request and to handle errors.</li>
+<li>The application program ends its database access with an API call that disconnects it from the database.</li>
+</ul>
+</section>
+<section id="what-is-a-db-api" class="level3" data-number="2.5.2">
+<h3 data-number="2.5.2" class="anchored" data-anchor-id="what-is-a-db-api"><span class="header-section-number">2.5.2</span> What is a DB-API</h3>
+<p>DB-API is Python’s standard API for accessing relational databases. It is a standard that allows you to write a single program that works with multiple kinds of relational databases instead of writing a separate program for each one. So, if you learn the DB-API functions, then you can apply that knowledge to use any database with Python.</p>
+<p>The two main concepts in the Python DB-API are:</p>
+<ul>
+<li><strong>connection objects</strong> that you use to connect to a database and manage your transactions.</li>
+<li><strong>Cursor objects</strong> are used to run queries. You open a cursor object and then run queries. The cursor works similar to a cursor in a text processing system where you scroll down in your result set and get your data into the application. Cursors are used to scan through the results of a database.</li>
+</ul>
+<p>The methods used with connection objects are:</p>
+<ul>
+<li>The <code>cursor()</code> method returns a new cursor object using the connection.</li>
+<li>The <code>commit()</code> method is used to commit any pending transaction to the database.</li>
+<li>The <code>rollback()</code> method causes the database to roll back to the start of any pending transaction.</li>
+<li>The <code>close()</code> method is used to close a database connection.</li>
+</ul>
+<p>As an example: First, you import your database module by using the connect API from that module. To open a connection to the database, you use the connection function and pass in the parameters that is, the database name, username, and password. The connect function returns connection object. After this, you create a cursor object on the connection object. The cursor is used to run queries and fetch results. After running the queries using the cursor, we also use the cursor to fetch the results of the query. Finally, when the system is done running the queries, it frees all resources by closing the connection.</p>
+<p align="left">
+<img width="300," height="200," src="../images/db_api.png">
+</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../index.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data analysis with Python</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../code/2_preprocessing_of_data.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pre-processing of data in python</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

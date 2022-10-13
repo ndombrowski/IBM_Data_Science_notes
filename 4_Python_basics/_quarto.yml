@@ -1,0 +1,60 @@
+# Book settings
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Python basics"
+  author: "Nina Dombrowski"
+  logo: images/tree_of_life.png
+  chapters:
+    - index.qmd
+    - code/Week1-Basics.qmd
+    - code/Week2-Lists_Tuples.qmd
+    - code/Week3_Conditions_a_branching.qmd
+    - code/Week4_Files_Pandas_Numpy.qmd
+    - code/Week5_API_and_Data_collection.qmd
+
+format:
+  html:
+    theme: cosmo
+    code-overflow: wrap
+  pdf:
+    documentclass: scrreprt
+    pdf-engine: pdflatex
+    geometry:
+    #  - top=25mm
+    #  - right=20mm
+    #  - left=10mm
+    #  - bottom=4mm
+    #  - textwidth=4.5in
+      - heightrounded
+    highlight-style: github
+    pandoc_args: --listings
+    header-includes:
+        \usepackage{fvextra}
+        \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+    colorlinks: true
+    code-block-bg: D3D3D3
+
+execute:
+  eval: false
+  freeze: auto  # re-render only when source changes
+
+knitr:
+  opts_chunk:
+    collapse: true
+
+### code block spacing ###
+space-before-code-block: 10pt
+space-after-code-block: 8pt
+
+### linespacing ###
+linespacing: 22pt plus2pt # 22pt is official for submission & library copies
+frontmatter-linespacing: 17pt plus1pt minus1pt #spacing in roman-numbered pages (acknowledgments, table of contents, etc.)
+
+### title page
+title-size: 22pt
+title-size-linespacing: 28pt
+gap-before-crest: 25mm
+gap-after-crest: 25mm

@@ -1,0 +1,483 @@
+# Basic SQL
+
+## Introduction
+
+What is SQL?
+
+- Structured English Query language
+- Language used for relational databases
+- Used to query data
+
+What is data?
+
+- A collection of facts with words, numbers or pictures
+- One of the most critical assets in any business
+- Needs to be secure
+
+What is a database?
+
+- A repository of data
+- Provides functionality to add, modify and query data
+- Different kind of databases for different requirements
+
+Relational database:
+
+- Data is stored in tabular form, i.e. consists of rows and columns
+- Columns contain properties, i.e names, age
+- A table is a collection of related things, i.e. list of employees
+- We can make relationships between tables (hence: relational)
+
+DBMS:
+
+- Database Management system, a software to manage databases
+- Interchangeable use of database, database server, database sytem, data server or DBMS
+
+
+RDBMS:
+
+- Relational database management system
+- Set of software tools that controls the data
+  - controls access, organization and storage
+- Examples; MySQL, Oracle, IBM Dbs, etc
+
+
+
+## The SELECT statement
+
+### How to retrieve rows from a table
+
+- After creating a table and inserting data into a table we want to see the data
+- SELECT statement is a data manipulation language (DML) statement used to read and modify data
+- The select statement is called a query
+- The output we get from a query is called the results
+- The basic command looks like this
+
+```
+SELECT * from <tablename>
+```
+
+- We can only retrieve the columns we want, i.e.
+
+```
+SELECT <column1>, <column2> from <tablename>
+```
+
+- The order in the columns displayed table matches the order in the used select statement
+
+### Restricting the results set via the WHERE clause
+
+- This clause restricts the results set
+- Requires a predicate that is conditions to
+  - evaluate to true, false or unknown
+  - predicates are used in the search condition of the where clause
+- Example: We want to have the title from the book with the book ID B1
+
+```
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition
+;
+```
+
+- FROM: Specifies from which table to get the data. The clause can include optional JOIN subclauses to specify the rules for joining tables.
+- [Optional Clause] WHERE : Specifies which rows to retrieve.
+- Some database systems require a semicolon at the end of each SQL statement for execution. It is a standard way to separate one SQL statement from another which allows more than one SQL statement to be executed in the same call to the server. So, it is good practice to use a semicolon at the end of each SQL statement.
+
+```
+SELECT book_id, title from Book.db
+  WHERE book_id = 'B1'
+```
+
+- We can also use other comparison operators
+  - equal to --> =
+  - greater than --> >
+  - less than --> <
+  - greater than or equal to --> >=
+  - less than or equal to --> <=
+  - not equal to --> <>
+  
+
+### Exercise
+  
+To reproduce the example, we
+
+- Downloaded datasette from the web
+- Downloaded the SanFranciscoFilmLocations database as csv from [here](https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am/data)
+- we converted this to a datasette database with `csvs-to-sqlite Film_Locations_in_San_Francisco.csv Film_Locations_in_San_Francisco.db`
+- and opened the datasette with `datasette Film_Locations_in_San_Francisco.db`
+
+We can also load the db into r:
+
+#### Task A: explore the database
+
+```{r setup}
+library(DBI)
+db = dbConnect(RSQLite::SQLite(), dbname ="Week1/Film_Locations_in_San_Francisco.db")
+
+#set connection for each chunk, other wise we would need `{sql, connection=db}`
+knitr::opts_chunk$set(connection = "db", max.print = 10)
+#knitr::opts_chunk$set(connection = "db2", max.print = 5)
+
+#show less columns
+#options(max.print = 5)
+```
+
+#### Task B: Example exercises
+
+1. In this example, suppose we want to retrieve details of all the films from the "FilmLocations" table. The details of each film record should contain all the film columns.
+
+```{sql}
+SELECT * FROM Film_Locations_in_San_Francisco
+```
+
+
+2. In this example, now we want to retrieve selective details of all the film records. Let us retrieve the names of all the films along with director names and writer names.
+
+```{sql}
+SELECT Title, Director,Writer FROM Film_Locations_in_San_Francisco
+```
+
+
+3. In this example, we want to retrieve film names along with filming locations and release years. But we also want to restrict the output resultset so that we can retrieve only the film records released in 2001 and onwards (release years after 2001 including 2001).
+
+**Notice** If we have a space in the column header, we need to use quotes.
+
+```{sql}
+SELECT Title, Locations,"Release Year" FROM Film_Locations_in_San_Francisco
+WHERE "Release Year" >=2001
+```
+4. Retrieve the fun facts and filming locations of all films.
+
+```{sql}
+SELECT "Fun Facts",Locations FROM Film_Locations_in_San_Francisco
+```
+5. Retrieve the names of all films released in the 20th century and before (release years before 2000 including 2000) that, along with filming locations and release years.
+
+```{sql}
+SELECT Title,Locations,"Release Year" FROM Film_Locations_in_San_Francisco
+WHERE "Release Year" <= 2000
+```
+6. Retrieve the names, production company names, filming locations, and release years of the films which are not written by James Cameron.
+
+```{sql}
+SELECT Title,"Production Company",Locations, "Release Year", Writer FROM Film_Locations_in_San_Francisco
+WHERE Writer <> "James Cameron"
+```
+
+## Count, Distinct, limit
+
+### Count
+
+- Number of rows that meet target criteria
+- `select COUNT(*) from table` to get the total number of rows in a table
+- `select COUNT(COUNTRY) from Medals; where COUNTRY='Canada'`: Rows in the medals table were the country is Canada
+
+
+### Distinct
+
+- Remove duplicate values
+- `select DISTINCT columnname from table `: retrieve unique values in a column
+- `select DISTINCT Country from Medals; where Medaltype == 'GOLD'`: get a list of unique countries that received gold medals
+
+
+### Limit
+
+- Used to restrict the number of rows retrieved from a database
+- `select * from table LIMIT 10`: retrieve only the first 10 rows
+- `select * from Medals; where YEAR = 2018 LIMIT 5`: retrieve 5 rows in the Medals table for a specific year
+
+
+
+#### Exercises
+
+1. Retrieve the number of rows from the "FilmLocations" table.
+
+```{sql}
+select COUNT(*) from Film_Locations_in_San_Francisco
+```
+2. In this example, now we want to count the number of locations of the films. But we also want to restrict the output resultset in such a way that we only retrieve the number of locations of the films written by a certain writer. Retrieve the number of locations of the films which are written by James Cameron.
+
+```{sql}
+select COUNT(Locations) from Film_Locations_in_San_Francisco
+where Writer = "James Cameron"
+```
+3. Retrieve the number of locations of the films which are directed by Woody Allen.
+
+```{sql}
+select COUNT(Locations) from Film_Locations_in_San_Francisco
+where Director = "Woody Allen"
+```
+
+4. Retrieve the number of films shot at Russian Hill.
+
+```{sql}
+select COUNT(Title) from Film_Locations_in_San_Francisco
+where Locations = "Russian Hill"
+```
+5. Retrieve the number of rows having a release year older than 1950 from the "FilmLocations" table.
+
+```{sql}
+select COUNT(*) from Film_Locations_in_San_Francisco
+where "Release Year" > 1950
+```
+
+6. In this example, we want to retrieve the title of all films in the table in such a way that duplicates will be discarded in the output resultset. Retrieve the name of all films without any repeated titles.
+
+
+```{sql}
+select DISTINCT Title from Film_Locations_in_San_Francisco
+```
+
+7. In this example, we want to retrieve the count of release years of the films produced by a specific company in such a way that duplicate release years of those films will be discarded in the count. Retrieve the number of release years of the films distinctly, produced by Warner Bros. Pictures.
+
+```{sql}
+select COUNT(DISTINCT "Release Year") from Film_Locations_in_San_Francisco
+where "Production Company" = "Warner Bros. Pictures"
+```
+8. Retrieve the name of all unique films released in the 21st century and onwards, along with their release years.
+
+```{sql}
+select DISTINCT Title, "Release Year" from Film_Locations_in_San_Francisco
+where "Release Year" >= 2001
+```
+
+9. Retrieve the names of all the directors and their distinct films shot at City Hall.
+
+```{sql}
+select DISTINCT Director, Title from Film_Locations_in_San_Francisco
+where Locations = "City Hall"
+```
+
+
+10. Retrieve the number of distributors distinctly who distributed films acted by Clint Eastwood as 1st actor.
+
+```{sql}
+select COUNT (DISTINCT Distributor) from Film_Locations_in_San_Francisco
+where "Actor 1" = "Clint Eastwood"
+```
+
+11. In this example, let us retrieve a specific number of rows from the top of the table in such a way that rows other than those are not in the output resultset. Retrieve the first 25 rows from the "FilmLocations" table.
+
+```{sql}
+select * from Film_Locations_in_San_Francisco Limit 25
+```
+
+12. In this example, let us take the first example to a more advanced level. Now we want to retrieve a specific number of rows from the table, but this time, not from the top of the table. This time we want to retrieve a specific number of rows starting from a specific row in the table. Retrieve the first 15 rows from the "FilmLocations" table starting from row 11. For this we use **OFFSET**
+
+
+```{sql}
+select * from Film_Locations_in_San_Francisco Limit 15 OFFSET 10
+```
+
+13. Retrieve the name of first 50 films distinctly.
+
+```{sql}
+select Distinct Title from Film_Locations_in_San_Francisco Limit 50
+```
+
+14. Retrieve first 10 film names distinctly released in 2015.
+
+```{sql}
+select Distinct Title from Film_Locations_in_San_Francisco
+where "Release Year" = 2015 Limit 10
+```
+
+
+15. Retrieve the next 3 film names distinctly after first 5 films released in 2015.
+
+```{sql}
+select Distinct Title from Film_Locations_in_San_Francisco
+where "Release Year" = 2015 Limit 3 OFFSET 5
+```
+
+
+## Insert
+
+- The insert statement is used to add rows to a table
+- Its a DML statement used to read and modify data
+
+I.e lets add something to the author table, ie a new author:
+
+```
+Insert into Author.db
+  (Author_ID, Lastname, Firstname)
+Values("A1", "Chong", "Raul")
+```
+
+- Important: the number of provided values should equal the number of column names specified in the column name list 
+
+We can insert multiple rows like this:
+
+```
+Insert into Author.db
+  (Author_ID, Lastname, Firstname)
+Values
+  ("A1", "Chong", "Raul")
+  ("A2", "Ahuja", "Rai")
+```
+
+
+## Update
+
+- Update is used alter existing data in a table
+- If we don't specify the where statement, ALL rows in the table will be updated
+
+We want to update the Last and first Name for the author with the ID A2:
+
+```
+Update Author.db
+SET LastName="Katta"
+  Firstname="Lakshimi"
+  Where author_id='A2'
+```
+
+
+
+## Delete
+
+- used to remove 1 or more rows
+
+We want to delete the rows for author ID A2 and A3
+
+```
+Delete from author.db
+  Where author_id IN ('A2', "A3")
+```
+
+
+### Exercise
+
+Prepare the data by copy/pasting the data from the online tutorial into excel and save as csv. It was converted to an sql database with `csvs-to-sqlite Instructor.csv Instructor.db`
+
+Prep database for R
+
+```{r}
+db2 = dbConnect(RSQLite::SQLite(), dbname ="Week1/Instructor.db")
+```
+
+
+1. First have a look at the database
+
+```{sql, connection=db2}
+Select * from Instructor
+```
+
+2. In this example, suppose we want to insert a new single row into the Instructor table. Insert a new instructor record with id 4 for Sandip Saha who lives in Edmonton, CA into the "Instructor" table.
+
+```{sql, connection=db2}
+Insert into Instructor (ins_id, lastname, firstname, city, country)
+VALUES ("4", "Sandip", "Saha", "Edmonton", "CA")
+```
+
+```{sql, connection=db2}
+Select * from Instructor
+```
+
+3. n this example, suppose we want to insert some new multiple rows into the Instructor table. Insert two new instructor records into the "Instructor" table. First record with id 5 for John Doe who lives in Sydney, AU. Second record with id 6 for Jane Doe who lives in Dhaka, BD.
+
+```{sql, connection=db2}
+INSERT INTO Instructor(ins_id, lastname, firstname, city, country)
+VALUES(5, 'Doe', 'John', 'Sydney', 'AU'), (6, 'Doe', 'Jane', 'Dhaka', 'BD') 
+```
+
+```{sql, connection=db2}
+Select * from Instructor Limit 10
+```
+
+4. Insert a new instructor record with id 7 for Antonio Cangiano who lives in Vancouver, CA into the "Instructor" table.
+
+```{sql, connection=db2}
+Insert into Instructor(ins_id, lastname, firstname, city, country)
+Values(7, "Cangiano", "Antonio", "Vancouver", "CA")
+```
+
+```{sql, connection=db2}
+Select * from Instructor Limit 5 OFFSET 4
+```
+
+5. nsert two new instructor records into the "Instructor" table. First record with id 8 for Steve Ryan who lives in Barlby, GB. Second record with id 9 for Ramesh Sannareddy who lives in Hyderabad, IN.
+
+```{sql, connection=db2}
+Insert into Instructor(ins_id, lastname, firstname, city, country)
+Values(8, "Ryan", "Steve", "Varly", "GB"),(9, "Sannareddy", "Ramesh", "Hyderabad", "IN")
+```
+
+
+```{sql, connection=db2}
+Select * from Instructor Limit 5 OFFSET 4
+```
+
+6. In this example, we want to update one column of an existing row of the table. Update the city for Sandip to Toronto.
+
+```{sql, connection=db2}
+Update Instructor
+Set city="Toronto"
+Where lastname="Sandip"
+```
+
+
+```{sql, connection=db2}
+Select * from Instructor
+```
+
+7. Update the city and country for Doe with id 5 to Dubai and AE respectively.
+
+```{sql, connection=db2}
+Update Instructor
+Set city="Dubai", country="AE"
+Where lastname="Doe"
+```
+
+```{sql, connection=db2}
+Select * from Instructor Limit 5 Offset 2
+```
+
+
+8. Update the city of the instructor record to Markham whose id is 1.
+
+```{sql, connection=db2}
+Update Instructor
+Set city="Markham"
+Where ins_id=1
+```
+
+```{sql, connection=db2}
+Select * from Instructor Limit 5 Offset 0
+```
+
+9. Update the city and country for Sandip with id 4 to Dhaka and BD respectively.
+
+```{sql, connection=db2}
+Update Instructor
+Set city="Dhaka", country="DB"
+Where ins_id=4
+```
+
+```{sql, connection=db2}
+Select * from Instructor Limit 5 Offset 1
+```
+
+10. In this example, we want to remove a row from the table. Remove the instructor record of Doe whose id is 6.
+
+```{sql, connection=db2}
+Delete from Instructor
+where ins_id=6
+```
+
+```{sql, connection=db2}
+Select * from Instructor Limit 5 Offset 3
+```
+
+11. Remove the instructor record of Hima.
+
+```{sql, connection=db2}
+Delete from Instructor
+Where firstname="Hima"
+```
+
+
+```{sql, connection=db2}
+Select * from Instructor Limit 5
+```
+
+

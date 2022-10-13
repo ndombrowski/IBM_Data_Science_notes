@@ -1,0 +1,152 @@
+---
+title: "Week 3"
+author: "Nina Dombrowski"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    toc_depth: 5  
+    highlight: kate
+    code_folding: hide
+---
+
+
+# IMB tools
+
+
+## Watson Studio
+
+- Integrated platform of tools, services, and data
+- Simplify data processes
+- Extract value and insights from our data
+- Includes open source tools, such as R or jupyter
+- Creating efficient workflows
+- Watson Studio provides many benefits for organizations helping to infuse AI into the business and drive innovation. 
+- You can train Watson Studio with embedded AI services including watson visual recognition
+- Interactively discover, cleanse, and transform your data using data refinery
+- understand the quality and distribution of your data with built-in charts and statistics, - Visualized results through interactive dashboards
+- Gallery: Collection of assets, such as  of papers, notebooks and tutorials
+- IBM Watson gives you access to IBM Watson Studio, IBM Watson Knowledge Catalog, the data refinery, machine and deep learning, visual recognition models, dashboards and streams flows
+
+
+## Creating an account
+
+- Sign up for a free trial: https://dataplatform.cloud.ibm.com
+
+
+
+## Jupyter in Watson
+
+- Go to https://cloud.ibm.com
+- Go to the IBM Cloud Dashboard and click Services.
+- When you click on Services, all your existing services will be shown in the list. Click the Watson Studio service you created
+- Click Launch
+- Click on Create a project.
+- Create an empty project.
+- Click on Assets > New asset.
+- In the list of asset types, click Jupyter Notebook Editor.
+- On the New notebook page, click Blank and then add a name and optional description for the notebook. Specify the language as Python and runtime environment. Click Create.
+
+
+
+## Github and Watson
+
+-  in Watson studio navigate to your profile settings on the integrations tab visit the link to generate a github personal access token 
+- provide a descriptive name for the token and 
+- select the repo scope then generate the token 
+- copy the token return to the github integration settings and paste 
+- the token the token is validated when you save it to your profile settings
+- now navigate to your projects 
+- you enable github integration at the project level on the settings tab 
+- simply scroll to the bottom and paste the existing github repository URL 
+- once the URL is validated click connect go to the assets tab and open the notebook you want to publish
+
+### Gists
+
+- Publish as a gist just are another way to share your work on github 
+- every gist is a git repository so it can be forked and cloned
+- there are two types of gists public and secret
+- if you start out with a secret gist you can convert it to a public gist later 
+
+
+## Other Tools
+
+### Watson Knowledge catalogue
+
+- Most orgas have a lot of data stored in different locations
+- This tool combines all data into one rich metadata-based catalog
+- Data management, Data integration/transformation and code asset management
+- Allows to find, govern, understand, prepare and connect data
+- Allows sharing
+- Protects against misuse
+- Build-in data refinery 
+- A catalog contains metadata about the contents of assets
+- Stored in an encrypted environment
+- Split between were the data is stored and the metadata. This way we can keep the data in other data repositories or IBM Cloud, etc. 
+- Metadata has location credentials
+- Ability to mask sensitive data
+
+
+### Data refinery
+
+- Simplifying data preparation: cleansing, shaping and preparing data 
+- We need to do this because most data sets are not readily consumable
+- This tool simplifies this task and provides a self-service data preparation environment
+- One example: we have dates in different formats and want to extract the same format for all
+
+
+### SPSS Modeler Flows in Watson Study
+
+- Graphical way to build machine learning models and pipelines
+- Data management, Data integration/transformation, Data vis and Model building
+- Drag-and-drop editor that consist of “nodes” of various types, with data “flowing” from one node to the next according to their connections.
+- 
+
+
+### IBM SPSS Modeler in Watson Study
+
+- Data management, Data int/trans, Data vis, Model building, Model deployment
+- Data mining and text analytics software
+- 
+
+
+### SPSS statistics
+
+- Statistical and machine learning application
+- Build predictive models, perform statistical analysis
+- Displays data as a spreadsheet and allows for data editing
+
+
+
+
+### Model deployment with Watson Machine Learning
+
+- Used for model deployment
+- Standards for model deployment: 
+    - PPML/Predictive model markup language , XML based
+    - PFA (Portable format for analytics), JSON based
+    - ONNX: Open Neutral Network eXchange    
+- Via graphical interface or python
+
+
+
+### Auto AI in Watson Studio
+
+- Automation of repetitive work: Data prep, Model selection, feature engineering (find best data transformation sequence), hyper-parameter optimization
+
+
+
+### IBM Watson OpenScale
+
+- Test products for fairness and detect model bias
+- Test explainability: audit and explain model decisions
+- Model monitoring: Monitor model performance, help to find causes when detecting model drift
+- Measure business impact
+- Ensure model compliancy
+
+
+
+
+
+https://eu-de.dataplatform.cloud.ibm.com/projects/9a3e6b5a-a142-4353-91f8-43e1f4ad2032/assets?context=cpdaas
+
+https://eu-de.dataplatform.cloud.ibm.com/analytics/notebooks/v2/3bfc8107-5767-4bc4-8a9a-95ab477ddfbb/view?access_token=8725d54d281c02bccd0c8dffc7f39770494c62c5dc33ec5ce7cee386e32bda82

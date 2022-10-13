@@ -1,0 +1,18 @@
+{
+  "hash": "831c1d737186a947ff363d1e7c996ce8",
+  "result": {
+    "markdown": "# Preamble\n\nIntro to SQL\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n#in terminal set python path for R:\n#nano $HOME/.Renviron\n#RETICULATE_PYTHON=\"/opt/anaconda3/bin/python3.7\"\n\n#set reticulate py version\n#ibrary(\"reticulate\")\n#repl_python()\n\n#make sure in the global options -> markdown -> to set the wdir to project\n#also make the mark at show output inline for all r markdown docs to be able to execute bash/sql\n\n#install for R internal py\n#/Users/ninadombrowski/Library/r-miniconda/envs/r-reticulate/bin/python -m pip install -U seaborn\n\n#install via terminal\n#/opt/anaconda3/bin/python3.7 -m pip install -U yfinance\n\n#watson:\n#https://eu-de.dataplatform.cloud.ibm.com/projects/c0e22bcd-1461-4381-a45a-9b55ee8d6643?context=cpdaas\n\n#notebook for watson\n#https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0220EN-SkillsNetwork/labs/project/Final%20Assignment.ipynb\n\n#https://eu-de.dataplatform.cloud.ibm.com/analytics/notebooks/v2/effc3192-d2ca-402c-836b-ae2bc252ffbf?projectid=c0e22bcd-1461-4381-a45a-9b55ee8d6643&context=cpdaas\n\n#link to finished notebook\n#https://eu-de.dataplatform.cloud.ibm.com/analytics/notebooks/v2/effc3192-d2ca-402c-836b-ae2bc252ffbf/view?access_token=eafb0019d830bd9df164400db6de2b78e94c787f6ed81b1c096396abfac40ab2\n```\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {
+      "knitr": [
+        "{\"type\":\"list\",\"attributes\":{},\"value\":[]}"
+      ]
+    },
+    "preserve": null,
+    "postProcess": false
+  }
+}

@@ -1,0 +1,122 @@
+---
+title: "Data Science Methodology"
+author: "Nina Dombrowski"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    toc_depth: 5  
+    highlight: kate
+    code_folding: hide
+---
+
+# From Problem to Apprach from Requirements to collection
+
+## General intro
+
+**Methodology:** A system of methods used in a particular area of study or activity. This course will focus on the methodology developed by John Rollins on CRISP-DM. 
+
+**10 basic questions:**
+
+From problem to approach:
+- What is the problem we want to solve
+- How can we use data to answer this question?
+
+Working with the data:
+- What data to we need to answer our question?
+- Where is the data coming from (identify all sources) and how will ge get it?
+- Is the data that we collected representative of then problem we want to solve?
+- What additional work is required to manipulate and work with the data?
+
+Deriving the answer:
+- In what way can the data be visualized to get our answer?
+- Does the model used answer our initial question or do we need to adjust it?
+- Can we put the model in practice?
+- Can we get constructive feedback into answering the question?
+
+**Case study for this module:**
+
+- There is a limited budget for providing healthcare in the system to properly address the patient condition prior to the initial patient discharge. 
+- The core question is: What is the best way to allocate these funds to maximize their use in providing quality care? 
+
+
+### Intro to CRISP-DM
+
+- Cross Industry Process for Data Mining
+- A process aimed at increasing the use of data mining 
+- CRISP-DM is comprised of six steps
+  - Business understanding: Outlines the intention of the project and thus requires communication and clarity. 
+  - Data understanding: Includes data collection based on what the business wants/needs. We also decide here what sources to use and by what methods.
+  - Data preparation: Transform data into a usable subset. Check data for questionable, missing or ambiguous data.
+  - Modeling: Processing data through appropriate models to get new insights via data mining. The use of models reveal patterns and structures in the data.
+  - Evaluation: Testing of the selected model, usually via a pre-selected test to run the trained model on to test the effectiveness. 
+  - Deployment: Here, the model us used on new data and thus we might identify new variables/needs for our dataset.
+  
+  
+## From Problem to approach
+
+### Business understanding
+
+- Spend time for clarification and get business understanding
+- What problem are we trying to solve , what is the goal of the question asked?
+- Having a clearly defined question is vital because it will shape the analytical approach we then will take to answer the question 
+- For example: "How can we reduce the costs of performing an activity?" Is the goal to improve the efficiency of the activity? Or is it to increase the businesses profitability?
+- Next, we need to figure out the objectives that are in support of the goal. 
+- Depending on the problem we might need to engage different stakeholders. 
+
+
+### Analytic approach
+
+- The right approach depends on the question being asked
+- Finding the right approach involves clarification from the person asking the question
+- H0w can we use data to answer our question?
+- An approach can be:
+  - Descriptive: current status
+  - Diagnostic (statistical analysis): What happened, why is it happening
+  - Predictive (forecasting): What if these trends continue, what will happen next?
+  - Prescriptive: How do we solve it?
+- If the question is to determine probabilities we use a **predictive model**
+- If we want to show relationships we use a **descriptive model**
+- If the question requires a yes/no answer we use a **classification model**
+- Machine learning: 
+  - Give computers the ability to learn without explicitly being programmed
+  - Identify trends and relationships in data 
+  - Use clustering association approaches
+
+
+  
+## From Requirements to Collections
+
+### Data requirements
+
+- Cooking with data: each step is critical to make a meal
+- Identify the required ingredients, how to source and/or collect them, how to understand or work with them and how to prepare the data to meet the desired outcome
+- Define the data requirements: identify data content, formats and sources for initial data collection
+- Example clinical study: 
+  - define requirements for people to be selected for a cohort
+  - Define the data content and formats suitable for the tree decision tree classifier we want to use as an analytical tool
+
+
+### Data collection
+
+- Determine whether our data has the requirements we need
+- Revise requirements if needed
+- Decide whether or not more data is needed
+- Use descriptive statistics and initial data vis to assess the content, quality and gain initial data insights
+- Identify gaps
+- Know the source of the data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

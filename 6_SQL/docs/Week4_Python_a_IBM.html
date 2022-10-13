@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.168">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introduction to SQL - 5&nbsp; SQL and python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Week5_RealData.html" rel="next">
+<link href="./Week3-Notes.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SQL and python</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./" class="sidebar-logo-link">
+      <img src="./images/tree_of_life.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to SQL</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preamble</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week1-Notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Basic SQL</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week2-Notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Relational databases</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week3-Notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Using String Patterns</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week4_Python_a_IBM.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SQL and python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week5_RealData.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Working with real world data</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#access-databases-via-python" id="toc-access-databases-via-python" class="nav-link active" data-scroll-target="#access-databases-via-python"><span class="toc-section-number">5.1</span>  Access databases via python</a></li>
+  <li><a href="#writting-code-via-a-dbi-api" id="toc-writting-code-via-a-dbi-api" class="nav-link" data-scroll-target="#writting-code-via-a-dbi-api"><span class="toc-section-number">5.2</span>  Writting code via a DBI-API</a></li>
+  <li><a href="#connecting-to-a-database-using-ibm_db-api" id="toc-connecting-to-a-database-using-ibm_db-api" class="nav-link" data-scroll-target="#connecting-to-a-database-using-ibm_db-api"><span class="toc-section-number">5.3</span>  Connecting to a database using ibm_db API</a></li>
+  <li><a href="#creating-tables-loading-data-and-querying-data" id="toc-creating-tables-loading-data-and-querying-data" class="nav-link" data-scroll-target="#creating-tables-loading-data-and-querying-data"><span class="toc-section-number">5.4</span>  Creating tables, loading data and querying data</a></li>
+  <li><a href="#sql-magic" id="toc-sql-magic" class="nav-link" data-scroll-target="#sql-magic"><span class="toc-section-number">5.5</span>  SQL magic</a></li>
+  <li><a href="#analysing-data-with-python" id="toc-analysing-data-with-python" class="nav-link" data-scroll-target="#analysing-data-with-python"><span class="toc-section-number">5.6</span>  Analysing data with python</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SQL and python</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="access-databases-via-python" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="access-databases-via-python"><span class="header-section-number">5.1</span> Access databases via python</h2>
+<ul>
+<li>Python database api (DB-API) to access relational databases</li>
+<li>Useful interfaces via the jupyter notebooks; a open-source web-application</li>
+<li>Accessing databases using python: <strong>user &lt;-&gt; jupyter notebook + python programs &lt;-DP API calls to connect to a adtabase-&gt; DBMS</strong> (Database Management Systems)</li>
+<li>AQL API: consists of library function calls as application programming interface (API) for the dbms
+<ul>
+<li>We begin with API calls that connect to a db via connect</li>
+<li>We then send a SQL statement via the API to the DBMS</li>
+<li>execute</li>
+<li>status_check</li>
+</ul></li>
+</ul>
+</section>
+<section id="writting-code-via-a-dbi-api" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="writting-code-via-a-dbi-api"><span class="header-section-number">5.2</span> Writting code via a DBI-API</h2>
+<ul>
+<li>dB API calls: Pythons standard API for accessing relational databases</li>
+<li>Connection objects: Are used to connect to a database and manage transactions</li>
+<li>Cursor objects: used to run queries; allows to scroll through the results set and retrieve results</li>
+<li>Connection methods
+<ul>
+<li>.cursor()</li>
+<li>.commit()</li>
+<li>.rollback()</li>
+<li>.close()</li>
+</ul></li>
+<li>Cursor methods
+<ul>
+<li>.callproc()</li>
+<li>.execute()</li>
+<li>.fetchall()</li>
+</ul></li>
+<li>Database cursor: a control structure that enables traversal over the records in a database. It behaves like a file name or file handle in a programming language.</li>
+<li>Example</li>
+</ul>
+<pre><code>#import database module with 
+from dbmodule import connect
+
+#create connection object
+Connection = connect('databasename', 'username', 'psswd')
+
+#create a cursor object (we need the cursor to run queries
+Cursor = Connection.cursor())
+
+#run queries
+Cursor.execute('select * from mytable')
+
+#fetch the results of the query
+Results = cursor.fetchall()
+
+#free resources by closing the connection
+Cursor.close()
+Connection.close()</code></pre>
+</section>
+<section id="connecting-to-a-database-using-ibm_db-api" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="connecting-to-a-database-using-ibm_db-api"><span class="header-section-number">5.3</span> Connecting to a database using ibm_db API</h2>
+<ul>
+<li>ibm_db: API that provides useful python functions for accessing and manipulating data in an IBM data service database</li>
+<li>Uses the IBM Data service driver for ODBC and CLI APIs to connect to IBM DB and Informix</li>
+</ul>
+<ol start="0" type="1">
+<li>Go to your IBM Cloud Resources dashboard (or click on IBM Cloud in the top left corner):https://cloud.ibm.com/resources</li>
+<li>Locate and click on your Db2 service listed under Services.</li>
+<li>Click on Service Credentials in the left menu</li>
+<li>Click on the button to create New credential</li>
+<li>In the prompt that comes up click the “Add” button in the bottom right:</li>
+<li>Check the box to View credentials</li>
+<li>Copy and save the credentials making a note of the following:</li>
+</ol>
+<ul>
+<li>port is the database port –&gt; 30376</li>
+<li>db is the database name –&gt; bludb</li>
+<li>host is the hostname of the database instance –&gt; 6667d8e9-9d4d-4ccb-ba32-21da3bb5aafc.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud</li>
+<li>username is the username you’ll use to connect –&gt; jty26738</li>
+<li>password is the password you’ll use to connect –&gt; Nth9JHtETHDz3XnJ</li>
+</ul>
+</section>
+<section id="creating-tables-loading-data-and-querying-data" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="creating-tables-loading-data-and-querying-data"><span class="header-section-number">5.4</span> Creating tables, loading data and querying data</h2>
+<ul>
+<li>We can create tables via db2 or with the R/Python environment</li>
+<li>DB uses the <code>ibm_db.exec_immediate()</code> with the following parameters
+<ul>
+<li>Connection</li>
+<li>Statement</li>
+<li>Options</li>
+</ul></li>
+<li>i.e.&nbsp;lets create a trucks table</li>
+</ul>
+<pre><code>stmt = ibm.db.exec_immediate(conn,
+"Create table trucks(
+serial_no varchar(20)) primary key not null,
+model varchar(20) not null, 
+manufacturer varchar(20) not null,
+engine_size varchar(20) not null,
+truck_class varchar(20) not null)"
+)</code></pre>
+<ul>
+<li>now lets load some data:</li>
+</ul>
+<pre><code>stmt = ibm.db.exec_immediate(conn, 
+"Insert into trucks (serial_no, model, manufacturer,engine_size,truck_class)
+values('A1234', 'Lonestar', 'International trucks', 'Cummins ISX15', 'Class 8');"
+)</code></pre>
+<ul>
+<li>Now we can query some data, i.e.&nbsp;lets view the table</li>
+</ul>
+<pre><code>#query the data
+stmt = ibm_db.exec_immediate(conn, "select * from trucks")
+
+#print results
+ibm_db.fetch_both(stmt)</code></pre>
+<ul>
+<li>We can also use the pandas python library to retrieve data</li>
+</ul>
+<pre><code>import pandas
+import ibm_db_dbi
+
+#prep connection
+pconn = ibm_db_dbi.Connection(conn)
+
+#create a pandas dataframe
+df = pandas.read_sql('Select * from trucks', pconn)
+
+#view 
+df</code></pre>
+</section>
+<section id="sql-magic" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="sql-magic"><span class="header-section-number">5.5</span> SQL magic</h2>
+<p>Jupyter notebooks have a concept of Magic commands that can simplify working with Python, and are particularly useful for data analysis. You can use the SQL Magic commands to execute queries more easily. Your notebooks can have two types of magic commands:</p>
+<ul>
+<li>Cell magics: start with a double %% sign and apply to the entire cell</li>
+<li>Line magics: start with a single % (percent) sign and apply to a particular line in a cell</li>
+</ul>
+<p>Their usage is of the format:</p>
+<p><strong>%magicname arguments</strong></p>
+<p>For example if you want to execute the a query to select some data from a table and fetch its results, you can simply enter a command like the following in your Jupyter notebook cell:</p>
+<p><strong>%sql select * from tablename</strong></p>
+<p>Although SQL magic simplifies working with databases, it has some limitations. For example, unlike DB-API, there are no explicit methods to close a connection and free up resources.</p>
+<p>Examples can be found in: DB0201EN-Week3-1-3-SQLmagic.ipynb</p>
+</section>
+<section id="analysing-data-with-python" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="analysing-data-with-python"><span class="header-section-number">5.6</span> Analysing data with python</h2>
+<ul>
+<li>Kaggle McDonalds nutrition info</li>
+</ul>
+<ol type="1">
+<li>Load csv into DB2 cloud (source, target, define, finalize)</li>
+<li>Verify loaded data using sql, i.e.&nbsp;with select * from table</li>
+</ol>
+<pre><code>stmt = ibm_db.exec_immediate(conn, "select count(*) from mcdonals")</code></pre>
+<ol start="3" type="1">
+<li>Use pandas to retrieve data, i.e.&nbsp;vs pandas.read_sql to read in data via a select statement.</li>
+</ol>
+<pre><code>import pandas 
+import ibm_db_dbi
+pconn = ibm_dbi.Connection(conn)
+df = pandas.read_sql('select * from mcdonalds', pconn)
+df</code></pre>
+<ol start="4" type="1">
+<li>Learn about data with pandas, i.e.&nbsp;with <code>df.describe(include="all")</code></li>
+</ol>
+<ul>
+<li>Lets find the food item with the max sodium content</li>
+</ul>
+<p>4.1. Lets first visualize the food items</p>
+<pre><code>import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+
+#make categorical scatteplots
+plot = sns.swarmplot(x="category", y="sodium", data =df)
+plt.setp(plot.get_xticklabels(), rotation=70)
+plt.title('Sodium content')
+plt.show()</code></pre>
+<p>4.2 Find the food item with the max sodium content</p>
+<pre><code>#get summary stats
+df['Sodium'].describe()
+
+#find the row with the max sodium value. Lets say we get 82
+df['Sodium'].idxmax()
+
+#lets find the the item with the id retrieved in the second line of code
+df.at[82,'Item']</code></pre>
+<p>4.3 further data vis using scatterplots</p>
+<pre><code>import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+
+#create a scatterplot with protein data vs total fat content to look for correlations
+plot = sns.joinplot(x='Protein', y='Total Fat', data=df)
+plt.show()</code></pre>
+<p>4.4 further data vis using boxplots</p>
+<pre><code>import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+
+#create a boxplot to show the distribution for the sugar data
+plot = sns.set_style("whitegrid")
+ax= sns.boxplot(x=df['Sugars'])
+plt.show()</code></pre>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Week3-Notes.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Using String Patterns</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Week5_RealData.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Working with real world data</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

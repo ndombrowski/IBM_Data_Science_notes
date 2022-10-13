@@ -1,0 +1,2385 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Data analysis with python - 4&nbsp; Exploratory data analysis (EDA) in python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../code/4_model_dev.html" rel="next">
+<link href="../code/2_preprocessing_of_data.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exploratory data analysis (EDA) in python</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../" class="sidebar-logo-link">
+      <img src="../images/tree_of_life.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Data analysis with python</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data analysis with Python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/1_importing_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Importing datasets</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/2_preprocessing_of_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pre-processing of data in python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/3_exploratory_data_analysis.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exploratory data analysis (EDA) in python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/4_model_dev.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model Development in python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/5_model_eval_and_refinement.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Model Evaluation and Refinement</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#notebook-setup" id="toc-notebook-setup" class="nav-link active" data-scroll-target="#notebook-setup"><span class="toc-section-number">4.1</span>  Notebook setup</a></li>
+  <li><a href="#analyzing-individual-feature-patterns-using-visualization" id="toc-analyzing-individual-feature-patterns-using-visualization" class="nav-link" data-scroll-target="#analyzing-individual-feature-patterns-using-visualization"><span class="toc-section-number">4.2</span>  Analyzing Individual Feature Patterns Using Visualization</a></li>
+  <li><a href="#descriptive-statistics" id="toc-descriptive-statistics" class="nav-link" data-scroll-target="#descriptive-statistics"><span class="toc-section-number">4.3</span>  Descriptive statistics</a>
+  <ul class="collapse">
+  <li><a href="#the-describe-function" id="toc-the-describe-function" class="nav-link" data-scroll-target="#the-describe-function"><span class="toc-section-number">4.3.1</span>  The describe function</a></li>
+  <li><a href="#the-value_counts-function" id="toc-the-value_counts-function" class="nav-link" data-scroll-target="#the-value_counts-function"><span class="toc-section-number">4.3.2</span>  The value_counts function</a></li>
+  <li><a href="#boxplots" id="toc-boxplots" class="nav-link" data-scroll-target="#boxplots"><span class="toc-section-number">4.3.3</span>  Boxplots</a></li>
+  <li><a href="#scatterplots" id="toc-scatterplots" class="nav-link" data-scroll-target="#scatterplots"><span class="toc-section-number">4.3.4</span>  Scatterplots</a></li>
+  </ul></li>
+  <li><a href="#groupby-in-python" id="toc-groupby-in-python" class="nav-link" data-scroll-target="#groupby-in-python"><span class="toc-section-number">4.4</span>  GroupBy in python</a>
+  <ul class="collapse">
+  <li><a href="#pivot-in-python" id="toc-pivot-in-python" class="nav-link" data-scroll-target="#pivot-in-python"><span class="toc-section-number">4.4.1</span>  Pivot() in python</a></li>
+  <li><a href="#heatmap-plots" id="toc-heatmap-plots" class="nav-link" data-scroll-target="#heatmap-plots"><span class="toc-section-number">4.4.2</span>  Heatmap plots</a></li>
+  <li><a href="#correlation-heatmap" id="toc-correlation-heatmap" class="nav-link" data-scroll-target="#correlation-heatmap"><span class="toc-section-number">4.4.3</span>  Correlation heatmap</a></li>
+  </ul></li>
+  <li><a href="#correlation" id="toc-correlation" class="nav-link" data-scroll-target="#correlation"><span class="toc-section-number">4.5</span>  Correlation</a></li>
+  <li><a href="#association-between-two-categorical-variables-chi-square" id="toc-association-between-two-categorical-variables-chi-square" class="nav-link" data-scroll-target="#association-between-two-categorical-variables-chi-square"><span class="toc-section-number">4.6</span>  Association between two categorical variables: Chi-Square</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exploratory data analysis (EDA) in python</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>Exploratory data analysis is a preliminary step in data analysis to:</p>
+<ul>
+<li>Summarize main characteristics of the data</li>
+<li>Gain better understanding of the data set</li>
+<li>Uncover relationships between different variables</li>
+<li>Extract important variables for the problem we’re trying to solve</li>
+</ul>
+<p>In this tutorial we want to answer the key question: What are the main characteristics that have the most impact on the car price?</p>
+<section id="notebook-setup" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="notebook-setup"><span class="header-section-number">4.1</span> Notebook setup</h2>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load libs</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#load data</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"../data/automobileEDA.csv"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>symboling</th>
+      <th>normalized-losses</th>
+      <th>make</th>
+      <th>aspiration</th>
+      <th>num-of-doors</th>
+      <th>body-style</th>
+      <th>drive-wheels</th>
+      <th>engine-location</th>
+      <th>wheel-base</th>
+      <th>length</th>
+      <th>...</th>
+      <th>compression-ratio</th>
+      <th>horsepower</th>
+      <th>peak-rpm</th>
+      <th>city-mpg</th>
+      <th>highway-mpg</th>
+      <th>price</th>
+      <th>city-L/100km</th>
+      <th>horsepower-binned</th>
+      <th>diesel</th>
+      <th>gas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3</td>
+      <td>122</td>
+      <td>alfa-romero</td>
+      <td>std</td>
+      <td>two</td>
+      <td>convertible</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>88.6</td>
+      <td>0.811148</td>
+      <td>...</td>
+      <td>9.0</td>
+      <td>111.0</td>
+      <td>5000.0</td>
+      <td>21</td>
+      <td>27</td>
+      <td>13495.0</td>
+      <td>11.190476</td>
+      <td>Medium</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3</td>
+      <td>122</td>
+      <td>alfa-romero</td>
+      <td>std</td>
+      <td>two</td>
+      <td>convertible</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>88.6</td>
+      <td>0.811148</td>
+      <td>...</td>
+      <td>9.0</td>
+      <td>111.0</td>
+      <td>5000.0</td>
+      <td>21</td>
+      <td>27</td>
+      <td>16500.0</td>
+      <td>11.190476</td>
+      <td>Medium</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>122</td>
+      <td>alfa-romero</td>
+      <td>std</td>
+      <td>two</td>
+      <td>hatchback</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>94.5</td>
+      <td>0.822681</td>
+      <td>...</td>
+      <td>9.0</td>
+      <td>154.0</td>
+      <td>5000.0</td>
+      <td>19</td>
+      <td>26</td>
+      <td>16500.0</td>
+      <td>12.368421</td>
+      <td>Medium</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>164</td>
+      <td>audi</td>
+      <td>std</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>99.8</td>
+      <td>0.848630</td>
+      <td>...</td>
+      <td>10.0</td>
+      <td>102.0</td>
+      <td>5500.0</td>
+      <td>24</td>
+      <td>30</td>
+      <td>13950.0</td>
+      <td>9.791667</td>
+      <td>Medium</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>164</td>
+      <td>audi</td>
+      <td>std</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>4wd</td>
+      <td>front</td>
+      <td>99.4</td>
+      <td>0.848630</td>
+      <td>...</td>
+      <td>8.0</td>
+      <td>115.0</td>
+      <td>5500.0</td>
+      <td>18</td>
+      <td>22</td>
+      <td>17450.0</td>
+      <td>13.055556</td>
+      <td>Medium</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 29 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="analyzing-individual-feature-patterns-using-visualization" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="analyzing-individual-feature-patterns-using-visualization"><span class="header-section-number">4.2</span> Analyzing Individual Feature Patterns Using Visualization</h2>
+<p>How to choose the right visualization method?¶</p>
+<p>When visualizing individual variables, it is important to first understand what type of variable you are dealing with. This will help us find the right visualization method for that variable.</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df.dtypes.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>symboling             int64
+normalized-losses     int64
+make                 object
+aspiration           object
+num-of-doors         object
+dtype: object</code></pre>
+</div>
+</div>
+<p>We can calculate the correlation between variables of type “int64” or “float64” using the method “corr”. The diagonal elements are always one; we will study correlation more precisely Pearson correlation in-depth at the end of the notebook.</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df.corr()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>symboling</th>
+      <th>normalized-losses</th>
+      <th>wheel-base</th>
+      <th>length</th>
+      <th>width</th>
+      <th>height</th>
+      <th>curb-weight</th>
+      <th>engine-size</th>
+      <th>bore</th>
+      <th>stroke</th>
+      <th>compression-ratio</th>
+      <th>horsepower</th>
+      <th>peak-rpm</th>
+      <th>city-mpg</th>
+      <th>highway-mpg</th>
+      <th>price</th>
+      <th>city-L/100km</th>
+      <th>diesel</th>
+      <th>gas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>symboling</th>
+      <td>1.000000</td>
+      <td>0.466264</td>
+      <td>-0.535987</td>
+      <td>-0.365404</td>
+      <td>-0.242423</td>
+      <td>-0.550160</td>
+      <td>-0.233118</td>
+      <td>-0.110581</td>
+      <td>-0.140019</td>
+      <td>-0.008245</td>
+      <td>-0.182196</td>
+      <td>0.075819</td>
+      <td>0.279740</td>
+      <td>-0.035527</td>
+      <td>0.036233</td>
+      <td>-0.082391</td>
+      <td>0.066171</td>
+      <td>-0.196735</td>
+      <td>0.196735</td>
+    </tr>
+    <tr>
+      <th>normalized-losses</th>
+      <td>0.466264</td>
+      <td>1.000000</td>
+      <td>-0.056661</td>
+      <td>0.019424</td>
+      <td>0.086802</td>
+      <td>-0.373737</td>
+      <td>0.099404</td>
+      <td>0.112360</td>
+      <td>-0.029862</td>
+      <td>0.055563</td>
+      <td>-0.114713</td>
+      <td>0.217299</td>
+      <td>0.239543</td>
+      <td>-0.225016</td>
+      <td>-0.181877</td>
+      <td>0.133999</td>
+      <td>0.238567</td>
+      <td>-0.101546</td>
+      <td>0.101546</td>
+    </tr>
+    <tr>
+      <th>wheel-base</th>
+      <td>-0.535987</td>
+      <td>-0.056661</td>
+      <td>1.000000</td>
+      <td>0.876024</td>
+      <td>0.814507</td>
+      <td>0.590742</td>
+      <td>0.782097</td>
+      <td>0.572027</td>
+      <td>0.493244</td>
+      <td>0.158502</td>
+      <td>0.250313</td>
+      <td>0.371147</td>
+      <td>-0.360305</td>
+      <td>-0.470606</td>
+      <td>-0.543304</td>
+      <td>0.584642</td>
+      <td>0.476153</td>
+      <td>0.307237</td>
+      <td>-0.307237</td>
+    </tr>
+    <tr>
+      <th>length</th>
+      <td>-0.365404</td>
+      <td>0.019424</td>
+      <td>0.876024</td>
+      <td>1.000000</td>
+      <td>0.857170</td>
+      <td>0.492063</td>
+      <td>0.880665</td>
+      <td>0.685025</td>
+      <td>0.608971</td>
+      <td>0.124139</td>
+      <td>0.159733</td>
+      <td>0.579821</td>
+      <td>-0.285970</td>
+      <td>-0.665192</td>
+      <td>-0.698142</td>
+      <td>0.690628</td>
+      <td>0.657373</td>
+      <td>0.211187</td>
+      <td>-0.211187</td>
+    </tr>
+    <tr>
+      <th>width</th>
+      <td>-0.242423</td>
+      <td>0.086802</td>
+      <td>0.814507</td>
+      <td>0.857170</td>
+      <td>1.000000</td>
+      <td>0.306002</td>
+      <td>0.866201</td>
+      <td>0.729436</td>
+      <td>0.544885</td>
+      <td>0.188829</td>
+      <td>0.189867</td>
+      <td>0.615077</td>
+      <td>-0.245800</td>
+      <td>-0.633531</td>
+      <td>-0.680635</td>
+      <td>0.751265</td>
+      <td>0.673363</td>
+      <td>0.244356</td>
+      <td>-0.244356</td>
+    </tr>
+    <tr>
+      <th>height</th>
+      <td>-0.550160</td>
+      <td>-0.373737</td>
+      <td>0.590742</td>
+      <td>0.492063</td>
+      <td>0.306002</td>
+      <td>1.000000</td>
+      <td>0.307581</td>
+      <td>0.074694</td>
+      <td>0.180449</td>
+      <td>-0.062704</td>
+      <td>0.259737</td>
+      <td>-0.087027</td>
+      <td>-0.309974</td>
+      <td>-0.049800</td>
+      <td>-0.104812</td>
+      <td>0.135486</td>
+      <td>0.003811</td>
+      <td>0.281578</td>
+      <td>-0.281578</td>
+    </tr>
+    <tr>
+      <th>curb-weight</th>
+      <td>-0.233118</td>
+      <td>0.099404</td>
+      <td>0.782097</td>
+      <td>0.880665</td>
+      <td>0.866201</td>
+      <td>0.307581</td>
+      <td>1.000000</td>
+      <td>0.849072</td>
+      <td>0.644060</td>
+      <td>0.167562</td>
+      <td>0.156433</td>
+      <td>0.757976</td>
+      <td>-0.279361</td>
+      <td>-0.749543</td>
+      <td>-0.794889</td>
+      <td>0.834415</td>
+      <td>0.785353</td>
+      <td>0.221046</td>
+      <td>-0.221046</td>
+    </tr>
+    <tr>
+      <th>engine-size</th>
+      <td>-0.110581</td>
+      <td>0.112360</td>
+      <td>0.572027</td>
+      <td>0.685025</td>
+      <td>0.729436</td>
+      <td>0.074694</td>
+      <td>0.849072</td>
+      <td>1.000000</td>
+      <td>0.572609</td>
+      <td>0.209523</td>
+      <td>0.028889</td>
+      <td>0.822676</td>
+      <td>-0.256733</td>
+      <td>-0.650546</td>
+      <td>-0.679571</td>
+      <td>0.872335</td>
+      <td>0.745059</td>
+      <td>0.070779</td>
+      <td>-0.070779</td>
+    </tr>
+    <tr>
+      <th>bore</th>
+      <td>-0.140019</td>
+      <td>-0.029862</td>
+      <td>0.493244</td>
+      <td>0.608971</td>
+      <td>0.544885</td>
+      <td>0.180449</td>
+      <td>0.644060</td>
+      <td>0.572609</td>
+      <td>1.000000</td>
+      <td>-0.055390</td>
+      <td>0.001263</td>
+      <td>0.566936</td>
+      <td>-0.267392</td>
+      <td>-0.582027</td>
+      <td>-0.591309</td>
+      <td>0.543155</td>
+      <td>0.554610</td>
+      <td>0.054458</td>
+      <td>-0.054458</td>
+    </tr>
+    <tr>
+      <th>stroke</th>
+      <td>-0.008245</td>
+      <td>0.055563</td>
+      <td>0.158502</td>
+      <td>0.124139</td>
+      <td>0.188829</td>
+      <td>-0.062704</td>
+      <td>0.167562</td>
+      <td>0.209523</td>
+      <td>-0.055390</td>
+      <td>1.000000</td>
+      <td>0.187923</td>
+      <td>0.098462</td>
+      <td>-0.065713</td>
+      <td>-0.034696</td>
+      <td>-0.035201</td>
+      <td>0.082310</td>
+      <td>0.037300</td>
+      <td>0.241303</td>
+      <td>-0.241303</td>
+    </tr>
+    <tr>
+      <th>compression-ratio</th>
+      <td>-0.182196</td>
+      <td>-0.114713</td>
+      <td>0.250313</td>
+      <td>0.159733</td>
+      <td>0.189867</td>
+      <td>0.259737</td>
+      <td>0.156433</td>
+      <td>0.028889</td>
+      <td>0.001263</td>
+      <td>0.187923</td>
+      <td>1.000000</td>
+      <td>-0.214514</td>
+      <td>-0.435780</td>
+      <td>0.331425</td>
+      <td>0.268465</td>
+      <td>0.071107</td>
+      <td>-0.299372</td>
+      <td>0.985231</td>
+      <td>-0.985231</td>
+    </tr>
+    <tr>
+      <th>horsepower</th>
+      <td>0.075819</td>
+      <td>0.217299</td>
+      <td>0.371147</td>
+      <td>0.579821</td>
+      <td>0.615077</td>
+      <td>-0.087027</td>
+      <td>0.757976</td>
+      <td>0.822676</td>
+      <td>0.566936</td>
+      <td>0.098462</td>
+      <td>-0.214514</td>
+      <td>1.000000</td>
+      <td>0.107885</td>
+      <td>-0.822214</td>
+      <td>-0.804575</td>
+      <td>0.809575</td>
+      <td>0.889488</td>
+      <td>-0.169053</td>
+      <td>0.169053</td>
+    </tr>
+    <tr>
+      <th>peak-rpm</th>
+      <td>0.279740</td>
+      <td>0.239543</td>
+      <td>-0.360305</td>
+      <td>-0.285970</td>
+      <td>-0.245800</td>
+      <td>-0.309974</td>
+      <td>-0.279361</td>
+      <td>-0.256733</td>
+      <td>-0.267392</td>
+      <td>-0.065713</td>
+      <td>-0.435780</td>
+      <td>0.107885</td>
+      <td>1.000000</td>
+      <td>-0.115413</td>
+      <td>-0.058598</td>
+      <td>-0.101616</td>
+      <td>0.115830</td>
+      <td>-0.475812</td>
+      <td>0.475812</td>
+    </tr>
+    <tr>
+      <th>city-mpg</th>
+      <td>-0.035527</td>
+      <td>-0.225016</td>
+      <td>-0.470606</td>
+      <td>-0.665192</td>
+      <td>-0.633531</td>
+      <td>-0.049800</td>
+      <td>-0.749543</td>
+      <td>-0.650546</td>
+      <td>-0.582027</td>
+      <td>-0.034696</td>
+      <td>0.331425</td>
+      <td>-0.822214</td>
+      <td>-0.115413</td>
+      <td>1.000000</td>
+      <td>0.972044</td>
+      <td>-0.686571</td>
+      <td>-0.949713</td>
+      <td>0.265676</td>
+      <td>-0.265676</td>
+    </tr>
+    <tr>
+      <th>highway-mpg</th>
+      <td>0.036233</td>
+      <td>-0.181877</td>
+      <td>-0.543304</td>
+      <td>-0.698142</td>
+      <td>-0.680635</td>
+      <td>-0.104812</td>
+      <td>-0.794889</td>
+      <td>-0.679571</td>
+      <td>-0.591309</td>
+      <td>-0.035201</td>
+      <td>0.268465</td>
+      <td>-0.804575</td>
+      <td>-0.058598</td>
+      <td>0.972044</td>
+      <td>1.000000</td>
+      <td>-0.704692</td>
+      <td>-0.930028</td>
+      <td>0.198690</td>
+      <td>-0.198690</td>
+    </tr>
+    <tr>
+      <th>price</th>
+      <td>-0.082391</td>
+      <td>0.133999</td>
+      <td>0.584642</td>
+      <td>0.690628</td>
+      <td>0.751265</td>
+      <td>0.135486</td>
+      <td>0.834415</td>
+      <td>0.872335</td>
+      <td>0.543155</td>
+      <td>0.082310</td>
+      <td>0.071107</td>
+      <td>0.809575</td>
+      <td>-0.101616</td>
+      <td>-0.686571</td>
+      <td>-0.704692</td>
+      <td>1.000000</td>
+      <td>0.789898</td>
+      <td>0.110326</td>
+      <td>-0.110326</td>
+    </tr>
+    <tr>
+      <th>city-L/100km</th>
+      <td>0.066171</td>
+      <td>0.238567</td>
+      <td>0.476153</td>
+      <td>0.657373</td>
+      <td>0.673363</td>
+      <td>0.003811</td>
+      <td>0.785353</td>
+      <td>0.745059</td>
+      <td>0.554610</td>
+      <td>0.037300</td>
+      <td>-0.299372</td>
+      <td>0.889488</td>
+      <td>0.115830</td>
+      <td>-0.949713</td>
+      <td>-0.930028</td>
+      <td>0.789898</td>
+      <td>1.000000</td>
+      <td>-0.241282</td>
+      <td>0.241282</td>
+    </tr>
+    <tr>
+      <th>diesel</th>
+      <td>-0.196735</td>
+      <td>-0.101546</td>
+      <td>0.307237</td>
+      <td>0.211187</td>
+      <td>0.244356</td>
+      <td>0.281578</td>
+      <td>0.221046</td>
+      <td>0.070779</td>
+      <td>0.054458</td>
+      <td>0.241303</td>
+      <td>0.985231</td>
+      <td>-0.169053</td>
+      <td>-0.475812</td>
+      <td>0.265676</td>
+      <td>0.198690</td>
+      <td>0.110326</td>
+      <td>-0.241282</td>
+      <td>1.000000</td>
+      <td>-1.000000</td>
+    </tr>
+    <tr>
+      <th>gas</th>
+      <td>0.196735</td>
+      <td>0.101546</td>
+      <td>-0.307237</td>
+      <td>-0.211187</td>
+      <td>-0.244356</td>
+      <td>-0.281578</td>
+      <td>-0.221046</td>
+      <td>-0.070779</td>
+      <td>-0.054458</td>
+      <td>-0.241303</td>
+      <td>-0.985231</td>
+      <td>0.169053</td>
+      <td>0.475812</td>
+      <td>-0.265676</td>
+      <td>-0.198690</td>
+      <td>-0.110326</td>
+      <td>0.241282</td>
+      <td>-1.000000</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="descriptive-statistics" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="descriptive-statistics"><span class="header-section-number">4.3</span> Descriptive statistics</h2>
+<ul>
+<li>Describe basic features of data</li>
+<li>Give short summaries about the sample and measures of the data</li>
+</ul>
+<p>Examples of useful tools in python:</p>
+<section id="the-describe-function" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="the-describe-function"><span class="header-section-number">4.3.1</span> The describe function</h3>
+<p>The describe function automatically computes basic statistics for all continuous variables. Any NaN values are automatically skipped in these statistics.</p>
+<p>This will show:</p>
+<ul>
+<li>the count of that variable</li>
+<li>the mean</li>
+<li>the standard deviation (std)</li>
+<li>the minimum value</li>
+<li>the IQR (Interquartile Range: 25%, 50% and 75%)</li>
+<li>the maximum value</li>
+<li>We can apply the method “describe” as follows:</li>
+</ul>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>symboling</th>
+      <th>normalized-losses</th>
+      <th>wheel-base</th>
+      <th>length</th>
+      <th>width</th>
+      <th>height</th>
+      <th>curb-weight</th>
+      <th>engine-size</th>
+      <th>bore</th>
+      <th>stroke</th>
+      <th>compression-ratio</th>
+      <th>horsepower</th>
+      <th>peak-rpm</th>
+      <th>city-mpg</th>
+      <th>highway-mpg</th>
+      <th>price</th>
+      <th>city-L/100km</th>
+      <th>diesel</th>
+      <th>gas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>201.000000</td>
+      <td>201.00000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+      <td>197.000000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+      <td>201.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.840796</td>
+      <td>122.00000</td>
+      <td>98.797015</td>
+      <td>0.837102</td>
+      <td>0.915126</td>
+      <td>53.766667</td>
+      <td>2555.666667</td>
+      <td>126.875622</td>
+      <td>3.330692</td>
+      <td>3.256904</td>
+      <td>10.164279</td>
+      <td>103.405534</td>
+      <td>5117.665368</td>
+      <td>25.179104</td>
+      <td>30.686567</td>
+      <td>13207.129353</td>
+      <td>9.944145</td>
+      <td>0.099502</td>
+      <td>0.900498</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>1.254802</td>
+      <td>31.99625</td>
+      <td>6.066366</td>
+      <td>0.059213</td>
+      <td>0.029187</td>
+      <td>2.447822</td>
+      <td>517.296727</td>
+      <td>41.546834</td>
+      <td>0.268072</td>
+      <td>0.319256</td>
+      <td>4.004965</td>
+      <td>37.365700</td>
+      <td>478.113805</td>
+      <td>6.423220</td>
+      <td>6.815150</td>
+      <td>7947.066342</td>
+      <td>2.534599</td>
+      <td>0.300083</td>
+      <td>0.300083</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>-2.000000</td>
+      <td>65.00000</td>
+      <td>86.600000</td>
+      <td>0.678039</td>
+      <td>0.837500</td>
+      <td>47.800000</td>
+      <td>1488.000000</td>
+      <td>61.000000</td>
+      <td>2.540000</td>
+      <td>2.070000</td>
+      <td>7.000000</td>
+      <td>48.000000</td>
+      <td>4150.000000</td>
+      <td>13.000000</td>
+      <td>16.000000</td>
+      <td>5118.000000</td>
+      <td>4.795918</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.000000</td>
+      <td>101.00000</td>
+      <td>94.500000</td>
+      <td>0.801538</td>
+      <td>0.890278</td>
+      <td>52.000000</td>
+      <td>2169.000000</td>
+      <td>98.000000</td>
+      <td>3.150000</td>
+      <td>3.110000</td>
+      <td>8.600000</td>
+      <td>70.000000</td>
+      <td>4800.000000</td>
+      <td>19.000000</td>
+      <td>25.000000</td>
+      <td>7775.000000</td>
+      <td>7.833333</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>1.000000</td>
+      <td>122.00000</td>
+      <td>97.000000</td>
+      <td>0.832292</td>
+      <td>0.909722</td>
+      <td>54.100000</td>
+      <td>2414.000000</td>
+      <td>120.000000</td>
+      <td>3.310000</td>
+      <td>3.290000</td>
+      <td>9.000000</td>
+      <td>95.000000</td>
+      <td>5125.369458</td>
+      <td>24.000000</td>
+      <td>30.000000</td>
+      <td>10295.000000</td>
+      <td>9.791667</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>2.000000</td>
+      <td>137.00000</td>
+      <td>102.400000</td>
+      <td>0.881788</td>
+      <td>0.925000</td>
+      <td>55.500000</td>
+      <td>2926.000000</td>
+      <td>141.000000</td>
+      <td>3.580000</td>
+      <td>3.410000</td>
+      <td>9.400000</td>
+      <td>116.000000</td>
+      <td>5500.000000</td>
+      <td>30.000000</td>
+      <td>34.000000</td>
+      <td>16500.000000</td>
+      <td>12.368421</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>3.000000</td>
+      <td>256.00000</td>
+      <td>120.900000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>59.800000</td>
+      <td>4066.000000</td>
+      <td>326.000000</td>
+      <td>3.940000</td>
+      <td>4.170000</td>
+      <td>23.000000</td>
+      <td>262.000000</td>
+      <td>6600.000000</td>
+      <td>49.000000</td>
+      <td>54.000000</td>
+      <td>45400.000000</td>
+      <td>18.076923</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>The default setting of “describe” skips variables of type object. We can apply the method “describe” on the variables of type ‘object’ as follows:</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df.describe(include <span class="op">=</span> [<span class="st">'object'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>make</th>
+      <th>aspiration</th>
+      <th>num-of-doors</th>
+      <th>body-style</th>
+      <th>drive-wheels</th>
+      <th>engine-location</th>
+      <th>engine-type</th>
+      <th>num-of-cylinders</th>
+      <th>fuel-system</th>
+      <th>horsepower-binned</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>201</td>
+      <td>201</td>
+      <td>201</td>
+      <td>201</td>
+      <td>201</td>
+      <td>201</td>
+      <td>201</td>
+      <td>201</td>
+      <td>201</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>unique</th>
+      <td>22</td>
+      <td>2</td>
+      <td>2</td>
+      <td>5</td>
+      <td>3</td>
+      <td>2</td>
+      <td>6</td>
+      <td>7</td>
+      <td>8</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>top</th>
+      <td>toyota</td>
+      <td>std</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>ohc</td>
+      <td>four</td>
+      <td>mpfi</td>
+      <td>Low</td>
+    </tr>
+    <tr>
+      <th>freq</th>
+      <td>32</td>
+      <td>165</td>
+      <td>115</td>
+      <td>94</td>
+      <td>118</td>
+      <td>198</td>
+      <td>145</td>
+      <td>157</td>
+      <td>92</td>
+      <td>115</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="the-value_counts-function" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="the-value_counts-function"><span class="header-section-number">4.3.2</span> The value_counts function</h3>
+<p>Value counts is a good way of understanding how many units of each characteristic/variable we have. We can apply the “value_counts” method on the column “drive-wheels”. Don’t forget the method “value_counts” only works on pandas series, not pandas dataframes. As a result, we only include one bracket df[‘drive-wheels’], not two brackets df[[‘drive-wheels’]].</p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'drive-wheels'</span>].value_counts()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>fwd    118
+rwd     75
+4wd      8
+Name: drive-wheels, dtype: int64</code></pre>
+</div>
+</div>
+<p>We can convert the series to a dataframe as follows:</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'drive-wheels'</span>].value_counts().to_frame()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>drive-wheels</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>fwd</th>
+      <td>118</td>
+    </tr>
+    <tr>
+      <th>rwd</th>
+      <td>75</td>
+    </tr>
+    <tr>
+      <th>4wd</th>
+      <td>8</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Let’s repeat the above steps but save the results to the dataframe “drive_wheels_counts” and rename the column ‘drive-wheels’ to ‘value_counts’.</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>drive_wheels_counts <span class="op">=</span> df[<span class="st">'drive-wheels'</span>].value_counts().to_frame()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>drive_wheels_counts.rename(columns<span class="op">=</span>{<span class="st">'drive-wheels'</span>: <span class="st">'value_counts'</span>}, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>drive_wheels_counts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>value_counts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>fwd</th>
+      <td>118</td>
+    </tr>
+    <tr>
+      <th>rwd</th>
+      <td>75</td>
+    </tr>
+    <tr>
+      <th>4wd</th>
+      <td>8</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Now let’s rename the index to ‘drive-wheels’:</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>drive_wheels_counts.index.name <span class="op">=</span> <span class="st">"drive-wheels"</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>drive_wheels_counts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>value_counts</th>
+    </tr>
+    <tr>
+      <th>drive-wheels</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>fwd</th>
+      <td>118</td>
+    </tr>
+    <tr>
+      <th>rwd</th>
+      <td>75</td>
+    </tr>
+    <tr>
+      <th>4wd</th>
+      <td>8</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>We can repeat the above process for the variable ‘engine-location’.</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>engine_loc_counts <span class="op">=</span> df[<span class="st">'engine-location'</span>].value_counts().to_frame()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>engine_loc_counts.rename(columns<span class="op">=</span>{<span class="st">'engine-location'</span>: <span class="st">'value_counts'</span>}, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>engine_loc_counts.index.name <span class="op">=</span> <span class="st">'engine-location'</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>engine_loc_counts.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>value_counts</th>
+    </tr>
+    <tr>
+      <th>engine-location</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>front</th>
+      <td>198</td>
+    </tr>
+    <tr>
+      <th>rear</th>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>After examining the value counts of the engine location, we see that engine location would not be a good predictor variable for the price. This is because we only have three cars with a rear engine and 198 with an engine in the front, so this result is skewed. Thus, we are not able to draw any conclusions about the engine location.</p>
+</section>
+<section id="boxplots" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="boxplots"><span class="header-section-number">4.3.3</span> Boxplots</h3>
+<ul>
+<li><p><u><em>Boxplot</em></u> allow to plot the distribution of numerical data and make it easy to compare between groups. The boxplot shows:</p>
+<ul>
+<li>The <strong>median</strong>: represents where the middle data point is.</li>
+<li>The <strong>upper quartile</strong> shows where the 75th percentile is.</li>
+<li>The <strong>lower quartile</strong> shows where the 25th percentile is.</li>
+<li>The data between the upper and lower quartile represents the <strong>interquartile range</strong>.</li>
+<li>The <strong>lower and upper extremes</strong> are calculated as 1.5 times the interquartile range, above the 75th percentile, and as 1.5 times the IQR below the 25th percentile.</li>
+<li><strong>Outliers</strong> are individual dots that occur outside the upper and lower extremes.</li>
+</ul></li>
+</ul>
+<p>Let’s look at the relationship between “body-style” and “price”.</p>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sns.boxplot(x <span class="op">=</span> <span class="st">"body-style"</span>, y <span class="op">=</span> <span class="st">"price"</span>, data <span class="op">=</span> df)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="3_exploratory_data_analysis_files/figure-html/cell-12-output-1.png" width="350" height="319"></p>
+</div>
+</div>
+<p>We see that the distributions of price between the different body-style categories have a significant overlap, so body-style would not be a good predictor of price. Let’s examine engine “engine-location” and “price”:</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sns.boxplot(x <span class="op">=</span> <span class="st">"engine-location"</span>, y <span class="op">=</span> <span class="st">"price"</span>, data <span class="op">=</span> df)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="3_exploratory_data_analysis_files/figure-html/cell-13-output-1.png" width="350" height="319"></p>
+</div>
+</div>
+<p>Here we see that the distribution of price between these two engine-location categories, front and rear, are distinct enough to take engine-location as a potential good predictor of price.</p>
+<p>Let’s examine “drive-wheels” and “price”.</p>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>sns.boxplot(x <span class="op">=</span> <span class="st">"drive-wheels"</span>, y <span class="op">=</span> <span class="st">"price"</span>, data <span class="op">=</span> df)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="3_exploratory_data_analysis_files/figure-html/cell-14-output-1.png" width="350" height="319"></p>
+</div>
+</div>
+<p>Here we see that the distribution of price between the different drive-wheels categories differs. As such, drive-wheels could potentially be a predictor of price.</p>
+</section>
+<section id="scatterplots" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="scatterplots"><span class="header-section-number">4.3.4</span> Scatterplots</h3>
+<ul>
+<li><p><u><em>Scatter plots</em></u> allow the representation of observations as data points and allows to show the relationships between two variables. Could engine size possibly predict the price of a car? Scatterplots show the relationship between two variables:</p>
+<ul>
+<li><strong>Predictor/independent variable</strong> on the x-axis, i.e.&nbsp;the variable that we are using to predict an outcome, i.e.&nbsp;the engine size</li>
+<li><strong>Target/dependent variable</strong> on the y-axis, i.e.&nbsp;the price</li>
+</ul></li>
+</ul>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sns.regplot(x <span class="op">=</span> <span class="st">"engine-size"</span>, y <span class="op">=</span> <span class="st">"price"</span>, data <span class="op">=</span> df)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>plt.ylim</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="3_exploratory_data_analysis_files/figure-html/cell-15-output-1.png" width="350" height="319"></p>
+</div>
+</div>
+<p>As the engine-size goes up, the price goes up: this indicates a positive direct correlation between these two variables. Engine size seems like a pretty good predictor of price since the regression line is almost a perfect diagonal line.</p>
+<p>We can examine the correlation between ‘engine-size’ and ‘price’ and see that it’s approximately 0.87.</p>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"engine-size"</span>, <span class="st">"price"</span>]].corr()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>engine-size</th>
+      <th>price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>engine-size</th>
+      <td>1.000000</td>
+      <td>0.872335</td>
+    </tr>
+    <tr>
+      <th>price</th>
+      <td>0.872335</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Highway mpg is a potential predictor variable of price. Let’s find the scatterplot of “highway-mpg” and “price”.</p>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>sns.regplot(x <span class="op">=</span> <span class="st">"highway-mpg"</span>, y <span class="op">=</span> <span class="st">"price"</span>, data <span class="op">=</span> df)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>plt.ylim</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="3_exploratory_data_analysis_files/figure-html/cell-17-output-1.png" width="361" height="319"></p>
+</div>
+</div>
+<p>As highway-mpg goes up, the price goes down: this indicates an inverse/negative relationship between these two variables. Highway mpg could potentially be a predictor of price.</p>
+<p>We can examine the correlation between ‘highway-mpg’ and ‘price’ and see it’s approximately -0.704.</p>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"highway-mpg"</span>, <span class="st">"price"</span>]].corr()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>highway-mpg</th>
+      <th>price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>highway-mpg</th>
+      <td>1.000000</td>
+      <td>-0.704692</td>
+    </tr>
+    <tr>
+      <th>price</th>
+      <td>-0.704692</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Let’s see if “peak-rpm” is a predictor variable of “price”.</p>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sns.regplot(x <span class="op">=</span> <span class="st">"peak-rpm"</span>, y <span class="op">=</span> <span class="st">"price"</span>, data <span class="op">=</span> df)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>plt.ylim</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="3_exploratory_data_analysis_files/figure-html/cell-19-output-1.png" width="350" height="319"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"peak-rpm"</span>, <span class="st">"price"</span>]].corr()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>peak-rpm</th>
+      <th>price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>peak-rpm</th>
+      <td>1.000000</td>
+      <td>-0.101616</td>
+    </tr>
+    <tr>
+      <th>price</th>
+      <td>-0.101616</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Peak rpm does not seem like a good predictor of the price at all since the regression line is close to horizontal. Also, the data points are very scattered and far from the fitted line, showing lots of variability. Therefore, it’s not a reliable variable.</p>
+</section>
+</section>
+<section id="groupby-in-python" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="groupby-in-python"><span class="header-section-number">4.4</span> GroupBy in python</h2>
+<p>Assume we want to know, is there any relationship between the different types of drive system, forward, rear, and four-wheel drive, and the price of the vehicles?</p>
+<p>If so, which type of drive system adds the most value to a vehicle? It would be nice if we could group all the data by the different types of drive wheels and compare the results of these different drive wheels against each other.</p>
+<p>To do this we can use pandas groupby() method, which:</p>
+<ul>
+<li>groups data by different categories</li>
+<li>Can be applied on categorical values</li>
+<li>Allows to group data into categories</li>
+<li>Accepts single multiple variables</li>
+</ul>
+<p>For example, let’s group by the variable “drive-wheels”. We see that there are 3 different categories of drive wheels.</p>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'drive-wheels'</span>].unique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>array(['rwd', 'fwd', '4wd'], dtype=object)</code></pre>
+</div>
+</div>
+<p>If we want to know, on average, which type of drive wheel is most valuable, we can group “drive-wheels” and then average them.</p>
+<p>We can select the columns ‘drive-wheels’, ‘body-style’ and ‘price’, then assign it to the variable “df_group_one”.</p>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>df_group_one <span class="op">=</span> df[[<span class="st">'drive-wheels'</span>, <span class="st">'body-style'</span>, <span class="st">'price'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can then calculate the average price for each of the different categories of data.</p>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df_group_one <span class="op">=</span> df_group_one.groupby([<span class="st">'drive-wheels'</span>], as_index <span class="op">=</span> <span class="va">False</span>).mean()</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>df_group_one</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>drive-wheels</th>
+      <th>price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>4wd</td>
+      <td>10241.000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>fwd</td>
+      <td>9244.779661</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>rwd</td>
+      <td>19757.613333</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>From our data, it seems rear-wheel drive vehicles are, on average, the most expensive, while 4-wheel and front-wheel are approximately the same in price.</p>
+<p>You can also group by multiple variables. For example, let’s group by both ‘drive-wheels’ and ‘body-style’. This groups the dataframe by the unique combination of ‘drive-wheels’ and ‘body-style’. We can store the results in the variable ‘grouped_test1’.</p>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df_gptest <span class="op">=</span> df[[<span class="st">'drive-wheels'</span>,<span class="st">'body-style'</span>,<span class="st">'price'</span>]]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>grouped_test1 <span class="op">=</span> df_gptest.groupby([<span class="st">'drive-wheels'</span>,<span class="st">'body-style'</span>],as_index<span class="op">=</span><span class="va">False</span>).mean()</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>grouped_test1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>drive-wheels</th>
+      <th>body-style</th>
+      <th>price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>4wd</td>
+      <td>hatchback</td>
+      <td>7603.000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4wd</td>
+      <td>sedan</td>
+      <td>12647.333333</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4wd</td>
+      <td>wagon</td>
+      <td>9095.750000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>fwd</td>
+      <td>convertible</td>
+      <td>11595.000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>fwd</td>
+      <td>hardtop</td>
+      <td>8249.000000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>fwd</td>
+      <td>hatchback</td>
+      <td>8396.387755</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>fwd</td>
+      <td>sedan</td>
+      <td>9811.800000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>fwd</td>
+      <td>wagon</td>
+      <td>9997.333333</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>rwd</td>
+      <td>convertible</td>
+      <td>23949.600000</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>rwd</td>
+      <td>hardtop</td>
+      <td>24202.714286</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>rwd</td>
+      <td>hatchback</td>
+      <td>14337.777778</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>rwd</td>
+      <td>sedan</td>
+      <td>21711.833333</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>rwd</td>
+      <td>wagon</td>
+      <td>16994.222222</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<section id="pivot-in-python" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="pivot-in-python"><span class="header-section-number">4.4.1</span> Pivot() in python</h3>
+<p>To make the output of the groupby method easier to read, we can transform this table to a pivot table by using the pivot method. A pivot table has one variable displayed along the columns and the other variable displayed along the rows.</p>
+<p>In our case, we will leave the drive-wheels variable as the rows of the table, and pivot body-style to become the columns of the table:</p>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>grouped_pivot <span class="op">=</span> grouped_test1.pivot(index <span class="op">=</span> <span class="st">"drive-wheels"</span>, columns <span class="op">=</span> <span class="st">"body-style"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>grouped_pivot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="5" halign="left">price</th>
+    </tr>
+    <tr>
+      <th>body-style</th>
+      <th>convertible</th>
+      <th>hardtop</th>
+      <th>hatchback</th>
+      <th>sedan</th>
+      <th>wagon</th>
+    </tr>
+    <tr>
+      <th>drive-wheels</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4wd</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>7603.000000</td>
+      <td>12647.333333</td>
+      <td>9095.750000</td>
+    </tr>
+    <tr>
+      <th>fwd</th>
+      <td>11595.0</td>
+      <td>8249.000000</td>
+      <td>8396.387755</td>
+      <td>9811.800000</td>
+      <td>9997.333333</td>
+    </tr>
+    <tr>
+      <th>rwd</th>
+      <td>23949.6</td>
+      <td>24202.714286</td>
+      <td>14337.777778</td>
+      <td>21711.833333</td>
+      <td>16994.222222</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Often, we won’t have data for some of the pivot cells. We can fill these missing cells with the value 0, but any other value could potentially be used as well. It should be mentioned that missing data is quite a complex subject and is an entire course on its own.</p>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>grouped_pivot <span class="op">=</span> grouped_pivot.fillna(<span class="dv">0</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>grouped_pivot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="5" halign="left">price</th>
+    </tr>
+    <tr>
+      <th>body-style</th>
+      <th>convertible</th>
+      <th>hardtop</th>
+      <th>hatchback</th>
+      <th>sedan</th>
+      <th>wagon</th>
+    </tr>
+    <tr>
+      <th>drive-wheels</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4wd</th>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>7603.000000</td>
+      <td>12647.333333</td>
+      <td>9095.750000</td>
+    </tr>
+    <tr>
+      <th>fwd</th>
+      <td>11595.0</td>
+      <td>8249.000000</td>
+      <td>8396.387755</td>
+      <td>9811.800000</td>
+      <td>9997.333333</td>
+    </tr>
+    <tr>
+      <th>rwd</th>
+      <td>23949.6</td>
+      <td>24202.714286</td>
+      <td>14337.777778</td>
+      <td>21711.833333</td>
+      <td>16994.222222</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="heatmap-plots" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="heatmap-plots"><span class="header-section-number">4.4.2</span> Heatmap plots</h3>
+<p>Heatmap plots:</p>
+<ul>
+<li>Another way to visualize tables and plot the target variable over multiple variables</li>
+<li>Takes a rectangular grid of data and assigns a color intensity based on the data value at the grid points</li>
+</ul>
+</section>
+<section id="correlation-heatmap" class="level3" data-number="4.4.3">
+<h3 data-number="4.4.3" class="anchored" data-anchor-id="correlation-heatmap"><span class="header-section-number">4.4.3</span> Correlation heatmap</h3>
+<p>Taking all variables into account, we can now create a heatmap that indicates the correlation between each of the variables with one another. The color scheme indicates the Pearson correlation coefficient, indicating the strength of the correlation between two variables.</p>
+<p>Let’s use a heat map to visualize the relationship between Body Style vs Price.</p>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>plt.pcolor(grouped_pivot, cmap <span class="op">=</span> <span class="st">'RdBu'</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>plt.colorbar()</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="3_exploratory_data_analysis_files/figure-html/cell-27-output-1.png" width="336" height="305"></p>
+</div>
+</div>
+<p>The heatmap plots the target variable (price) proportional to colour with respect to the variables ‘drive-wheel’ and ‘body-style’ on the vertical and horizontal axis, respectively. This allows us to visualize how the price is related to ‘drive-wheel’ and ‘body-style’.</p>
+<p>The default labels convey no useful information to us. Let’s change that:</p>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> ax.pcolor(grouped_pivot, cmap<span class="op">=</span><span class="st">'RdBu'</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">#label names</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>row_labels <span class="op">=</span> grouped_pivot.columns.levels[<span class="dv">1</span>]</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>col_labels <span class="op">=</span> grouped_pivot.index</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co">#move ticks and labels to the center</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>ax.set_xticks(np.arange(grouped_pivot.shape[<span class="dv">1</span>]) <span class="op">+</span> <span class="fl">0.5</span>, minor<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>ax.set_yticks(np.arange(grouped_pivot.shape[<span class="dv">0</span>]) <span class="op">+</span> <span class="fl">0.5</span>, minor<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co">#insert labels</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels(row_labels, minor<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>ax.set_yticklabels(col_labels, minor<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co">#rotate label if too long</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">90</span>)</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>fig.colorbar(im)</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="3_exploratory_data_analysis_files/figure-html/cell-28-output-1.png" width="342" height="362"></p>
+</div>
+</div>
+<p>Visualization is very important in data science, and Python visualization packages provide great freedom. We will go more in-depth in a separate Python visualizations course.</p>
+<p>The main question we want to answer in this module is, “What are the main characteristics which have the most impact on the car price?”.</p>
+<p>To get a better measure of the important characteristics, we look at the correlation of these variables with the car price. In other words: how is the car price dependent on this variable?</p>
+</section>
+</section>
+<section id="correlation" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="correlation"><span class="header-section-number">4.5</span> Correlation</h2>
+<p>Correlation is a statistical metric for measuring to what extent different variables are interdependent.</p>
+<p>In other words, when we look at two variables over time, if one variable changes how does this affect change in the other variable?</p>
+<p>For example, there is a correlation between umbrella and rain variables where more precipitation means more people use umbrellas. Also, if it doesn’t rain people would not carry umbrellas. Therefore, we can say that umbrellas and rain are interdependent and by definition they are correlated.</p>
+<p><strong>It is important to know that correlation doesn’t imply causation.</strong></p>
+<p><strong>Correlation</strong>: a measure of the extent of interdependence between variables. <strong>Causation</strong>: the relationship between cause and effect between two variables.</p>
+<p>In fact, we can say that umbrella and rain are correlated but we would not have enough information to say whether the umbrella caused the rain or the rain caused the umbrella.</p>
+<section id="pearson-correlation" class="level4" data-number="4.5.0.1">
+<h4 data-number="4.5.0.1" class="anchored" data-anchor-id="pearson-correlation"><span class="header-section-number">4.5.0.1</span> Pearson correlation</h4>
+<p>Measures the strength of the correlation between a continuous numerical variable.</p>
+<p>This method will give us two values:</p>
+<ul>
+<li><p>Correlation coefficient, a value:</p>
+<ul>
+<li>Close to 1: Large positive relationship</li>
+<li>Close to -1 : Large negative relationship</li>
+<li>Close to 0: No relationship</li>
+</ul></li>
+</ul>
+<p>Pearson Correlation is the default method of the function “corr”. Like before, we can calculate the Pearson Correlation of the of the ‘int64’ or ‘float64’ variables.</p>
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df.corr().head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>symboling</th>
+      <th>normalized-losses</th>
+      <th>wheel-base</th>
+      <th>length</th>
+      <th>width</th>
+      <th>height</th>
+      <th>curb-weight</th>
+      <th>engine-size</th>
+      <th>bore</th>
+      <th>stroke</th>
+      <th>compression-ratio</th>
+      <th>horsepower</th>
+      <th>peak-rpm</th>
+      <th>city-mpg</th>
+      <th>highway-mpg</th>
+      <th>price</th>
+      <th>city-L/100km</th>
+      <th>diesel</th>
+      <th>gas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>symboling</th>
+      <td>1.000000</td>
+      <td>0.466264</td>
+      <td>-0.535987</td>
+      <td>-0.365404</td>
+      <td>-0.242423</td>
+      <td>-0.550160</td>
+      <td>-0.233118</td>
+      <td>-0.110581</td>
+      <td>-0.140019</td>
+      <td>-0.008245</td>
+      <td>-0.182196</td>
+      <td>0.075819</td>
+      <td>0.279740</td>
+      <td>-0.035527</td>
+      <td>0.036233</td>
+      <td>-0.082391</td>
+      <td>0.066171</td>
+      <td>-0.196735</td>
+      <td>0.196735</td>
+    </tr>
+    <tr>
+      <th>normalized-losses</th>
+      <td>0.466264</td>
+      <td>1.000000</td>
+      <td>-0.056661</td>
+      <td>0.019424</td>
+      <td>0.086802</td>
+      <td>-0.373737</td>
+      <td>0.099404</td>
+      <td>0.112360</td>
+      <td>-0.029862</td>
+      <td>0.055563</td>
+      <td>-0.114713</td>
+      <td>0.217299</td>
+      <td>0.239543</td>
+      <td>-0.225016</td>
+      <td>-0.181877</td>
+      <td>0.133999</td>
+      <td>0.238567</td>
+      <td>-0.101546</td>
+      <td>0.101546</td>
+    </tr>
+    <tr>
+      <th>wheel-base</th>
+      <td>-0.535987</td>
+      <td>-0.056661</td>
+      <td>1.000000</td>
+      <td>0.876024</td>
+      <td>0.814507</td>
+      <td>0.590742</td>
+      <td>0.782097</td>
+      <td>0.572027</td>
+      <td>0.493244</td>
+      <td>0.158502</td>
+      <td>0.250313</td>
+      <td>0.371147</td>
+      <td>-0.360305</td>
+      <td>-0.470606</td>
+      <td>-0.543304</td>
+      <td>0.584642</td>
+      <td>0.476153</td>
+      <td>0.307237</td>
+      <td>-0.307237</td>
+    </tr>
+    <tr>
+      <th>length</th>
+      <td>-0.365404</td>
+      <td>0.019424</td>
+      <td>0.876024</td>
+      <td>1.000000</td>
+      <td>0.857170</td>
+      <td>0.492063</td>
+      <td>0.880665</td>
+      <td>0.685025</td>
+      <td>0.608971</td>
+      <td>0.124139</td>
+      <td>0.159733</td>
+      <td>0.579821</td>
+      <td>-0.285970</td>
+      <td>-0.665192</td>
+      <td>-0.698142</td>
+      <td>0.690628</td>
+      <td>0.657373</td>
+      <td>0.211187</td>
+      <td>-0.211187</td>
+    </tr>
+    <tr>
+      <th>width</th>
+      <td>-0.242423</td>
+      <td>0.086802</td>
+      <td>0.814507</td>
+      <td>0.857170</td>
+      <td>1.000000</td>
+      <td>0.306002</td>
+      <td>0.866201</td>
+      <td>0.729436</td>
+      <td>0.544885</td>
+      <td>0.188829</td>
+      <td>0.189867</td>
+      <td>0.615077</td>
+      <td>-0.245800</td>
+      <td>-0.633531</td>
+      <td>-0.680635</td>
+      <td>0.751265</td>
+      <td>0.673363</td>
+      <td>0.244356</td>
+      <td>-0.244356</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>What is this P-value? The P-value is the probability value that the correlation between these two variables is statistically significant. Normally, we choose a significance level of 0.05, which means that we are 95% confident that the correlation between the variables is significant.</p>
+<ul>
+<li><p>P-value of:</p>
+<ul>
+<li>&lt; 0.001 : strong certainty of the result</li>
+<li>&lt; 0.05 : moderate certainty of the result</li>
+<li>&lt; 0.1 : weak certainty of the result</li>
+<li><blockquote class="blockquote">
+<p>0.1 : no certainty of the result</p>
+</blockquote></li>
+</ul></li>
+</ul>
+<p>Let’s calculate the Pearson Correlation Coefficient and P-value of ‘wheel-base’ and ‘price’.</p>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>pearson_coef, p_value <span class="op">=</span> stats.pearsonr(df[<span class="st">'wheel-base'</span>], df[<span class="st">'price'</span>])</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The Pearson Correlation Coefficient is"</span>, pearson_coef, <span class="st">" with a P-value of P ="</span>, p_value)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The Pearson Correlation Coefficient is 0.584641822265508  with a P-value of P = 8.076488270733218e-20</code></pre>
+</div>
+</div>
+<p>Since the p-value is &lt; 0.001, the correlation between wheel-base and price is statistically significant, although the linear relationship isn’t extremely strong (~0.585).</p>
+<p>Let’s calculate the Pearson Correlation Coefficient and P-value of ‘horsepower’ and ‘price’.</p>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>pearson_coef, p_value <span class="op">=</span> stats.pearsonr(df[<span class="st">'horsepower'</span>], df[<span class="st">'price'</span>])</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The Pearson Correlation Coefficient is"</span>, pearson_coef, <span class="st">" with a P-value of P ="</span>, p_value)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The Pearson Correlation Coefficient is 0.809574567003656  with a P-value of P = 6.369057428259557e-48</code></pre>
+</div>
+</div>
+<p>Since the p-value is &lt; 0.001, the correlation between horsepower and price is statistically significant, and the linear relationship is quite strong (~0.809, close to 1).</p>
+<p>Let’s calculate the Pearson Correlation Coefficient and P-value of ‘length’ and ‘price’.</p>
+<div class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>pearson_coef, p_value <span class="op">=</span> stats.pearsonr(df[<span class="st">'length'</span>], df[<span class="st">'price'</span>])</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The Pearson Correlation Coefficient is"</span>, pearson_coef, <span class="st">" with a P-value of P ="</span>, p_value)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The Pearson Correlation Coefficient is 0.690628380448364  with a P-value of P = 8.016477466158986e-30</code></pre>
+</div>
+</div>
+<p>Since the p-value is &lt; 0.001, the correlation between length and price is statistically significant, and the linear relationship is moderately strong (~0.691).</p>
+<p>Let’s calculate the Pearson Correlation Coefficient and P-value of ‘width’ and ‘price’:</p>
+<div class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>pearson_coef, p_value <span class="op">=</span> stats.pearsonr(df[<span class="st">'width'</span>], df[<span class="st">'price'</span>])</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The Pearson Correlation Coefficient is"</span>, pearson_coef, <span class="st">" with a P-value of P ="</span>, p_value)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The Pearson Correlation Coefficient is 0.7512653440522674  with a P-value of P = 9.200335510481516e-38</code></pre>
+</div>
+</div>
+</section>
+<section id="anova" class="level4" data-number="4.5.0.2">
+<h4 data-number="4.5.0.2" class="anchored" data-anchor-id="anova"><span class="header-section-number">4.5.0.2</span> Anova</h4>
+<p>ANOVA: Analysis of Variance</p>
+<p>The Analysis of Variance (ANOVA) is a statistical method used to test whether there are significant differences between the means of two or more groups. ANOVA returns two parameters:</p>
+<p>F-test score: ANOVA assumes the means of all groups are the same, calculates how much the actual means deviate from the assumption, and reports it as the F-test score. A larger score means there is a larger difference between the means.</p>
+<p>P-value: P-value tells how statistically significant our calculated score value is.</p>
+<p>If our price variable is strongly correlated with the variable we are analyzing, we expect ANOVA to return a sizeable F-test score and a small p-value.</p>
+<p>Since ANOVA analyzes the difference between different groups of the same variable, the groupby function will come in handy. Because the ANOVA algorithm averages the data automatically, we do not need to take the average before hand.</p>
+<p>To see if different types of ‘drive-wheels’ impact ‘price’, we group the data.</p>
+<div class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>grouped_test2<span class="op">=</span>df_gptest[[<span class="st">'drive-wheels'</span>, <span class="st">'price'</span>]].groupby([<span class="st">'drive-wheels'</span>])</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>grouped_test2.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="33">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>drive-wheels</th>
+      <th>price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>rwd</td>
+      <td>13495.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>rwd</td>
+      <td>16500.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>fwd</td>
+      <td>13950.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4wd</td>
+      <td>17450.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>fwd</td>
+      <td>15250.0</td>
+    </tr>
+    <tr>
+      <th>136</th>
+      <td>4wd</td>
+      <td>7603.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>df_gptest.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="34">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>drive-wheels</th>
+      <th>body-style</th>
+      <th>price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>rwd</td>
+      <td>convertible</td>
+      <td>13495.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>rwd</td>
+      <td>convertible</td>
+      <td>16500.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>We can obtain the values of the method group using the method “get_group”.</p>
+<div class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>grouped_test2.get_group(<span class="st">'4wd'</span>)[<span class="st">'price'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<pre><code>4      17450.0
+136     7603.0
+140     9233.0
+141    11259.0
+144     8013.0
+145    11694.0
+150     7898.0
+151     8778.0
+Name: price, dtype: float64</code></pre>
+</div>
+</div>
+<p>We can use the function ‘f_oneway’ in the module ‘stats’ to obtain the F-test score and P-value.</p>
+<div class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ANOVA</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>f_val, p_val <span class="op">=</span> stats.f_oneway(grouped_test2.get_group(<span class="st">'fwd'</span>)[<span class="st">'price'</span>], grouped_test2.get_group(<span class="st">'rwd'</span>)[<span class="st">'price'</span>], grouped_test2.get_group(<span class="st">'4wd'</span>)[<span class="st">'price'</span>])  </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( <span class="st">"ANOVA results: F="</span>, f_val, <span class="st">", P ="</span>, p_val)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ANOVA results: F= 67.95406500780399 , P = 3.3945443577151245e-23</code></pre>
+</div>
+</div>
+<p>This is a great result with a large F-test score showing a strong correlation and a P-value of almost 0 implying almost certain statistical significance. But does this mean all three tested groups are all this highly correlated?</p>
+<p>Let’s examine them separately.</p>
+<p><strong>fwd and rwd</strong></p>
+<div class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>f_val, p_val <span class="op">=</span> stats.f_oneway(grouped_test2.get_group(<span class="st">'fwd'</span>)[<span class="st">'price'</span>], grouped_test2.get_group(<span class="st">'rwd'</span>)[<span class="st">'price'</span>])  </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( <span class="st">"ANOVA results: F="</span>, f_val, <span class="st">", P ="</span>, p_val )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ANOVA results: F= 130.5533160959111 , P = 2.2355306355677845e-23</code></pre>
+</div>
+</div>
+<p><strong>4wd and rwd</strong></p>
+<div class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>f_val, p_val <span class="op">=</span> stats.f_oneway(grouped_test2.get_group(<span class="st">'4wd'</span>)[<span class="st">'price'</span>], grouped_test2.get_group(<span class="st">'rwd'</span>)[<span class="st">'price'</span>])  </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( <span class="st">"ANOVA results: F="</span>, f_val, <span class="st">", P ="</span>, p_val)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ANOVA results: F= 8.580681368924756 , P = 0.004411492211225333</code></pre>
+</div>
+</div>
+<p><strong>4wd and fwd</strong></p>
+<div class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>f_val, p_val <span class="op">=</span> stats.f_oneway(grouped_test2.get_group(<span class="st">'4wd'</span>)[<span class="st">'price'</span>], grouped_test2.get_group(<span class="st">'fwd'</span>)[<span class="st">'price'</span>])  </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"ANOVA results: F="</span>, f_val, <span class="st">", P ="</span>, p_val)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ANOVA results: F= 0.665465750252303 , P = 0.41620116697845666</code></pre>
+</div>
+</div>
+<p>We now have a better idea of what our data looks like and which variables are important to take into account when predicting the car price. We have narrowed it down to the following variables:</p>
+<p>Continuous numerical variables:</p>
+<p>Length Width Curb-weight Engine-size Horsepower City-mpg Highway-mpg Wheel-base Bore Categorical variables:</p>
+<p>Drive-wheels As we now move into building machine learning models to automate our analysis, feeding the model with variables that meaningfully affect our target variable will improve our model’s prediction performance.</p>
+</section>
+</section>
+<section id="association-between-two-categorical-variables-chi-square" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="association-between-two-categorical-variables-chi-square"><span class="header-section-number">4.6</span> Association between two categorical variables: Chi-Square</h2>
+<ul>
+<li>Chi-square test for association allows to find out if there is a relationship between two categorical variables.</li>
+<li>Intended to test how likely it is that an observed distribution is due to chance.</li>
+<li>Measures how well the observed distribution of data fits with the distribution that is expected if the variables are independent = i.e.&nbsp;it tests the null hypothesis that the variables are independent.</li>
+<li>Compares the observed data to the values that the model expects if the data was distributed in different categories by chance. Anytime the observed data doesn’t fit within the model of the expected values, the probability that the variables are dependent becomes stronger, thus proving the null hypothesis incorrect.</li>
+<li>The chi-square doesn’t tell us what type of relationship exists between the two variables, only that a relationship exists.</li>
+<li><strong>P-value &lt; 0.05</strong>: We reject the null hypothesis that the two variables are independent and can conclude that there is evidence for an association between variable A and variable B.</li>
+</ul>
+<p>(Row total * Column total) / grand total</p>
+<p>degree of freedom = (row-1)*(column-1)</p>
+<pre><code>scipy.stats.chi2_contingency(cont_table, correction = True)</code></pre>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../code/2_preprocessing_of_data.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pre-processing of data in python</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../code/4_model_dev.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model Development in python</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,41 @@
+---
+title: "Data Science Methodology"
+author: "Nina Dombrowski"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    toc_depth: 5  
+    highlight: kate
+    code_folding: hide
+---
+
+# From Deployment to feedback
+
+## Deployment
+
+- Are stakeholders familiar with the new tool?
+- Understanding the results:
+  - Practical understanding of the meaning of the model results
+  - Implication of model results for designing intervention actions 
+- Gather application requirements
+  - ease of use
+  - automation for data prep and scoring
+  - up-to-date risk assessment 
+- Identify additional requirements
+  - Training staff to use the tool
+  - Track/monitor processes for feedback stage
+
+
+## Feedback
+
+- Was the problem solved? Was the question answered?
+- Revise modeling based on feedback
+- Once the model is evaluated and the data scientist confident it will work it is deployed and put to the actual test, actual real time use in the field
+- Define a review process
+  - Measure the results
+  - track patients
+  - Measure effectiveness of the intervention
+- Refine the model
+- Redeployment
+
+

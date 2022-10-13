@@ -1,0 +1,242 @@
+# SQL and python
+
+## Access databases via python
+
+- Python database api (DB-API) to access relational databases
+- Useful interfaces via the jupyter notebooks; a open-source web-application
+- Accessing databases using python: **user <-> jupyter notebook + python programs <-DP API calls to connect to a adtabase-> DBMS** (Database Management Systems)
+- AQL API: consists of library function calls as application programming interface (API) for the dbms
+  - We begin with API calls that connect to a db via connect
+  - We then send a SQL statement via the API to the DBMS
+  - execute
+  - status_check
+
+
+## Writting code via a DBI-API
+
+- dB API calls: Pythons standard API for accessing relational databases
+- Connection objects: Are used to connect to a database and manage transactions
+- Cursor objects: used to run queries; allows to scroll through the results set and retrieve results
+- Connection methods
+  - .cursor()
+  - .commit()
+  - .rollback()
+  - .close()
+- Cursor methods
+  - .callproc()
+  - .execute()
+  - .fetchall()
+- Database cursor:  a control structure that enables traversal over the records in a database. It behaves like a file name or file handle in a programming language.
+- Example
+
+```
+#import database module with 
+from dbmodule import connect
+
+#create connection object
+Connection = connect('databasename', 'username', 'psswd')
+
+#create a cursor object (we need the cursor to run queries
+Cursor = Connection.cursor())
+
+#run queries
+Cursor.execute('select * from mytable')
+
+#fetch the results of the query
+Results = cursor.fetchall()
+
+#free resources by closing the connection
+Cursor.close()
+Connection.close()
+```
+
+
+## Connecting to a database using ibm_db API
+
+- ibm_db: API that provides useful python functions for accessing and manipulating data in an IBM data service database
+- Uses the IBM Data service driver for ODBC and CLI APIs to connect to IBM DB and Informix
+
+0. Go to your IBM Cloud Resources dashboard (or click on IBM Cloud in the top left corner):https://cloud.ibm.com/resources
+1. Locate and click on your Db2 service listed under Services.
+2. Click on Service Credentials in the left menu
+3. Click on the button to create New credential
+4. In the prompt that comes up click the “Add” button in the bottom right:
+5. Check the box to View credentials
+6. Copy and save the credentials making a note of the following:
+
+  - port is the database port --> 30376
+  - db is the database name --> bludb
+  - host is the hostname of the database instance --> 6667d8e9-9d4d-4ccb-ba32-21da3bb5aafc.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud
+  - username is the username you'll use to connect --> jty26738
+  - password is the password you'll use to connect --> Nth9JHtETHDz3XnJ
+
+
+## Creating tables, loading data and querying data
+
+- We can create tables via db2 or with the R/Python environment
+- DB uses the `ibm_db.exec_immediate()` with the following parameters
+  - Connection
+  - Statement
+  - Options
+- i.e. lets create a trucks table
+
+```
+stmt = ibm.db.exec_immediate(conn,
+"Create table trucks(
+serial_no varchar(20)) primary key not null,
+model varchar(20) not null, 
+manufacturer varchar(20) not null,
+engine_size varchar(20) not null,
+truck_class varchar(20) not null)"
+)
+```
+  
+- now lets load some data: 
+
+```
+stmt = ibm.db.exec_immediate(conn, 
+"Insert into trucks (serial_no, model, manufacturer,engine_size,truck_class)
+values('A1234', 'Lonestar', 'International trucks', 'Cummins ISX15', 'Class 8');"
+)
+```
+
+
+- Now we can query some data, i.e. lets view the table
+
+```
+#query the data
+stmt = ibm_db.exec_immediate(conn, "select * from trucks")
+
+#print results
+ibm_db.fetch_both(stmt)
+```
+
+- We can also use the pandas python library to retrieve data
+
+```
+import pandas
+import ibm_db_dbi
+
+#prep connection
+pconn = ibm_db_dbi.Connection(conn)
+
+#create a pandas dataframe
+df = pandas.read_sql('Select * from trucks', pconn)
+
+#view 
+df
+```
+
+
+## SQL magic
+
+Jupyter notebooks have a concept of Magic commands that can simplify working with Python, and are particularly useful for data analysis. You can use the SQL Magic commands to execute queries more easily. Your notebooks can have two types of magic commands:
+
+- Cell magics: start with a double %% sign and apply to the entire cell
+- Line magics: start with a single % (percent) sign and apply to a particular line in a cell
+
+Their usage is of the format:
+
+**%magicname arguments**
+
+
+For example if you want to execute the a query to select some data from a table and fetch its results, you can simply enter a command like the following in your Jupyter notebook cell:
+
+**%sql select * from tablename**
+
+Although SQL magic simplifies working with databases, it has some limitations. For example, unlike DB-API, there are no explicit methods to close a connection and free up resources.
+
+Examples can be found in: DB0201EN-Week3-1-3-SQLmagic.ipynb
+
+
+
+## Analysing data with python
+
+- Kaggle McDonalds nutrition info
+
+1. Load csv into DB2 cloud (source, target, define, finalize)
+2. Verify loaded data using sql, i.e. with select * from table
+
+```
+stmt = ibm_db.exec_immediate(conn, "select count(*) from mcdonals")
+```
+
+3. Use pandas to retrieve data, i.e. vs pandas.read_sql to read in data via a select statement.
+
+```
+import pandas 
+import ibm_db_dbi
+pconn = ibm_dbi.Connection(conn)
+df = pandas.read_sql('select * from mcdonalds', pconn)
+df
+```
+
+4. Learn about data with pandas, i.e. with `df.describe(include="all")`
+
+- Lets find the food item with the max sodium content
+
+4.1. Lets first visualize the food items
+
+```
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+
+#make categorical scatteplots
+plot = sns.swarmplot(x="category", y="sodium", data =df)
+plt.setp(plot.get_xticklabels(), rotation=70)
+plt.title('Sodium content')
+plt.show()
+```
+
+4.2 Find the food item with the max sodium content
+
+```
+#get summary stats
+df['Sodium'].describe()
+
+#find the row with the max sodium value. Lets say we get 82
+df['Sodium'].idxmax()
+
+#lets find the the item with the id retrieved in the second line of code
+df.at[82,'Item']
+```
+
+4.3 further data vis using scatterplots
+
+```
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+
+#create a scatterplot with protein data vs total fat content to look for correlations
+plot = sns.joinplot(x='Protein', y='Total Fat', data=df)
+plt.show()
+```
+
+
+4.4 further data vis using boxplots
+
+```
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+
+#create a boxplot to show the distribution for the sugar data
+plot = sns.set_style("whitegrid")
+ax= sns.boxplot(x=df['Sugars'])
+plt.show()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,11 @@
+{
+  "hash": "47a31acfab9a839beb07cf6169dc3441",
+  "result": {
+    "markdown": "# Data analysis with Python\n\nIn this module, you will learn how to understand data and learn about how to use the libraries in Python to help you import data from multiple sources. You will then learn how to perform some basic tasks to start exploring and analyzing the imported data set.\n\n\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

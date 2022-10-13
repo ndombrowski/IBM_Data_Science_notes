@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Data analysis with python - 5&nbsp; Model Development in python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../code/5_model_eval_and_refinement.html" rel="next">
+<link href="../code/3_exploratory_data_analysis.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model Development in python</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../" class="sidebar-logo-link">
+      <img src="../images/tree_of_life.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Data analysis with python</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data analysis with Python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/1_importing_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Importing datasets</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/2_preprocessing_of_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pre-processing of data in python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/3_exploratory_data_analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exploratory data analysis (EDA) in python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/4_model_dev.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model Development in python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/5_model_eval_and_refinement.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Model Evaluation and Refinement</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">5.1</span>  Introduction</a></li>
+  <li><a href="#linear-regression-and-multiple-linear-regression" id="toc-linear-regression-and-multiple-linear-regression" class="nav-link" data-scroll-target="#linear-regression-and-multiple-linear-regression"><span class="toc-section-number">5.2</span>  Linear Regression and Multiple Linear Regression</a>
+  <ul class="collapse">
+  <li><a href="#simple-linear-regression-slr" id="toc-simple-linear-regression-slr" class="nav-link" data-scroll-target="#simple-linear-regression-slr"><span class="toc-section-number">5.2.1</span>  Simple linear regression (SLR)</a></li>
+  <li><a href="#multiple-linear-regression-mlr" id="toc-multiple-linear-regression-mlr" class="nav-link" data-scroll-target="#multiple-linear-regression-mlr"><span class="toc-section-number">5.2.2</span>  Multiple linear regression (MLR)</a></li>
+  </ul></li>
+  <li><a href="#model-evaluation-using-visualization" id="toc-model-evaluation-using-visualization" class="nav-link" data-scroll-target="#model-evaluation-using-visualization"><span class="toc-section-number">5.3</span>  Model Evaluation using Visualization</a>
+  <ul class="collapse">
+  <li><a href="#regression-plots" id="toc-regression-plots" class="nav-link" data-scroll-target="#regression-plots"><span class="toc-section-number">5.3.1</span>  Regression plots</a></li>
+  <li><a href="#residual-plot" id="toc-residual-plot" class="nav-link" data-scroll-target="#residual-plot"><span class="toc-section-number">5.3.2</span>  Residual plot</a></li>
+  <li><a href="#distribution-plots" id="toc-distribution-plots" class="nav-link" data-scroll-target="#distribution-plots"><span class="toc-section-number">5.3.3</span>  Distribution plots</a></li>
+  </ul></li>
+  <li><a href="#polynomial-regression-and-pipelines" id="toc-polynomial-regression-and-pipelines" class="nav-link" data-scroll-target="#polynomial-regression-and-pipelines"><span class="toc-section-number">5.4</span>  Polynomial Regression and Pipelines</a>
+  <ul class="collapse">
+  <li><a href="#polynomial-regression" id="toc-polynomial-regression" class="nav-link" data-scroll-target="#polynomial-regression"><span class="toc-section-number">5.4.1</span>  Polynomial Regression</a></li>
+  <li><a href="#pipelines" id="toc-pipelines" class="nav-link" data-scroll-target="#pipelines"><span class="toc-section-number">5.4.2</span>  Pipelines</a></li>
+  </ul></li>
+  <li><a href="#measures-for-in-sample-evaluation" id="toc-measures-for-in-sample-evaluation" class="nav-link" data-scroll-target="#measures-for-in-sample-evaluation"><span class="toc-section-number">5.5</span>  Measures for In-Sample Evaluation</a>
+  <ul class="collapse">
+  <li><a href="#example-r-square-for-slr" id="toc-example-r-square-for-slr" class="nav-link" data-scroll-target="#example-r-square-for-slr"><span class="toc-section-number">5.5.1</span>  Example R-square for SLR</a></li>
+  <li><a href="#example-r-square-for-mlr" id="toc-example-r-square-for-mlr" class="nav-link" data-scroll-target="#example-r-square-for-mlr"><span class="toc-section-number">5.5.2</span>  Example R-square for MLR</a></li>
+  <li><a href="#example-r-square-for-polynomial-fit" id="toc-example-r-square-for-polynomial-fit" class="nav-link" data-scroll-target="#example-r-square-for-polynomial-fit"><span class="toc-section-number">5.5.3</span>  Example R-square for polynomial fit</a></li>
+  </ul></li>
+  <li><a href="#prediction-and-decision-making" id="toc-prediction-and-decision-making" class="nav-link" data-scroll-target="#prediction-and-decision-making"><span class="toc-section-number">5.6</span>  Prediction and Decision Making</a>
+  <ul class="collapse">
+  <li><a href="#prediction" id="toc-prediction" class="nav-link" data-scroll-target="#prediction"><span class="toc-section-number">5.6.1</span>  Prediction</a></li>
+  <li><a href="#decision-making-determining-a-good-model-fit" id="toc-decision-making-determining-a-good-model-fit" class="nav-link" data-scroll-target="#decision-making-determining-a-good-model-fit"><span class="toc-section-number">5.6.2</span>  Decision Making: Determining a Good Model Fit¶</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model Development in python</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">5.1</span> Introduction</h2>
+<ul>
+<li>Model : A mathematical equation used to predict a value given one or more values</li>
+<li>Relating one or more independent variables to dependent variables. For example we can input a cars highway-mpg as independent variable (ore feature). The output of the model or the dependent variable is the predicted price.</li>
+<li>The more relevant data we have, the more accurate a model usually is. For example, we can input multiple independent variables (highway-mpg, engine-size, etc) and therefore our model might predict a more accurate price for a car.</li>
+</ul>
+<p>Some questions we want to ask in this module</p>
+<p>Do I know if the dealer is offering fair value for my trade-in? Do I know if I put a fair value on my car?</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#setup general libs</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#setup lib for linear regression</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#model vis</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#read in example data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"../data/automobileEDA.csv.1"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>symboling</th>
+      <th>normalized-losses</th>
+      <th>make</th>
+      <th>aspiration</th>
+      <th>num-of-doors</th>
+      <th>body-style</th>
+      <th>drive-wheels</th>
+      <th>engine-location</th>
+      <th>wheel-base</th>
+      <th>length</th>
+      <th>...</th>
+      <th>compression-ratio</th>
+      <th>horsepower</th>
+      <th>peak-rpm</th>
+      <th>city-mpg</th>
+      <th>highway-mpg</th>
+      <th>price</th>
+      <th>city-L/100km</th>
+      <th>horsepower-binned</th>
+      <th>diesel</th>
+      <th>gas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3</td>
+      <td>122</td>
+      <td>alfa-romero</td>
+      <td>std</td>
+      <td>two</td>
+      <td>convertible</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>88.6</td>
+      <td>0.811148</td>
+      <td>...</td>
+      <td>9.0</td>
+      <td>111.0</td>
+      <td>5000.0</td>
+      <td>21</td>
+      <td>27</td>
+      <td>13495.0</td>
+      <td>11.190476</td>
+      <td>Medium</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3</td>
+      <td>122</td>
+      <td>alfa-romero</td>
+      <td>std</td>
+      <td>two</td>
+      <td>convertible</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>88.6</td>
+      <td>0.811148</td>
+      <td>...</td>
+      <td>9.0</td>
+      <td>111.0</td>
+      <td>5000.0</td>
+      <td>21</td>
+      <td>27</td>
+      <td>16500.0</td>
+      <td>11.190476</td>
+      <td>Medium</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>122</td>
+      <td>alfa-romero</td>
+      <td>std</td>
+      <td>two</td>
+      <td>hatchback</td>
+      <td>rwd</td>
+      <td>front</td>
+      <td>94.5</td>
+      <td>0.822681</td>
+      <td>...</td>
+      <td>9.0</td>
+      <td>154.0</td>
+      <td>5000.0</td>
+      <td>19</td>
+      <td>26</td>
+      <td>16500.0</td>
+      <td>12.368421</td>
+      <td>Medium</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>164</td>
+      <td>audi</td>
+      <td>std</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>fwd</td>
+      <td>front</td>
+      <td>99.8</td>
+      <td>0.848630</td>
+      <td>...</td>
+      <td>10.0</td>
+      <td>102.0</td>
+      <td>5500.0</td>
+      <td>24</td>
+      <td>30</td>
+      <td>13950.0</td>
+      <td>9.791667</td>
+      <td>Medium</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>164</td>
+      <td>audi</td>
+      <td>std</td>
+      <td>four</td>
+      <td>sedan</td>
+      <td>4wd</td>
+      <td>front</td>
+      <td>99.4</td>
+      <td>0.848630</td>
+      <td>...</td>
+      <td>8.0</td>
+      <td>115.0</td>
+      <td>5500.0</td>
+      <td>18</td>
+      <td>22</td>
+      <td>17450.0</td>
+      <td>13.055556</td>
+      <td>Medium</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 29 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="linear-regression-and-multiple-linear-regression" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="linear-regression-and-multiple-linear-regression"><span class="header-section-number">5.2</span> Linear Regression and Multiple Linear Regression</h2>
+<p><strong>Linear regression</strong> will refer to one independent variable to make a prediction. <strong>Multiple linear regression</strong> will refer to multiple independent variables to make a prediction.</p>
+<section id="simple-linear-regression-slr" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="simple-linear-regression-slr"><span class="header-section-number">5.2.1</span> Simple linear regression (SLR)</h3>
+<ul>
+<li>A method to help us understand the relationship between two variables:
+<ul>
+<li>The predictor (independent) variable <strong>x</strong> and</li>
+<li>the target (dependent) variable <strong>y</strong></li>
+</ul></li>
+</ul>
+<p>The result of Linear Regression is a linear function that predicts the response (dependent) variable as a function of the predictor (independent) variable.</p>
+<p><span class="math inline">\(\begin{aligned}  y = b_0 + b_1x\\ \end{aligned}\)</span></p>
+<p>b<sub>o</sub>: the intercept of the regression line, in other words: the value of Y when X is 0 b<sub>1</sub>: the slope of the regression line, in other words: the value with which Y changes when X increases by 1 unit</p>
+<p>If we assume there is a linear relationship between the highway-mpg and the price, we can use this relationship to formulate a model to determine the price of the car. I.e. for a given car for which we know the price, we can check the highway-mpg in the manual. If the highway miles per gallon is 20, we can input this value into the model to obtain a prediction of $22,000.</p>
+<p>In order to determine the line, we take data points from our data set. We then use these training points to fit our model. The results of the training points are the parameters, b<sub>o</sub> and b<sub>1</sub>.</p>
+<p>In many cases, many factors influence how much people pay for a car. For example, make or how old the car is. In this model, this uncertainty is taken into account by assuming a small random value is added to the point on the line. This is called <strong>noise</strong>.</p>
+<p>In short:</p>
+<ul>
+<li>We have a set of training points.</li>
+<li>We use these training points to fit or train the model and get parameters.</li>
+<li>We then use these parameters in the model.</li>
+<li>We now have a model.</li>
+<li>We use the hat on the y to denote the model is an estimate.</li>
+<li>We can use this model to predict values that we haven’t seen.</li>
+</ul>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create a linear regression object</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>lm <span class="op">=</span> LinearRegression()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>lm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None, normalize=False)</code></pre>
+</div>
+</div>
+<p><strong>Question</strong>: How could “highway-mpg” help us predict car price?</p>
+<p>For this example, we want to look at how highway-mpg can help us predict car price. Using simple linear regression, we will create a linear function with “highway-mpg” as the predictor variable and the “price” as the response variable.</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#set the predictor variable (X), highway-mpg , and response variable (Y), price</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df[[<span class="st">'highway-mpg'</span>]]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> df[[<span class="st">'price'</span>]]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#fit the linear model using highway-mpg</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>lm.fit(X,Y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None, normalize=False)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#output a prediction</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>Yhat <span class="op">=</span> lm.predict(X)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>Yhat[<span class="dv">0</span>:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>array([[16236.50464347],
+       [16236.50464347],
+       [17058.23802179],
+       [13771.3045085 ],
+       [20345.17153508]])</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#What is the value of the intercept (a)?</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>lm.intercept_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>array([38423.30585816])</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#What is the value of the slope?</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>lm.coef_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>array([[-821.73337832]])</code></pre>
+</div>
+</div>
+<p>With these values we get a final linear model with the structure:</p>
+<p><strong>Price</strong> = 38423.31 -821.73 * <strong>highway-mpg</strong></p>
+</section>
+<section id="multiple-linear-regression-mlr" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="multiple-linear-regression-mlr"><span class="header-section-number">5.2.2</span> Multiple linear regression (MLR)</h3>
+<p>What if we want to predict car price using more than one variable?</p>
+<p>If we want to use more variables in our model to predict car price, we can use Multiple Linear Regression. Multiple Linear Regression is very similar to Simple Linear Regression, but this method is used to explain the relationship between:</p>
+<ul>
+<li>One continuous target (Y) variable</li>
+<li>Two or more predictor (X) variables</li>
+</ul>
+<p>If we would have four predictor variables, we would have something like this</p>
+<p><span class="math inline">\(\begin{aligned}  y = b_0 + b_1x_1+b_2x_2+b_3x_3+b_4x_4\\ \end{aligned}\)</span></p>
+<p>b<sub>o</sub>: the intercept (x=0) <br> b<sub>1</sub>: the coefficient or parameter of x<sub>1</sub> <br> b<sub>2</sub>: the coefficient or parameter of x<sub>2</sub> and so on</p>
+<p>From the previous section we know that other good predictors of price could be:</p>
+<ul>
+<li>Horsepower</li>
+<li>Curb-weight</li>
+<li>Engine-size</li>
+<li>Highway-mpg</li>
+</ul>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#use the variables above as predictor variables</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> df[[<span class="st">'horsepower'</span>, <span class="st">'curb-weight'</span>, <span class="st">'engine-size'</span>, <span class="st">'highway-mpg'</span>]]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#fit the linear model</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>lm <span class="op">=</span> LinearRegression()</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>lm.fit(Z, df[[<span class="st">'price'</span>]])</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#get the intercept</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lm.intercept_)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#get the coefficients</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lm.coef_)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[-15806.62462633]
+[[53.49574423  4.70770099 81.53026382 36.05748882]]</code></pre>
+</div>
+</div>
+<p>The final model we get with these values is:</p>
+<p><strong>Price</strong> = -15806.62 + 53.50 * <strong>horsepower</strong> + 4.71 * <strong>curb-weight</strong> + 81.52 * <strong>engine-size</strong> + 36.01 * <strong>highway-mpg</strong></p>
+</section>
+</section>
+<section id="model-evaluation-using-visualization" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="model-evaluation-using-visualization"><span class="header-section-number">5.3</span> Model Evaluation using Visualization</h2>
+<p>Now that we’ve developed some models, how do we evaluate our models and choose the best one? One way to do this is by using a visualization.</p>
+<section id="regression-plots" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="regression-plots"><span class="header-section-number">5.3.1</span> Regression plots</h3>
+<p>When it comes to simple linear regression, an excellent way to visualize the fit of our model is by using regression plots.</p>
+<p>This plot will show a combination of a scattered data points (a scatterplot), as well as the fitted linear regression line going through the data. This will give us a reasonable estimate of the relationship between the two variables, the strength of the correlation, as well as the direction (positive or negative correlation).</p>
+<p>Give good estimates of:</p>
+<ul>
+<li>Relationships between 2 variables</li>
+<li>The strength of the correlation</li>
+<li>The direction of the relatioship (positive or negative)</li>
+</ul>
+<p>A regression plot shows us:</p>
+<ul>
+<li>The horizontal axis is the independent variable</li>
+<li>The vertical axis is the dependent variable</li>
+<li>Each point represents a different target point</li>
+<li>The fitted line represents the predicted value</li>
+</ul>
+<p>Let’s visualize highway-mpg as potential predictor variable of price:</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>height <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(width, height))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>sns.regplot(x <span class="op">=</span> <span class="st">"highway-mpg"</span>, y <span class="op">=</span> <span class="st">"price"</span>, data <span class="op">=</span> df)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.ylim((0,))</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="4_model_dev_files/figure-html/cell-10-output-1.png" width="547" height="429"></p>
+</div>
+</div>
+<p>We can see from this plot that price is negatively correlated to highway-mpg since the regression slope is negative.</p>
+<p>One thing to keep in mind when looking at a regression plot is to pay attention to how scattered the data points are around the regression line. This will give you a good indication of the variance of the data and whether a linear model would be the best fit or not. If the data is too far off from the line, this linear model might not be the best model for this data.</p>
+<p>Let’s compare this plot to the regression plot of “peak-rpm”.</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(width, height))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>sns.regplot(x<span class="op">=</span><span class="st">"peak-rpm"</span>, y<span class="op">=</span><span class="st">"price"</span>, data<span class="op">=</span>df)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.ylim((0,))</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="4_model_dev_files/figure-html/cell-11-output-1.png" width="536" height="429"></p>
+</div>
+</div>
+<p>Comparing the regression plot of “peak-rpm” and “highway-mpg”, we see that the points for “highway-mpg” are much closer to the generated line and, on average, decrease. The points for “peak-rpm” have more spread around the predicted line and it is much harder to determine if the points are decreasing or increasing as the “peak-rpm” increases.</p>
+<p><strong>Given the regression plots above, is “peak-rpm” or “highway-mpg” more strongly correlated with “price”?</strong></p>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">'price'</span>, <span class="st">'highway-mpg'</span>, <span class="st">'peak-rpm'</span>]].corr()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>price</th>
+      <th>highway-mpg</th>
+      <th>peak-rpm</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>price</th>
+      <td>1.000000</td>
+      <td>-0.704692</td>
+      <td>-0.101616</td>
+    </tr>
+    <tr>
+      <th>highway-mpg</th>
+      <td>-0.704692</td>
+      <td>1.000000</td>
+      <td>-0.058598</td>
+    </tr>
+    <tr>
+      <th>peak-rpm</th>
+      <td>-0.101616</td>
+      <td>-0.058598</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>We see that the variable “highway-mpg” has a stronger correlation with “price”, it is approximate -0.704692 compared to “peak-rpm” which is approximate -0.101616. You can verify it using the following command:</p>
+</section>
+<section id="residual-plot" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="residual-plot"><span class="header-section-number">5.3.2</span> Residual plot</h3>
+<p>A good way to visualize the variance of the data is to use a residual plot.</p>
+<p><strong>Residual</strong> : The difference between the observed value (y) and the predicted value (Yhat) is called the residual (e). When we look at a regression plot, the residual is the distance from the data point to the fitted regression line.</p>
+<p><strong>Residual plot</strong>: A residual plot is a graph that shows the residuals on the vertical y-axis and the independent variable on the horizontal x-axis.</p>
+<p><strong>What to look for</strong>: We look at the spread of the residuals –&gt; If the points in a residual plot are randomly spread out around the x-axis, then a linear model is appropriate for the data.Randomly spread out residuals means that the variance is constant, and thus the linear model is a good fit for this data.</p>
+<section id="single-linear-regression" class="level4" data-number="5.3.2.1">
+<h4 data-number="5.3.2.1" class="anchored" data-anchor-id="single-linear-regression"><span class="header-section-number">5.3.2.1</span> Single linear regression</h4>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>height <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(width, height))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>sns.residplot(x <span class="op">=</span> df[<span class="st">'highway-mpg'</span>], y <span class="op">=</span> df[<span class="st">'price'</span>])</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="4_model_dev_files/figure-html/cell-13-output-1.png" width="547" height="429"></p>
+</div>
+</div>
+<p>We can see from this residual plot that the residuals are not randomly spread around the x-axis, leading us to believe that maybe a non-linear model is more appropriate for this data.</p>
+</section>
+</section>
+<section id="distribution-plots" class="level3" data-number="5.3.3">
+<h3 data-number="5.3.3" class="anchored" data-anchor-id="distribution-plots"><span class="header-section-number">5.3.3</span> Distribution plots</h3>
+<p>How do we visualize a model for Multiple Linear Regression? This gets a bit more complicated because you can’t visualize it with regression or residual plot.</p>
+<p>One way to look at the fit of the model is by looking at the distribution plot. We can look at the distribution of the fitted values that result from the model and compare it to the distribution of the actual values.</p>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#make a prediction using 4 variables</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>Y_hat <span class="op">=</span> lm.predict(Z)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#prepare the plot</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(width, height))</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>ax1 <span class="op">=</span> sns.distplot(df[<span class="st">'price'</span>], hist <span class="op">=</span> <span class="va">False</span>, color <span class="op">=</span> <span class="st">'r'</span>, label <span class="op">=</span> <span class="st">'Actual Value'</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>sns.distplot(Y_hat, hist <span class="op">=</span> <span class="va">False</span>, color <span class="op">=</span> <span class="st">"b"</span>, label <span class="op">=</span> <span class="st">"Fitted Values"</span>, ax <span class="op">=</span> ax1)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Actual vs fitted values for price"</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Price (in dollars"</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Proportion of cars"</span>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="4_model_dev_files/figure-html/cell-14-output-1.png" width="502" height="449"></p>
+</div>
+</div>
+<p>We can see that the fitted values are reasonably close to the actual values since the two distributions overlap a bit. However, there is definitely some room for improvement.</p>
+</section>
+</section>
+<section id="polynomial-regression-and-pipelines" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="polynomial-regression-and-pipelines"><span class="header-section-number">5.4</span> Polynomial Regression and Pipelines</h2>
+<p>What do we do when a linear model is not the best fit for our data?</p>
+<section id="polynomial-regression" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="polynomial-regression"><span class="header-section-number">5.4.1</span> Polynomial Regression</h3>
+<p>Polynomial regression is a special case of the general linear regression or multiple linear regression models. We get non-linear relationships by squaring or setting higher-order terms of the predictor variables. This method is beneficial for describing curvilinear relationships.</p>
+<p>Curvilinear relationship: what you get by squaring or setting higher order terms of the predictor variables in the model transforming the data. The model can be quadratic, which means that the predictor variable in the model is squared.</p>
+<center>
+<b>Quadratic - 2nd Order</b>
+</center>
+<p><span class="math display">\[
+Yhat = a + b_1 X +b_2 X^2
+\]</span></p>
+<center>
+<b>Cubic - 3rd Order</b>
+</center>
+<p><span class="math display">\[
+Yhat = a + b_1 X +b_2 X^2 +b_3 X^3\\\\\\\\\\
+\]</span></p>
+<center>
+<b>Higher-Order</b>:
+</center>
+<p><span class="math display">\[
+Y = a + b_1 X +b_2 X^2 +b_3 X^3 ....\\\\
+\]</span></p>
+<p>We saw earlier that a linear model did not provide the best fit while using “highway-mpg” as the predictor variable. Let’s see if we can try fitting a polynomial model to the data instead.</p>
+<p>We will use the following function to plot the data:</p>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> PlotPolly(model, independent_variable, dependent_variabble, Name):</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    x_new <span class="op">=</span> np.linspace(<span class="dv">15</span>, <span class="dv">55</span>, <span class="dv">100</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    y_new <span class="op">=</span> model(x_new)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    plt.plot(independent_variable, dependent_variabble, <span class="st">'.'</span>, x_new, y_new, <span class="st">'-'</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">'Polynomial Fit with Matplotlib for Price ~ Length'</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> plt.gca()</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    ax.set_facecolor((<span class="fl">0.898</span>, <span class="fl">0.898</span>, <span class="fl">0.898</span>))</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> plt.gcf()</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(Name)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">'Price of Cars'</span>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#get the variables</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> df[<span class="st">'highway-mpg'</span>]</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[<span class="st">'price'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s fit the polynomial using the function polyfit, then use the function poly1d to display the polynomial function</p>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#use a polynomal of the 3rd order (cubic)</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> np.polyfit(x, y, <span class="dv">3</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> np.poly1d(f)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        3         2
+-1.557 x + 204.8 x - 8965 x + 1.379e+05</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot </span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>PlotPolly(p, x, y, <span class="st">'highway-mpg'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="4_model_dev_files/figure-html/cell-18-output-1.png" width="411" height="339"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>np.polyfit(x, y, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>array([-1.55663829e+00,  2.04754306e+02, -8.96543312e+03,  1.37923594e+05])</code></pre>
+</div>
+</div>
+<p>We can already see from plotting that this polynomial model performs better than the linear model. This is because the generated polynomial function “hits” more of the data points.</p>
+<p>The analytical expression for Multivariate Polynomial function gets complicated. For example, the expression for a second-order (degree=2) polynomial with two variables is given by:</p>
+<p><span class="math display">\[
+Yhat = a + b\_1 X\_1 +b\_2 X\_2 +b\_3 X\_1 X\_2+b\_4 X\_1^2+b\_5 X\_2^2
+\]</span></p>
+<p>We can perform a polynomial transform on multiple features.</p>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import module</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> PolynomialFeatures</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#We create a PolynomialFeatures object of degree 2</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>pr<span class="op">=</span>PolynomialFeatures(degree<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co">#transform data</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>Z_pr<span class="op">=</span>pr.fit_transform(Z)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">#view data before transformation</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Z.shape)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co">#view data after the transformation</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Z_pr.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(201, 4)
+(201, 15)</code></pre>
+</div>
+</div>
+</section>
+<section id="pipelines" class="level3" data-number="5.4.2">
+<h3 data-number="5.4.2" class="anchored" data-anchor-id="pipelines"><span class="header-section-number">5.4.2</span> Pipelines</h3>
+<p>We can simplify our code by using a pipeline library.</p>
+<p>There are many steps to getting a prediction. For example, normalization, polynomial transform, and linear regression.</p>
+<p>We simplify the process using a pipeline, which sequentially performs a series of transformations and were the last step carries out a prediction.</p>
+<p>A pipeline could look as follows:</p>
+<ul>
+<li>First we import all the modules we need</li>
+<li>then we import the library pipeline</li>
+<li>We create a list of tuples, the first element in the tuple contains the name of the estimator model. The second element contains model constructor.</li>
+<li>We input the list in the pipeline constructor. We now have a pipeline object.</li>
+<li>We can train the pipeline by applying the train method to the pipeline object.</li>
+<li>We can also produce a prediction as well.</li>
+<li>The method normalizes the data, performs a polynomial transform, then outputs a prediction.</li>
+</ul>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import libs</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We create the pipeline by creating a list of tuples including the name of the model or estimator and its corresponding constructor.</p>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>Input<span class="op">=</span>[(<span class="st">'scale'</span>,StandardScaler()), (<span class="st">'polynomial'</span>, PolynomialFeatures(include_bias<span class="op">=</span><span class="va">False</span>)), (<span class="st">'model'</span>,LinearRegression())]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We input the list as an argument to the pipeline constructor:</p>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>pipe<span class="op">=</span>Pipeline(Input)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>pipe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>Pipeline(memory=None,
+         steps=[('scale',
+                 StandardScaler(copy=True, with_mean=True, with_std=True)),
+                ('polynomial',
+                 PolynomialFeatures(degree=2, include_bias=False,
+                                    interaction_only=False, order='C')),
+                ('model',
+                 LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None,
+                                  normalize=False))],
+         verbose=False)</code></pre>
+</div>
+</div>
+<p>First, we convert the data type Z to type float to avoid conversion warnings that may appear as a result of StandardScaler taking float inputs.</p>
+<p>Then, we can normalize the data, perform a transform and fit the model simultaneously.</p>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> Z.astype(<span class="bu">float</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>pipe.fit(Z,y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>Pipeline(memory=None,
+         steps=[('scale',
+                 StandardScaler(copy=True, with_mean=True, with_std=True)),
+                ('polynomial',
+                 PolynomialFeatures(degree=2, include_bias=False,
+                                    interaction_only=False, order='C')),
+                ('model',
+                 LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None,
+                                  normalize=False))],
+         verbose=False)</code></pre>
+</div>
+</div>
+<p>Similarly, we can normalize the data, perform a transform and produce a prediction simultaneously.</p>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>ypipe<span class="op">=</span>pipe.predict(Z)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>ypipe[<span class="dv">0</span>:<span class="dv">4</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<pre><code>array([13102.74784201, 13102.74784201, 18225.54572197, 10390.29636555])</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="measures-for-in-sample-evaluation" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="measures-for-in-sample-evaluation"><span class="header-section-number">5.5</span> Measures for In-Sample Evaluation</h2>
+<p>These measures are a way to numerically determine how good the model fits on our data.</p>
+<p>Two important measures that we often use to determine the fit of a model are:</p>
+<ul>
+<li><p>Mean Square Error (MSE): To measure the MSE, we find the difference between the actual value y and the predicted value then then square it. In this case, the actual value is 150; the predicted value is 50. Subtracting these points we get 100. We then square the number. We then take the Mean or average of all the errors by adding then all together and dividing by the number of samples.</p></li>
+<li><p>R-squared: R-squared is also called the coefficient of determination. It’s a measure to determine how close the data is to the fitted regression line. So how close is our actual data to our estimated model?</p></li>
+</ul>
+<section id="example-r-square-for-slr" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="example-r-square-for-slr"><span class="header-section-number">5.5.1</span> Example R-square for SLR</h3>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#highway_mpg_fit</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>lm.fit(X, Y)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the R^2</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'The R-square is: '</span>, lm.score(X, Y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The R-square is:  0.4965911884339176</code></pre>
+</div>
+</div>
+<p>We can say that ~49.659% of the variation of the price is explained by this simple linear model “horsepower_fit”.</p>
+<p>Let’s calculate the MSE:</p>
+<p>We can predict the output i.e., “yhat” using the predict method, where X is the input variable:</p>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>Yhat<span class="op">=</span>lm.predict(X)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'The output of the first four predicted value is: '</span>, Yhat[<span class="dv">0</span>:<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The output of the first four predicted value is:  [[16236.50464347]
+ [16236.50464347]
+ [17058.23802179]
+ [13771.3045085 ]]</code></pre>
+</div>
+</div>
+<p>Let’s import the function mean_squared_error from the module metrics:</p>
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>mse <span class="op">=</span> mean_squared_error(df[<span class="st">'price'</span>], Yhat)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'The mean square error of price and predicted value is: '</span>, mse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The mean square error of price and predicted value is:  31635042.944639888</code></pre>
+</div>
+</div>
+</section>
+<section id="example-r-square-for-mlr" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="example-r-square-for-mlr"><span class="header-section-number">5.5.2</span> Example R-square for MLR</h3>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the model </span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>lm.fit(Z, df[<span class="st">'price'</span>])</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the R^2</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'The R-square is: '</span>, lm.score(Z, df[<span class="st">'price'</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The R-square is:  0.8093562806577458</code></pre>
+</div>
+</div>
+<p>We can say that ~80.896 % of the variation of price is explained by this multiple linear regression “multi_fit”.</p>
+<p>Let’s calculate the MSE.</p>
+<div class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We produce a prediction: </span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>Y_predict_multifit <span class="op">=</span> lm.predict(Z)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="co">#We compare the predicted results with the actual results:</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'The mean square error of price and predicted value using multifit is: '</span>, mean_squared_error(df[<span class="st">'price'</span>], Y_predict_multifit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The mean square error of price and predicted value using multifit is:  11980366.870726489</code></pre>
+</div>
+</div>
+</section>
+<section id="example-r-square-for-polynomial-fit" class="level3" data-number="5.5.3">
+<h3 data-number="5.5.3" class="anchored" data-anchor-id="example-r-square-for-polynomial-fit"><span class="header-section-number">5.5.3</span> Example R-square for polynomial fit</h3>
+<div class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import the function r2_score from the module metrics as we are using a different function</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> r2_score</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We apply the function to get the value of R^2:</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>r_squared <span class="op">=</span> r2_score(y, p(x))</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'The R-square value is: '</span>, r_squared)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The R-square value is:  0.6741946663906513</code></pre>
+</div>
+</div>
+<p>We can say that ~67.419 % of the variation of price is explained by this polynomial fit.</p>
+<p>We can also calculate the MSE:</p>
+<div class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>mean_squared_error(df[<span class="st">'price'</span>], p(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="34">
+<pre><code>20474146.42636125</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="prediction-and-decision-making" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="prediction-and-decision-making"><span class="header-section-number">5.6</span> Prediction and Decision Making</h2>
+<p>How can we make sure our model is correct?</p>
+<p>To determine the best fit, we look at a combination of:</p>
+<ul>
+<li>do our model results make sense</li>
+<li>visualize the data</li>
+<li>use numerical measures for evaluation</li>
+<li>compare models</li>
+</ul>
+<section id="prediction" class="level3" data-number="5.6.1">
+<h3 data-number="5.6.1" class="anchored" data-anchor-id="prediction"><span class="header-section-number">5.6.1</span> Prediction</h3>
+<p>In the previous section, we trained the model using the method fit. Now we will use the method predict to produce a prediction. Lets import pyplot for plotting; we will also be using some functions from numpy.</p>
+<div class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create a new input </span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>new_input<span class="op">=</span>np.arange(<span class="dv">1</span>, <span class="dv">100</span>, <span class="dv">1</span>).reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co">#fit the model</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>lm.fit(X,Y)</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>lm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<pre><code>LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None, normalize=False)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co">#produce a prediction</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>yhat<span class="op">=</span>lm.predict(new_input)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>yhat[<span class="dv">0</span>:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<pre><code>array([[37601.57247984],
+       [36779.83910151],
+       [35958.10572319],
+       [35136.37234487],
+       [34314.63896655]])</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot data</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>plt.plot(new_input, yhat)</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="4_model_dev_files/figure-html/cell-38-output-1.png" width="346" height="300"></p>
+</div>
+</div>
+</section>
+<section id="decision-making-determining-a-good-model-fit" class="level3" data-number="5.6.2">
+<h3 data-number="5.6.2" class="anchored" data-anchor-id="decision-making-determining-a-good-model-fit"><span class="header-section-number">5.6.2</span> Decision Making: Determining a Good Model Fit¶</h3>
+<p>Now that we have visualized the different models, and generated the R-squared and MSE values for the fits, how do we determine a good model fit?</p>
+<ul>
+<li>What is a good R-squared value?</li>
+</ul>
+<p>When comparing models, the model with the higher R-squared value is a better fit for the data.</p>
+<ul>
+<li>What is a good MSE?</li>
+</ul>
+<p>When comparing models, the model with the smallest MSE value is a better fit for the data.</p>
+<p><strong>Let’s take a look at the values for the different models.</strong></p>
+<p>Simple Linear Regression: Using Highway-mpg as a Predictor Variable of Price.</p>
+<ul>
+<li>R-squared: 0.49659118843391759</li>
+<li>MSE: 3.16 x10^7</li>
+</ul>
+<p>Multiple Linear Regression: Using Horsepower, Curb-weight, Engine-size, and Highway-mpg as Predictor Variables of Price.</p>
+<ul>
+<li>R-squared: 0.80896354913783497</li>
+<li>MSE: 1.2 x10^7</li>
+</ul>
+<p>Polynomial Fit: Using Highway-mpg as a Predictor Variable of Price.</p>
+<ul>
+<li>R-squared: 0.6741946663906514</li>
+<li>MSE: 2.05 x 10^7</li>
+</ul>
+<section id="simple-linear-regression-model-slr-vs-multiple-linear-regression-model-mlr" class="level4" data-number="5.6.2.1">
+<h4 data-number="5.6.2.1" class="anchored" data-anchor-id="simple-linear-regression-model-slr-vs-multiple-linear-regression-model-mlr"><span class="header-section-number">5.6.2.1</span> Simple Linear Regression Model (SLR) vs Multiple Linear Regression Model (MLR)</h4>
+<p>Usually, the more variables you have, the better your model is at predicting, but this is not always true. Sometimes you may not have enough data, you may run into numerical problems, or many of the variables may not be useful and even act as noise. As a result, you should always check the MSE and R^2.</p>
+<p>In order to compare the results of the MLR vs SLR models, we look at a combination of both the R-squared and MSE to make the best conclusion about the fit of the model.</p>
+<ul>
+<li>MSE: The MSE of SLR is 3.16x10^7 while MLR has an MSE of 1.2 x10^7. The MSE of MLR is much smaller. 0 R-squared: In this case, we can also see that there is a big difference between the R-squared of the SLR and the R-squared of the MLR. The R-squared for the SLR (~0.497) is very small compared to the R-squared for the MLR (~0.809).</li>
+</ul>
+<p>This R-squared in combination with the MSE show that MLR seems like the better model fit in this case compared to SLR.</p>
+</section>
+<section id="simple-linear-model-slr-vs.-polynomial-fit" class="level4" data-number="5.6.2.2">
+<h4 data-number="5.6.2.2" class="anchored" data-anchor-id="simple-linear-model-slr-vs.-polynomial-fit"><span class="header-section-number">5.6.2.2</span> Simple Linear Model (SLR) vs.&nbsp;Polynomial Fit</h4>
+<ul>
+<li>MSE: We can see that Polynomial Fit brought down the MSE, since this MSE is smaller than the one from the SLR.</li>
+<li>R-squared: The R-squared for the Polynomial Fit is larger than the R-squared for the SLR, so the Polynomial Fit also brought up the R-squared quite a bit.</li>
+</ul>
+<p>Since the Polynomial Fit resulted in a lower MSE and a higher R-squared, we can conclude that this was a better fit model than the simple linear regression for predicting “price” with “highway-mpg” as a predictor variable.</p>
+</section>
+<section id="multiple-linear-regression-mlr-vs.-polynomial-fit" class="level4" data-number="5.6.2.3">
+<h4 data-number="5.6.2.3" class="anchored" data-anchor-id="multiple-linear-regression-mlr-vs.-polynomial-fit"><span class="header-section-number">5.6.2.3</span> Multiple Linear Regression (MLR) vs.&nbsp;Polynomial Fit¶</h4>
+<ul>
+<li>MSE: The MSE for the MLR is smaller than the MSE for the Polynomial Fit.</li>
+<li>R-squared: The R-squared for the MLR is also much larger than for the Polynomial Fit.</li>
+</ul>
+</section>
+<section id="conclusion" class="level4" data-number="5.6.2.4">
+<h4 data-number="5.6.2.4" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">5.6.2.4</span> Conclusion</h4>
+<p>Comparing these three models, we conclude that the MLR model is the best model to be able to predict price from our dataset. This result makes sense since we have 27 variables in total and we know that more than one of those variables are potential predictors of the final car price.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../code/3_exploratory_data_analysis.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exploratory data analysis (EDA) in python</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../code/5_model_eval_and_refinement.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Model Evaluation and Refinement</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

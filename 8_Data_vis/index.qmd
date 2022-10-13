@@ -1,0 +1,36 @@
+# Data analysis with Python
+
+In this module, you will learn about data visualization and some of the best practices to keep in mind when creating plots and visuals. You will also learn about the history and the architecture of Matplotlib and learn about basic plotting with Matplotlib. In addition, you will learn about the dataset on immigration to Canada, which will be used extensively throughout the course. Finally, you will briefly learn how to read csv files into a pandas dataframe and process and manipulate the data in the dataframe, and how to generate line plots using Matplotlib.
+
+Learning Objectives
+
+- Describe the importance of data visualization
+- Relate the history of Matplotlib and its architecture
+- Apply Matplotlib to create plots using Jupyter notebooks
+- Read csv files into a Pandas DataFrame; process and manipulate the data in the - DataFrame; and generate line plots using Matplotlib
+
+
+```{python}
+#|  echo: false
+
+#in terminal set python path for R:
+#nano $HOME/.Renviron
+#RETICULATE_PYTHON="/opt/anaconda3/bin/python3.7"
+
+#set reticulate py version
+#ibrary("reticulate")
+#repl_python()
+
+#setup some useful tools
+#reticulate::conda_install('r-reticulate', 'python-kaleido')
+#reticulate::conda_install('r-reticulate', 'plotly', channel = 'plotly')
+
+#make sure in the global options -> markdown -> to set the wdir to project
+#also make the mark at show output inline for all r markdown docs to be able to execute bash/sql
+
+#install for R internal py
+#/Users/ninadombrowski/Library/r-miniconda/envs/r-reticulate/bin/python -m pip install -U seaborn
+
+#install via terminal
+#/opt/anaconda3/bin/python3.7 -m pip install -U pandas dash
+```

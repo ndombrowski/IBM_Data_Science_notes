@@ -1,0 +1,423 @@
+# Relational databases
+
+## Relational model
+
+- most used model for databases
+- allows for data independence
+- Data is stored in tables providing logical/physical data independence and physical storage independence
+
+
+## Entity-relationship model
+
+- A database is seen here as a collection of entities
+- Used as a tool to design relational databases
+- In the ER model, **entities** are objects that exist independently of any other entities in the database
+- An entity can be a noun, person, place or thing and is drawn as a rectangle (i.e. a book)
+- Entities have **attributes** = data elements that describe the entity (i.e. where to find the book, title, price, etc). Drawn as ovals. 
+- Attributes are connected to exactly one entity
+- The entity <book> becomes a table in the database and the attributes become the columns in a table
+- Each attribute stores data values of different formats such as characters, dates or currencies
+
+
+## Primary keys
+
+- Each table is assigned a primary key
+- This key uniquely identifies each tuple, or row, in a table preventing duplication of data and providing a way of proving relationships between tables
+
+
+## Foreign keys
+
+- Primary keys that are defined in other tables creating a link between the tables
+
+
+## Create a databse on cloud
+
+- Benefits of clouds
+  - easy of use and access via an API, web interface and cloud or remove applications
+  - scalability
+  - disaster recovery
+- Examples: IBM db2, databases for postgreSQL, Oracle database cloud database, etc
+- DBaaS (Database-as-a-Service) provides users with access to database resources in cloud without having to setup the hardware
+- IBM Db2 on via the IBM cloud, go to catalog and databases to find DB2 and create a new service
+
+
+1. Login to [IBM Cloud](https://cloud.ibm.com/)
+2. Go to the DB2 Services page on IBM Catalog.
+3. Select a location where you want the service to be hosted. Only dallas has a free plan right nw
+4. To access your database instance, go to your IBM Cloud Resource List (you may need to log into IBM Cloud in the process) directly at: cloud.ibm.com/resources. Alternative: Go to your IBM Cloud dashboard (you may need to login to IBM Cloud in the process) at: cloud.ibm.com and click Services.
+5. In the Resource list, expand the Services and locate and click on your instance of Db2 you provisioned in exercise 2 (the name typically starts with Db2-xx for example Db2-fk, Db2-50, etc.)
+5. Add new service credentials
+6. Click on the Go to UI button
+7. The Db2 console will open in a new tab in your web browser. Click on the 3-bar menu icon in the top left corner and then click on RUN SQL.
+8. On the next screen click on Create new.
+9. The SQL editor will open where you can start typing and running queries. The SQL editor has several areas for performing different tasks.
+10. Click on the Add New Script + icon if you want to add a new script for composing queries and then select Create new.
+11. When you are asked in the upcoming labs, compose the appropriate SQL query for each problem and run by clicking Run all .
+12. NOTE: You may find that some results don't appear in the result set pane; in this case, click the highlighted diagonal arrow (View More) and it will open the full Result Set window containing the results.
+
+
+## Types of SQL statements (DDL vs DML)
+
+- SQL statements are used to interact with SQL elements, i.e. tables
+- Data Definition Language statements and Data Manipulation Language statements
+
+###  DDL
+
+- DDLs are used to define, change or drop database objects, such as tables
+- Common statement types: 
+  - create: create tables and define its columns
+  - alter: altering tables including adding and dropping columns and modifying their data types
+  - truncate: deleting data in a table but not the table itself
+  - drop: used to delete tables
+
+###  DML
+
+- DML statements are used to read and modify data. This are sometimes referred to as CRUD operations (Create, read, update and delete rows)
+- Common statement types: 
+  - insert: insert a row or several rows
+  - select: reads or selects a row or rows from a table
+  - update: edits rows 
+  - delete: remove row(s)
+
+
+
+### CREATE table statement
+
+- Syntax
+
+```
+Create table table_name
+(
+column1 datatype optional parameters,
+column2 datatype,
+...
+)
+```
+- Create a table for provinces in canada, here the data types used are
+  - char = a character string with fixed length, which is 2 in this case
+  - Varchar = a character string of a variable length, which in this case can be 24 characters long
+- Issuing this statement will create a table with two columns with the names: id and name
+
+```
+Create table provinces
+(
+id char(2) Primary Key not null,
+name varchar(24),
+...
+)
+```
+
+- Create a table for the author entity with attributes such as author_id, lastname, etc that will be the columns of the table. We want author_id to be the primary key, so that no dupliacte values can exist and uniquely identify each row
+
+```
+Create table author 
+(
+author_id char(2) Primary key not null,
+lastname varchar(15) not null
+firstname varchar(15) not null
+country varchar(2)
+)
+```
+
+### Alter a table
+
+- Add or remove columns
+- Modify the data type of columns
+- Add or remove keys
+- Add or remove constrains 
+
+For example lets add a column with the name phone_nr to the author table. In this example the data type is bigint, which can hold a number up to 19 digits long 
+
+```
+Alter table author
+add column phone_nr biginit
+```
+
+Now lets try to alter the datatype of a column and allow up to 20 charactes (to be able to include `-`)
+
+```
+Alter table author
+Alter column phone_nr set data type
+char(20);
+```
+
+Be careful though using alter with existing data that is not compatible with the data type we choose.
+
+Now lets drop a column, if we don't need it anymore
+
+```
+Alter table author
+drop column phone_nr;
+```
+
+
+### Drop a table
+
+- Deletes a table from a database
+
+```
+Drop table author
+```
+
+
+
+### Truncate  a table
+
+- Delete the data in a table rather than deleting the table itself
+- Deletes all rows in a table
+- The immediate specifies to process the statement immediately and cannot be undone
+
+```
+Truncate table author
+immediate;
+```
+
+
+#### Examples
+
+1. Creating a table
+
+1.1. Create a table called TEST with two columns - ID of type integer, and Name of type varchar that allows 30 characters,
+
+First lets create a new connection for this:
+```{r}
+library(DBI)
+db3 <- dbConnect(RSQLite::SQLite(), ":memory:")
+```
+
+```{sql, connection="db3"}
+create table Test
+(
+ID integer
+Name varchar(30)
+)
+```
+
+1.2. Now let's create a table called COUNTRY with an ID column, a two letter country code column, and a variable length country name column. The not null constraint is added after the datatype meaning that this column can not contain NULL or an empty value and we use the ID as primary key
+
+```{sql, connection="db3"}
+
+create table Country
+(
+ID int NOT NULL,
+Country char(2),
+Name varchar(60),
+Primary Key (ID)
+)
+```
+
+
+1.3 if the table you are trying to create already exists in the database, you will get an error indicating table XXX.YYY already exists. To circumvent this error, either create a table with a different name or first DROP the existing table. It is quite common to issue a DROP before doing a CREATE in test and development scenarios.
+
+```{sql, connection="db3"}
+
+drop table Country;
+create table Country
+(
+ID int NOT NULL,
+Country char(2),
+Name varchar(60),
+Primary Key (ID)
+)
+```
+
+**WARNING**: before dropping a table ensure that it doesn't contain important data that can't be recovered easily. Note that if the table does not already exist and you try to drop it, you will see an error like XXX.YYY is an undefined name.
+
+
+2. CREATE, ALTER, TRUNCATE, DROP
+
+2.1 You need to create two tables, PETSALE and PET. To create the two tables PETSALE and PET, copy the code below and paste it to the textbox of the Run SQL page. Click Run all.
+
+```{r}
+#load libs
+library(RMySQL)
+
+#build placeholder
+pet_db <- dbConnect(RSQLite::SQLite(), ":memory:")
+```
+
+```{sql, connection="pet_db"}
+
+CREATE TABLE PETSALE (
+    ID INTEGER NOT NULL,
+    PET CHAR(20),
+    SALEPRICE DECIMAL(6,2),
+    PROFIT DECIMAL(6,2),
+    SALEDATE DATE
+    );
+```
+
+```{sql, connection="pet_db"}
+
+CREATE TABLE PET (
+    ID INTEGER NOT NULL,
+    ANIMAL VARCHAR(20),
+    QUANTITY INTEGER
+    );
+```
+
+2.2 Now insert some records into the two newly created tables and show all the records of the two tables. Copy the code below and paste it to the textbox of the Run SQL page. Click Run all.
+
+```{sql, connection="pet_db"}
+
+INSERT INTO PETSALE VALUES
+    (1,'Cat',450.09,100.47,'2018-05-29'),
+    (2,'Dog',666.66,150.76,'2018-06-01'),
+    (3,'Parrot',50.00,8.9,'2018-06-04'),
+    (4,'Hamster',60.60,12,'2018-06-11'),
+    (5,'Goldfish',48.48,3.5,'2018-06-14');
+```
+
+```{sql, connection="pet_db"}
+
+INSERT INTO PET VALUES
+    (1,'Cat',3),
+    (2,'Dog',4),
+    (3,'Hamster',2);
+```
+
+```{sql, connection="pet_db"}
+
+SELECT * FROM PETSALE;
+```
+
+```{sql, connection="pet_db"}
+
+SELECT * FROM PET;
+```
+
+2.3 Add a new QUANTITY column to the PETSALE table and show the altered table. Copy the code below and paste it to the textbox of the Run SQL page. Click Run all.
+
+```{sql, connection="pet_db"}
+
+Alter table PETSALE
+ADD column QUANTITY integer;
+```
+
+```{sql, connection="pet_db"}
+
+select * from PETSALE
+```
+
+2.4 Now update the newly added QUANTITY column of the PETSALE table with some values and show all the records of the table. Copy the code below and paste it to the textbox of the Run SQL page. Click Run all.
+
+```{sql test, connection="pet_db"}
+
+UPDATE PETSALE SET QUANTITY = 9 WHERE ID = 1;
+```
+
+```{sql, connection="pet_db"}
+
+UPDATE PETSALE SET QUANTITY = 3 WHERE ID = 2;
+```
+
+```{sql, connection="pet_db"}
+
+UPDATE PETSALE SET QUANTITY = 2 WHERE ID = 3;
+```
+
+```{sql, connection="pet_db"}
+
+UPDATE PETSALE SET QUANTITY = 6 WHERE ID = 4;
+```
+
+```{sql, connection="pet_db"}
+
+UPDATE PETSALE SET QUANTITY = 24 WHERE ID = 5;
+```
+
+```{sql, connection="pet_db"}
+
+select * from PETSALE
+```
+
+2.5 Delete the PROFIT column from the PETSALE table and show the altered table. Copy the code below and paste it to the textbox of the Run SQL page. Click Run all.
+
+```{sql, connection="pet_db"}
+
+Alter table PETSALE
+drop column profit;
+```
+
+```{sql, connection="pet_db"}
+
+select * from PETSALE;
+```
+
+
+2.6 Change the data type to VARCHAR(20) type of the column PET of the table PETSALE and show the altered table. Copy the code below and paste it to the textbox of the Run SQL page. Click Run all.
+
+**Statment not working yet
+
+```
+#Alter table PETSALE
+#ALTER COLUMN PET set data type varchar(20);
+```
+
+```{sql, connection="pet_db"}
+
+select * from PETSALE;
+```
+2.7 Rename the column PET to ANIMAL of the PETSALE table and show the altered table. Copy the code below and paste it to the textbox of the Run SQL page. Click Run all.
+
+```{sql, connection="pet_db"}
+
+Alter table PETSALE
+RENAME COLUMN PET TO ANIMAL;
+```
+
+```{sql, connection="pet_db"}
+
+select * from PETSALE;
+```
+
+
+2.8 Remove all rows from the PET table and show the empty table. Copy the code below and paste it to the textbox of the Run SQL page. Click Run all.
+
+**Not yet working in R**
+
+```
+TRUNCATE TABLE PET IMMEDIATE;
+```
+
+```{sql, connection="pet_db"}
+
+select * from PETSALE;
+```
+
+
+2.9 Delete the PET table and verify if the table still exists or not (SELECT statement won't work if a table doesn't exist). Copy the code below and paste it to the textbox of the Run SQL page. Click Run all.
+
+```{sql, connection="pet_db"}
+
+DROP TABLE PET;
+```
+
+
+```
+select * from PET;
+```
+
+
+
+## Loading several databases 
+
+```bash
+csvs-to-sqlite *csv test.db
+datasette test.db
+```
+
+```{r}
+library(DBI)
+db_test = dbConnect(RSQLite::SQLite(), dbname ="Week2/tables/test.db")
+```
+      
+```{sql, connection="db_test"}
+SELECT * FROM JobsHistory
+```
+
+### List all tables we have inside our database
+
+```{r}
+dbListTables(db_test)
+```

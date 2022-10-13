@@ -1,0 +1,383 @@
+# Python: Lists and Tuples
+
+= Compound data types
+
+## Tuples
+
+- An ordered sequence 
+- Comma separated elements within parentheses
+
+```{python}
+Ratings = (10,9,6,4,10,8,8,6)
+Ratings
+```
+
+- Strings, integers and floats can all be contained in a tuple
+
+```{python}
+tuple1 = ('disco', 10, 1.2)
+tuple1
+```
+
+- We can access each element of a tuple via an **index**
+
+### Indexing tuples
+
+```{python}
+#access the first element
+tuple1[0]
+
+#access the third element
+tuple1[2]
+
+#access the last element
+tuple1[-1]
+```
+
+### Adding tuples
+
+- We can combine tuples, by adding them 
+
+```{python}
+tuple2 =  tuple1 + ("hard rock", 10)
+tuple2
+```
+
+### Slice tuples
+
+- If we want multiple elements from a tuple, we can slice tuples
+
+
+```{python}
+#get the first 3 elements, the last index is on larger than the index we want
+tuple2[0:3]
+```
+
+### Get the length of tuples
+
+- We get the length of a tuple with the **len()** command
+
+```{python}
+len(tuple2)
+```
+
+### Tuples are immutable
+
+
+- Tuples are immutable = we can not change them but we can assign a different tuple to the ratings variable. So if we want to manipulate a tuple we have to create a new tuple instead
+
+```{python}
+#store ratings in a new variable
+Ratings1 = Ratings
+
+#we can not use Ratings[2]=2 to change the 2nd element of a tuple
+#but we can change the contents of our variable with:
+Ratings = (1,4,2)
+
+#we can also sort a tuple and store it in a new variable
+Ratings_sorted = sorted(Ratings)
+Ratings_sorted
+```
+
+### Nesting tuples
+
+- A tuple can be **nested** = i.e. contain other tuples
+
+```{python}
+NT = (1,2,("pop", "rock"), (3,4), ("disco",(1,2)))
+NT
+
+#access the second element
+NT[2]
+
+#access the 2nd element inside it
+NT[2][1]
+```
+
+
+## Lists
+
+- Ordered sequences
+- Represented by square brackets
+- Lists are mutable
+- Otherwise shares similar respects than tuples (i.e. using an index, slicing, nesting, combining them by adding)
+
+
+```{python}
+L = ["Michael Jackson", 10.1, 1982]
+L
+```
+
+### Extending lists
+
+- We can extend list, i.e. modify it, using the **extend()** function
+
+```{python}
+L = ["Michael Jackson", 10.1, 1982]
+L.extend(["pop",10])
+L
+```
+
+### Appending lists
+
+- We can also append a list, i.e. we add only one element to a list
+
+```{python}
+L = ["Michael Jackson", 10.1, 1982]
+L.append(["pop",10])
+L
+```
+
+### Extending lists
+
+- **extend()** adds two new elements to the list
+
+```{python}
+L = ["Michael Jackson", 10.1, 1982]
+L.extend(["pop",10])
+L
+```
+
+### Lists are mutable
+
+- We can change elements in lists
+
+```{python}
+#change the first element in the list
+L = ["Michael Jackson", 10.1, 1982]
+L[0] = "hard rock"
+L
+```
+
+### Delete elements in lists
+
+- We can delete an element in a list with the **del()** command
+
+```{python}
+#delete the first element in the list
+L = ["Michael Jackson", 10.1, 1982]
+del(L[0])
+L
+```
+
+### Converting strings to lists
+
+- We can convert a string to a list using **split()**
+
+```{python}
+#normally split, splits strings by the space
+"hard rock".split()
+
+#we can also use a specific character, i.e. a delimiter, which we add as an argument
+"A,B,C,D".split(",")
+```
+
+### Aliasing
+
+- **Aliasing** = Multiple names referring to the same object
+
+```{python}
+#make an alias
+A = ["hard rock", 10, 1.2]
+B = A
+
+#if we now change A, B change as well!
+A[0] = "banana"
+A
+B
+```
+
+### Cloning
+
+- We can **clone** list A using the following syntax
+
+```{python}
+#clone a list
+A = ["hard rock", 10, 1.2]
+B = A[:]
+
+#if we now change A, B will not change
+A[0] = "banana"
+A
+B
+```
+
+
+## Exercise A
+
+See Module 2_PY0101EN-2-2-Lists.ipynb
+
+
+
+## Dictionaries
+
+- Dictionaries = A type of collection in python
+- Consists of keys and values
+    - Key = analogous to the index. They are like addresses but don't have to be integers and usually are characters. The are immutable and unique
+    - Values are similar to the element in a list and contain information. The values can be immutable, mutable and duplicates.
+- Dictionaries are generated using curly brackets and the keys are the first elements. Each key is followed by a value followed by a colon. Each key/value pair is separated by a comma
+
+### Generating a dictionary
+
+```{python}
+dic1 = {"key1":1, "key2":"2", "key3":[3,3,3], "key4":(4,4,4), "key5":5}
+dic1
+```
+
+- The key is used to look up the value
+
+```{python}
+dic1["key2"]
+```
+
+### Adding new elements to dictionaries
+
+```{python}
+dic1["key6"]="hello"
+dic1
+```
+
+### Delete an entry in a dictionary
+
+```{python}
+del(dic1["key6"])
+dic1
+```
+
+### Verify if an element is in the dictionary using the in command
+
+```{python}
+"key2" in dic1
+"key12" in dic1
+```
+
+### Print all the keys in a dictionary via the keys() command
+
+```{python}
+dic1.keys()
+```
+
+### Print all the values in a dictionary via the values() command
+
+```{python}
+dic1.values()
+```
+
+
+### Exercise
+
+See: Module 2_PY0101EN-2-4-Dictionaries.ipynb
+
+## Sets
+
+- A type of collection: like with lists and tuples, we can input different python types 
+- Unlike lists and tuples they are unordered, this means that sets do not record element positions
+- Sets only have unique elements: there is only one of a particular element in a set
+- To define a set, we use curly brackets and place the elements of a set inside
+
+### Making a set
+
+```{python}
+#generate a set with duplicate items
+set1 = {"pop", "rock", "soul", "hard rock", "rock"}
+
+#view set: duplicate items are not present when the set is created
+set1
+```
+
+### Converting a list to a set with the function set()
+
+- This process is called type casting
+
+```{python}
+#create a list
+album_list = ["Jackson", "Thriller", "Thriller", 1982]
+album_list
+
+#convert to a set (notice the lack of duplicated elements)
+album_set = set(album_list)
+album_set
+```
+
+### Set Operations
+
+- Set operations can be used to change the set
+
+### Add items with the add() method
+
+```{python}
+#create a set
+A = {"Thriller", "Back in black", "AC/DC"}
+
+#add an item
+A.add("NSYNC")
+A
+
+#add the same item twice (and nothing will happen)
+A.add("NSYNC")
+A
+```
+
+
+### Remove items from a set
+
+```{python}
+#remove an item
+A.remove("NSYNC")
+A
+```
+
+### Check if elements are in a set
+
+```{python}
+"AC/DC" in A
+"Who" in A
+```
+
+
+### Mathematical operations
+
+```{python}
+#define two sets
+set1 = {"Back in black", "AC/DC", "Thriller"}
+set2 = {"AC/DC", "Back in black", "Dark side of the moon"}
+set3 = {"Back in black", "AC/DC"}
+
+#define the intersection with `&`
+set3 = set1 & set2
+set3
+
+#create the union of both sets, ie. all the elements found in both sets
+set1.union(set2)
+
+#check if a set is a subset of another
+set3.issubset(set1)
+
+#find all the elements that are only contained in a set using the difference method
+set1.difference(set3)
+
+# check if a set is a superset or subset of another set
+set1.issuperset(set3)
+set3.issuperset(set1)
+```
+
+```{python}
+#define two sets with numbers
+A = [1, 2, 2, 1]
+A
+
+B = set([1, 2, 2, 1])
+B
+
+#compare the two sets
+sum(A) == sum(B)
+
+#to explain the result:
+print("the sum of A is:", sum(A))
+print("the sum of B is:", sum(B))
+```
+
+
+## Exercise
+
+

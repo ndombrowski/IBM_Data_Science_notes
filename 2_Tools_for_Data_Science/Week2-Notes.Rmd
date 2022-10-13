@@ -1,0 +1,436 @@
+---
+title: "Week 2"
+author: "Nina Dombrowski"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    toc_depth: 5  
+    highlight: kate
+    code_folding: hide
+---
+
+# Open source data science tools
+
+## Jupyter
+
+### Intro to Jupyter
+
+- Browser based application to generate and share code, data vis etc
+- It is similar to a lab notebook used in science
+- Useful for data reproduction, data recording, repetition of experiments, etc.
+- Combine text and code (output) in a single file
+- Can be exported, to i.e. pdf or html
+- Support many languages, i.e. R, Julia etc.
+- **Jupyter Lab** is a browser-based application that allows you to access multiple Jupyter Notebook files as well as other code and data files
+- Open source
+- Can be used with cloud based services, so we don't need to install stuff locally
+- Can be installed via pip or anaconda onto local computers
+- Here: we use a hosted version on skills network labs
+
+Some notes on installations: 
+- https://www.charles-deledalle.fr/pages/files/configure_conda.pdf
+- https://towardsdatascience.com/setting-up-jupyter-notebook-on-osx-catalina-6e886698d1a1
+- pyenv global 3.8.6
+
+### Jupyter kernels
+
+- A notebook kernel is a computational engine that executes code contained in a notebook file
+- Jupyter kernels for many languages exist
+- When the notebook is executed, the kernel performs the computation and produces the results
+
+
+### Jupyter architecture
+
+- Jupyter implements a 2-process model with a kernel and a client
+  - Client: interface that offers the ability to send code to the kernel and is the browser when opening a jupyter notebook
+  - Kernel:  a programming language-specific process that executes the code contained in a Jupyter notebook.
+- Represent code, metadata, contents and outputs
+- When saved it uses a dot I Pi NB (.ipynb) extension and a JSON structure
+- Architecture for file conversions: NB convert is used for file conversion, ie to HTML. Here, the Notebook is modified by a preprocessor, an exporter converts the notebook to the new file format, and a postprocessor will work on the file produced by exporting it
+
+
+### Practical
+
+- Go to https://labs.cognitiveclass.ai/login/lti
+
+  
+**Basics**
+  
+- Jupyter notebooks have two different modes, EDIT and COMMAND.
+  - Edit: To enter the EDIT mode, press ENTER on your keyboard or click in a cell. Edit mode can be identified by green border around the cell with green left margin. When you are in the edit mode, you can type in the cells.
+  - Command: To enter the COMMAND mode press ESC or click anywhere outside the cell. You will see grey border around the cell with blue left margin. When you are in Command mode, you can edit your notebook but you can't type in the cells.
+- Run selected cell: CTRL+ENTER
+- Run cell and insert below: ALT+ENTER
+- Run cell and select below: SHIFT+ENTER
+- Insert cell above: A
+- Insert cell below: B
+- Cut selected cells: X
+- Copy selected cells: C
+- % matplotlib inline: add this to show plots
+- add the code below to not only show the last results, but everything from the cell
+- if we want bash we add `%%bash` in the first code line or `%%R` for R
+
+```
+from IPython.core.interactiveshell import InteractiveShell
+InteractiveShell.ast_node_interactivity = "all"
+```
+
+**Additional stuff:**
+
+- We can als write HTML in markdown, i.e. try this `You can write HTML code in your Markdown cells. We can embed links, try executing the following HTML code in a Markdown cell:`
+- You can also use Markdown formatting. For example, to use an H1 Header to write a title, try running the following in a Markdown cell: # Header 1. You can find more rules for Markdown formatting in this Markdown Cheatsheet: https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
+- We can create simple tables, i.e. the example below will be rendered into a table
+
+| header | header |
+| ------ | ------ |
+| cell | cell |
+
+
+### Jupyter notebooks in the web
+
+- There are thousands of interesting jupyter notebooks available on the internet for you to learn from. One of the best sources is: https://github.com/jupyter/jupyter/wiki
+- Very often jupyter notebook are already shared in a rendered view. This means, that you can look at them as if they were running locally on you machine. But sometimes, folks only share a link to the jupyter file (which you can make out by the *.ipynb extension). In this case you can just grab the URL to that file and past it to the NB-Viewer => https://nbviewer.jupyter.org/
+
+Some nice example notebooks:
+
+- First you start with exploratory data analysis, so this notebook is highly recommended to have a look at: https://nbviewer.jupyter.org/github/Tanu-N-Prabhu/Python/blob/master/Exploratory_data_Analysis.ipynb
+- For data integration / cleansing at a smaller scale, the python library pandas is often used. Please have a look at this notebook: https://towardsdatascience.com/data-cleaning-with-python-using-pandas-library-c6f4a68ea8eb
+- If you want to already experience what clustering is, have a look at this: https://nbviewer.jupyter.org/github/temporaer/tutorial_ml_gkbionics/blob/master/2%20-%20KMeans.ipynb
+- And finally, if you want to go for a more in-depth notebook on the iris dataset have a look here: https://www.kaggle.com/lalitharajesh/iris-dataset-exploratory-data-analysis
+
+
+## R and RStudio
+
+### General
+
+- Statistical programming language
+- Most used by healthcare, academics, government
+- Supports importing data from different sources: Flat files, databases, web, etc
+- Easy to use functions
+- Good vis tools
+- Basic Data Analysis does not need installation of any packages or libraries
+- RStudio: 
+  - Environment to run R source code
+  - Integrated development environment (IDE)
+  - Includes syntax highlighting code editor, console for typing commands, a workspace and history tab that shows the list of R objects created during a session and a plot/files/help/packages tab
+- Popular libs: 
+  - dplyr for data manipulation
+  - stringr for manipulating strings
+  - ggplot for data vis
+  - caret for machine learning
+
+To install packages use `install.packages("package_name")`
+
+### Plotting with R
+
+- In-build vis function using the plot() function
+- Ggplot for data vis , allows to add layers on a single visualization
+- GGally: extends ggplot2 by adding several functions to reduce the complexity of combining geometric objects with transformed dat
+- Plotly for web-based data vis that can be displaced and saved as HTML files
+- Lattice: Data vis to implement complex, multiple-variable datasets
+- Leaflet: Good for interactive plots
+
+
+#### Example for using in-build functions
+
+```{r}
+#define data
+car <- c(1,4,6,4,10)
+
+#plot the vector and add a line
+plot(car, type = "o")
+
+#add a title
+title(main="Cars vs index")
+```
+
+
+#### Example for using ggplot using the in-build mtcars data
+
+```{r}
+#after installing, read in ggplot library
+library(ggplot2)
+
+#create a ggplot
+ggplot(mtcars, aes(x=mpg, y = wt)) +
+  #add a dot plot
+  geom_point() +
+  #add a title
+  ggtitle("Miles per gallon vs weight") +
+  #change the names of the axes
+  labs(y = "weight", x = "Milles per gallon")
+```
+
+### Getting started and installing packages (practical)
+
+Load the iris data set and inspect the data
+
+```{r}
+library(datasets)
+data(iris)
+View(iris)
+```
+
+The View() function directly takes us to data view tab to inspect our dataset. 
+- We can see that there are five columns in this data set 
+- The first four are floating point
+- The last one is label of data type string which contains the category value of our data set
+- We have 150 entries in total of which we are seeing the first 19.
+
+Find out how many species are in this dataset
+
+```{r}
+unique(iris$Species)
+```
+
+Example for installing packages (not run since already installed)
+
+```{r}
+#install.packages("GGally", repos = "https://cran.r-project.org", type= "source") 
+```
+
+
+### Plotting (practical)
+
+For this, we will first read in and have a look at the mtcars package
+
+```{r}
+#load lib
+library(datasets)
+
+# Load Data
+data(mtcars)
+
+# View first 5 rows
+head(mtcars, 5)
+```
+
+Get a more detailed information about the variables with `?mtcars`
+
+```{r}
+?mtcars
+```
+
+Create a scatterplot if disp and mpg with ggplot
+
+```{r}
+#load package
+library(ggplot2)
+
+#create a scatterplot
+ggplot(mtcars, aes(x = disp, y = mpg)) +
+  geom_point() +
+  #add title
+  ggtitle("displacement versus miles per gallon") +
+#change the axis labels
+labs(x = "Displacement", y = "Miles per Gallon")
+```
+Create a boxplot of the the distribution of mpg for the individual Engine types vs Engine (0 = V-shaped, 1 = straight)
+
+```{r}
+#convert the vs variable to a factor
+mtcars$vs <- as.factor(mtcars$vs)
+
+#create boxplot
+ggplot(mtcars, aes(x=vs, y=mpg)) +
+  geom_boxplot() 
+```
+
+```{r}
+#create boxplot and add colors to better differentiate the boxes
+ggplot(mtcars, aes(x=vs, y=mpg, fill = vs)) +
+  geom_boxplot(alpha=0.3) +
+  theme(legend.position = "none")
+```
+
+Create the histogram of weight wt.
+
+```{r}
+ggplot(mtcars, aes(x=wt)) +
+  geom_histogram(binwidth = 0.5)
+```
+
+## Github
+
+- Tools for performing version control and collaboration
+- Version control: allows to keep track of changes to documents and recover older versions of documents. 
+- Git: free and open software, distributed control system --> accessible anywhere in the world. 
+- Interfaces for Git repositories: Github, gitlab, bitbucket, beanstall
+- SSH protocol: method for secure login from one computer to another
+- Repository: The folders for our project that are setup for version control
+- Fork: Copy of a repository
+- Pull request: Process we use to request that some reviews and approves changes before they become final
+- Working dir: A directory on our file system, including its files and subdirs, that is associated with a git repository
+
+### Basic commands
+
+- init: create a new repository by creating one locally and pushing it to github or by cloning and existing repository by using `git init`
+- add:  moves changes from wdir to the staging area
+- status: allows to see the state of our wdir and a staged snapshot our our changes
+- commit: takes the staged snapshot our our changes and commits them to the project
+- reset: undoes changes
+- log: allows us to browse previous changes to a project
+- branch: create an isolated environment within your repository to make changes
+- checkout: see and change existing branches
+- merge: put everything together again
+
+Github comes with great resources to learn things: i.e. go to `try.github.io` to get a basic intro
+
+
+### Getting started
+
+Via the web browser:
+
+- Go to github website and login, i.e. https://github.com/ndombrowski
+- Create a new repository, by clicking plus and new repository
+- Add details: Name, Description (optional), visibility, initialize with readme and create repository
+- We get redirected to the repository we created
+- By default the root folder of our repository is shown and should have one file, the readme
+- To save changes, we need to commit them. A commit messages adds a description. 
+- We can also upload files from our local system
+
+### Working with branches
+
+Via the web browser:
+
+- A branch is a snapshot of our repository to which we can make changes. It is a copy of the master branch and can be used to develop and test changes before merging it back to the master branch.
+- Master: The main branch in github and the official working version that is stable. It is always advisable to never to push any code that is not tested to master
+- Child branch creates a copy of the master branch , here changes and experiments are done to ensure quality before merging tot he master branch. 
+- Setting up multiple child branches allows the simultaneous development by multiple team members. 
+
+
+Creating branches via the browser:
+
+- Click on branch: master button
+- add name child_branch, to create a new branch
+- We should now on top see that we have 2 branches
+- If w go to the child_branch we should see that whatever was in the master branch was copied to the child branch
+- Now we can add files to the child branch, without adding them to master
+- For adding a child, we need to make sure `branch: child_branch` is selected on the top, left button
+- Create a **Pull request (PR)**: a way to propose changes to the main branch. Ideally , another team member now reviews the changes and approves it to be merged to the master branch. 
+- To open a pull request: Click on `compare and pull request`. Now we should see the differences between the branches
+- Now we can create a pull request for which we add a title and optional comment. Here, we can also assign members that should look at the request
+- Next, we merge the pull request to the master branch by clicking `merge pull request`
+- If we don't need the child branch anymore we can delete it as well. 
+
+
+### Git via the command line
+
+#### Adding an ssh key
+
+An SSH key is an access credential in the SSH protocol. Its function is similar to that of user names and passwords, but the keys are primarily used for automated processes.
+
+Generate a key by:
+
+- Start terminal
+- `ssh-keygen -t rsa -b 4096 -C "<your email address>"` to generate a ssh key
+- next, you will be prompted to enter a directory to save the key. Press enter to use the default (~/.ssh/id_rsa folder in the home dir)
+- next, you will be promted to use a passphrase. You can here not use a passphrase by pressing enter and enter again
+- `cd ~/.ssh`
+- `ls`: lists the contents of the .ssh directory, you should find “id_rsa” and “id_rsa.pub” in the list of contents, where “id_rsa” is the private version of your key (**Never show or share this** and “id_rsa.pub” is the public version of your key.
+- Add the new SSH key to the ssh-agent which helps with the authentication process by
+  - `eval "$(ssh-agent -s)"` to start the agent
+  - `ssh-add ~/.ssh/id_rsa` to add the key
+  - copy the command with `cat ~/.ssh/id_rsa.pub | clip`
+- Go to github --> setting --> Under Personal settings, select “SSH and GPG keys” --> click the button to add a new SSH key --> Provide the title. Then select the Key field, and press Ctrl-v to paste the key from the clipboard buffer. The pasted key should have your email address at the end,
+
+
+
+#### Creating and working with a repository with a readme
+
+- Create a repository on github
+- Add name demo, click public, add a Readme
+- Click create repository
+- Create a local repository by:
+  - Click code
+  - Clone via https
+  - Via the terminal, go to an emptier folder on your computer, i.e. `/Users/ninadombrowski/Desktop/WorkingDir/Notebooks/IBM_Data_Science/2_Tools_for_Data_Science/git_demo`
+  - git clone link
+  - go to demo, now we should see the readme file. **Never touch the .git folder**
+- Add a file via `nano test.txt` and write something in there
+- Add changes to the repository by:
+  - `git add test.txt`
+  - Check changes to the master by typing `git status`. We should see that a new file was added and that it is in the staging area
+  - Add a second file via `nano test.txt` and write something in there
+  - `git add test2.txt`
+  - `git status` : we see both files are now in the staging area
+  - Commit with `git commit -m "initial commit"`. -m stands for message and should be informative to what we did. Now our changes were moved from the staging area to our local repository. Now we are ready to push the changes to the remote repository.
+  - If we refresh the website with our repository, we still don't see our new files. To get them there we need to push them to the remote repository via `git push`
+  - Now we should see the two files online
+  
+#### Deleting a repository
+
+- Click on Settings
+- Scroll down to the danger zone
+- Click delete repository and follow the instructions
+
+
+#### Creating and working with a repository without a readme
+
+- Create a repository on github
+- Add name demo, click public, DON't add a Readme
+- Click create repository
+- Now github will show us how to use init to setup the directory:
+  - with the terminal remove our folder, and create it again with `mkdir demo` and go into it
+  - create readme with `echo "# demo" >> README.md`
+  - `git init` to initialize the git folder by adding the.git folder
+  - `git add README.md` or `git add .`. The latter adds everything in the folder
+  - `git commit -m "first commit"`
+  - **Git Push** would not work here, because git would not know to which branch to push our repository since it does not exist yet
+  - `git branch -M main` to change to main instead of master. This only works for the initial commit
+  - git remote add origin https://github.com/ndombrowski/demo.git to link our local repository with the URL of our project
+  - git push -u origin main
+- If we refresh the website, we should see the readme file
+
+
+#### How to sync if someone else made a change
+
+- Create a new file via the web browser:
+  - add file --> create new file --> name it newfile.txt
+  - Press commit
+  - Now this file is only in the remote repository and not the local one
+- get this new file via `git pull`
+
+
+#### Create new branches
+
+- `git branch mybranch` to create a branch
+- `git status` : we see we are still on the main/master branch
+- `git checkout mybranch`        
+- `git status`: we see that we changed the branch
+- Create a new file with nano
+- `git add .`
+- `git commit -m "dsd"`
+- `git push`: we get the error that the current branch has no upstream branch --> so we first need to make sure that the branch is also created remotely with
+- `git push --set-upstream origin mybranch`
+- `git push`
+- Go to the website: we should see our two branches and an existing pull request.
+- Click on my branch: We should see the extra file just there
+- `git checkout main` to go to the main branch
+- `git merge mybranch` to merge mybranch with main once we are sure the changes we did are correct
+- If we go to the webserver, we still don't see the file in the main branch. For this we need to:
+- `git push`
+
+
+
+#### How to fork
+
+How do we contribute to existing repositories, i.e. if we found an error? If we fork a repository, ie a coursera repository, we will re-create it under our username.
+
+- Ask for commit rights to repository OR create a fork and commit the change to that fork
+- Go to `https://github.com/IBM/claimed`
+- Click on for on the top, right
+- With what we learned above, we can make a local repository, add some changes and commit them to the remote repository but only in my private account
+- Now we want to get that change back into the official repository: Click on `new pull request` --> `create pull request`. Now this request is send to the admin who has to decide what to do. 
+
+
+
+
+
+
+
+
+
+
+
+

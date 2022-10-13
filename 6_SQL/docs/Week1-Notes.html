@@ -1,0 +1,2720 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.168">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introduction to SQL - 2&nbsp; Basic SQL</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Week2-Notes.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Basic SQL</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./" class="sidebar-logo-link">
+      <img src="./images/tree_of_life.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to SQL</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preamble</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week1-Notes.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Basic SQL</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week2-Notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Relational databases</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week3-Notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Using String Patterns</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week4_Python_a_IBM.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SQL and python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week5_RealData.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Working with real world data</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">2.1</span>  Introduction</a></li>
+  <li><a href="#the-select-statement" id="toc-the-select-statement" class="nav-link" data-scroll-target="#the-select-statement"><span class="toc-section-number">2.2</span>  The SELECT statement</a>
+  <ul class="collapse">
+  <li><a href="#how-to-retrieve-rows-from-a-table" id="toc-how-to-retrieve-rows-from-a-table" class="nav-link" data-scroll-target="#how-to-retrieve-rows-from-a-table"><span class="toc-section-number">2.2.1</span>  How to retrieve rows from a table</a></li>
+  <li><a href="#restricting-the-results-set-via-the-where-clause" id="toc-restricting-the-results-set-via-the-where-clause" class="nav-link" data-scroll-target="#restricting-the-results-set-via-the-where-clause"><span class="toc-section-number">2.2.2</span>  Restricting the results set via the WHERE clause</a></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise"><span class="toc-section-number">2.2.3</span>  Exercise</a></li>
+  </ul></li>
+  <li><a href="#count-distinct-limit" id="toc-count-distinct-limit" class="nav-link" data-scroll-target="#count-distinct-limit"><span class="toc-section-number">2.3</span>  Count, Distinct, limit</a>
+  <ul class="collapse">
+  <li><a href="#count" id="toc-count" class="nav-link" data-scroll-target="#count"><span class="toc-section-number">2.3.1</span>  Count</a></li>
+  <li><a href="#distinct" id="toc-distinct" class="nav-link" data-scroll-target="#distinct"><span class="toc-section-number">2.3.2</span>  Distinct</a></li>
+  <li><a href="#limit" id="toc-limit" class="nav-link" data-scroll-target="#limit"><span class="toc-section-number">2.3.3</span>  Limit</a></li>
+  </ul></li>
+  <li><a href="#insert" id="toc-insert" class="nav-link" data-scroll-target="#insert"><span class="toc-section-number">2.4</span>  Insert</a></li>
+  <li><a href="#update" id="toc-update" class="nav-link" data-scroll-target="#update"><span class="toc-section-number">2.5</span>  Update</a></li>
+  <li><a href="#delete" id="toc-delete" class="nav-link" data-scroll-target="#delete"><span class="toc-section-number">2.6</span>  Delete</a>
+  <ul class="collapse">
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1"><span class="toc-section-number">2.6.1</span>  Exercise</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Basic SQL</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2.1</span> Introduction</h2>
+<p>What is SQL?</p>
+<ul>
+<li>Structured English Query language</li>
+<li>Language used for relational databases</li>
+<li>Used to query data</li>
+</ul>
+<p>What is data?</p>
+<ul>
+<li>A collection of facts with words, numbers or pictures</li>
+<li>One of the most critical assets in any business</li>
+<li>Needs to be secure</li>
+</ul>
+<p>What is a database?</p>
+<ul>
+<li>A repository of data</li>
+<li>Provides functionality to add, modify and query data</li>
+<li>Different kind of databases for different requirements</li>
+</ul>
+<p>Relational database:</p>
+<ul>
+<li>Data is stored in tabular form, i.e.&nbsp;consists of rows and columns</li>
+<li>Columns contain properties, i.e names, age</li>
+<li>A table is a collection of related things, i.e.&nbsp;list of employees</li>
+<li>We can make relationships between tables (hence: relational)</li>
+</ul>
+<p>DBMS:</p>
+<ul>
+<li>Database Management system, a software to manage databases</li>
+<li>Interchangeable use of database, database server, database sytem, data server or DBMS</li>
+</ul>
+<p>RDBMS:</p>
+<ul>
+<li>Relational database management system</li>
+<li>Set of software tools that controls the data
+<ul>
+<li>controls access, organization and storage</li>
+</ul></li>
+<li>Examples; MySQL, Oracle, IBM Dbs, etc</li>
+</ul>
+</section>
+<section id="the-select-statement" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="the-select-statement"><span class="header-section-number">2.2</span> The SELECT statement</h2>
+<section id="how-to-retrieve-rows-from-a-table" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="how-to-retrieve-rows-from-a-table"><span class="header-section-number">2.2.1</span> How to retrieve rows from a table</h3>
+<ul>
+<li>After creating a table and inserting data into a table we want to see the data</li>
+<li>SELECT statement is a data manipulation language (DML) statement used to read and modify data</li>
+<li>The select statement is called a query</li>
+<li>The output we get from a query is called the results</li>
+<li>The basic command looks like this</li>
+</ul>
+<pre><code>SELECT * from &lt;tablename&gt;</code></pre>
+<ul>
+<li>We can only retrieve the columns we want, i.e.</li>
+</ul>
+<pre><code>SELECT &lt;column1&gt;, &lt;column2&gt; from &lt;tablename&gt;</code></pre>
+<ul>
+<li>The order in the columns displayed table matches the order in the used select statement</li>
+</ul>
+</section>
+<section id="restricting-the-results-set-via-the-where-clause" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="restricting-the-results-set-via-the-where-clause"><span class="header-section-number">2.2.2</span> Restricting the results set via the WHERE clause</h3>
+<ul>
+<li>This clause restricts the results set</li>
+<li>Requires a predicate that is conditions to
+<ul>
+<li>evaluate to true, false or unknown</li>
+<li>predicates are used in the search condition of the where clause</li>
+</ul></li>
+<li>Example: We want to have the title from the book with the book ID B1</li>
+</ul>
+<pre><code>SELECT column1, column2, ...
+FROM table_name
+WHERE condition
+;</code></pre>
+<ul>
+<li>FROM: Specifies from which table to get the data. The clause can include optional JOIN subclauses to specify the rules for joining tables.</li>
+<li>[Optional Clause] WHERE : Specifies which rows to retrieve.</li>
+<li>Some database systems require a semicolon at the end of each SQL statement for execution. It is a standard way to separate one SQL statement from another which allows more than one SQL statement to be executed in the same call to the server. So, it is good practice to use a semicolon at the end of each SQL statement.</li>
+</ul>
+<pre><code>SELECT book_id, title from Book.db
+  WHERE book_id = 'B1'</code></pre>
+<ul>
+<li>We can also use other comparison operators
+<ul>
+<li>equal to –&gt; =</li>
+<li>greater than –&gt; &gt;</li>
+<li>less than –&gt; &lt;</li>
+<li>greater than or equal to –&gt; &gt;=</li>
+<li>less than or equal to –&gt; &lt;=</li>
+<li>not equal to –&gt; &lt;&gt;</li>
+</ul></li>
+</ul>
+</section>
+<section id="exercise" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="exercise"><span class="header-section-number">2.2.3</span> Exercise</h3>
+<p>To reproduce the example, we</p>
+<ul>
+<li>Downloaded datasette from the web</li>
+<li>Downloaded the SanFranciscoFilmLocations database as csv from <a href="https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am/data">here</a></li>
+<li>we converted this to a datasette database with <code>csvs-to-sqlite Film_Locations_in_San_Francisco.csv Film_Locations_in_San_Francisco.db</code></li>
+<li>and opened the datasette with <code>datasette Film_Locations_in_San_Francisco.db</code></li>
+</ul>
+<p>We can also load the db into r:</p>
+<section id="task-a-explore-the-database" class="level4" data-number="2.2.3.1">
+<h4 data-number="2.2.3.1" class="anchored" data-anchor-id="task-a-explore-the-database"><span class="header-section-number">2.2.3.1</span> Task A: explore the database</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>db <span class="ot">=</span> <span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="at">dbname =</span><span class="st">"Week1/Film_Locations_in_San_Francisco.db"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#set connection for each chunk, other wise we would need `{sql, connection=db}`</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">connection =</span> <span class="st">"db"</span>, <span class="at">max.print =</span> <span class="dv">10</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#knitr::opts_chunk$set(connection = "db2", max.print = 5)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#show less columns</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#options(max.print = 5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="task-b-example-exercises" class="level4" data-number="2.2.3.2">
+<h4 data-number="2.2.3.2" class="anchored" data-anchor-id="task-b-example-exercises"><span class="header-section-number">2.2.3.2</span> Task B: Example exercises</h4>
+<ol type="1">
+<li>In this example, suppose we want to retrieve details of all the films from the “FilmLocations” table. The details of each film record should contain all the film columns.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> Film_Locations_in_San_Francisco</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<colgroup>
+<col style="width: 4%">
+<col style="width: 2%">
+<col style="width: 9%">
+<col style="width: 50%">
+<col style="width: 8%">
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 3%">
+<col style="width: 4%">
+<col style="width: 3%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title</th>
+<th style="text-align: right;">Release Year</th>
+<th style="text-align: left;">Locations</th>
+<th style="text-align: left;">Fun Facts</th>
+<th style="text-align: left;">Production Company</th>
+<th style="text-align: left;">Distributor</th>
+<th style="text-align: left;">Director</th>
+<th style="text-align: left;">Writer</th>
+<th style="text-align: left;">Actor 1</th>
+<th style="text-align: left;">Actor 2</th>
+<th style="text-align: left;">Actor 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A Jitney Elopement</td>
+<td style="text-align: right;">1915</td>
+<td style="text-align: left;">20th and Folsom Streets</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">The Essanay Film Manufacturing Company</td>
+<td style="text-align: left;">General Film Company</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Edna Purviance</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A Jitney Elopement</td>
+<td style="text-align: right;">1915</td>
+<td style="text-align: left;">Golden Gate Park</td>
+<td style="text-align: left;">During San Francisco’s Gold Rush era, the Park was part of an area designated as the “Great Sand Waste”.</td>
+<td style="text-align: left;">The Essanay Film Manufacturing Company</td>
+<td style="text-align: left;">General Film Company</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Edna Purviance</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: right;">1924</td>
+<td style="text-align: left;">Cliff House (1090 Point Lobos Avenue)</td>
+<td style="text-align: left;">In 1887, the Cliff House was severely damaged when the schooner Parallel, abandoned and loaded with dynamite, ran aground on the rocks below.</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Zasu Pitts</td>
+<td style="text-align: left;">Gibson Gowland</td>
+<td style="text-align: left;">Jean Hersholt</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: right;">1924</td>
+<td style="text-align: left;">Bush and Sutter Streets</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Zasu Pitts</td>
+<td style="text-align: left;">Gibson Gowland</td>
+<td style="text-align: left;">Jean Hersholt</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: right;">1924</td>
+<td style="text-align: left;">Hayes Street at Laguna</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Zasu Pitts</td>
+<td style="text-align: left;">Gibson Gowland</td>
+<td style="text-align: left;">Jean Hersholt</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Jazz Singer</td>
+<td style="text-align: right;">1927</td>
+<td style="text-align: left;">Coffee Dan’s (O’Farrell Street at Powell)</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">Alan Crosland</td>
+<td style="text-align: left;">Alfred A. Cohn</td>
+<td style="text-align: left;">Al Jolson</td>
+<td style="text-align: left;">May McAvoy</td>
+<td style="text-align: left;">Warner Oland</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Barbary Coast</td>
+<td style="text-align: right;">1935</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">The Samuel Goldwyn Company</td>
+<td style="text-align: left;">United Artists</td>
+<td style="text-align: left;">Howard Hawks</td>
+<td style="text-align: left;">Ben Hecht</td>
+<td style="text-align: left;">Mariam Hopkins</td>
+<td style="text-align: left;">Edward G. Robinson</td>
+<td style="text-align: left;">Joel McCrea</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">After the Thin Man</td>
+<td style="text-align: right;">1936</td>
+<td style="text-align: left;">Coit Tower</td>
+<td style="text-align: left;">The Tower was funded by a gift bequeathed by Lillie Hitchcock Coit, a socialite who reportedly liked to chase fires. Though the tower resembles a firehose nozzle, it was not designed this way.</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">W.S. Van Dyke</td>
+<td style="text-align: left;">Frances Goodrich</td>
+<td style="text-align: left;">William Powell</td>
+<td style="text-align: left;">Myrna Loy</td>
+<td style="text-align: left;">James Stewart</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">San Francisco</td>
+<td style="text-align: right;">1936</td>
+<td style="text-align: left;">The Barbary Coast</td>
+<td style="text-align: left;">The Barbary Coast was a red-light district that was largely destroyed in the 1906 earthquake. Though some of the establishments were rebuilt after the earthquake, an anti-vice campaign put the establishments out of business.</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">W.S. Van Dyke</td>
+<td style="text-align: left;">Anita Loos</td>
+<td style="text-align: left;">Clark Gable</td>
+<td style="text-align: left;">Jeanette MacDonald</td>
+<td style="text-align: left;">Spencer Tracy</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">San Francisco</td>
+<td style="text-align: right;">1936</td>
+<td style="text-align: left;">City Hall</td>
+<td style="text-align: left;">The dome of SF’s City Hall is almost a foot taller than that of the US Capitol Building. In 1954, Joe DiMaggio and Marilyn Monroe married at the Beaux Arts-style building.</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">W.S. Van Dyke</td>
+<td style="text-align: left;">Anita Loos</td>
+<td style="text-align: left;">Clark Gable</td>
+<td style="text-align: left;">Jeanette MacDonald</td>
+<td style="text-align: left;">Spencer Tracy</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="2" type="1">
+<li>In this example, now we want to retrieve selective details of all the film records. Let us retrieve the names of all the films along with director names and writer names.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Title, Director,Writer <span class="kw">FROM</span> Film_Locations_in_San_Francisco</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title</th>
+<th style="text-align: left;">Director</th>
+<th style="text-align: left;">Writer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A Jitney Elopement</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Charles Chaplin</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A Jitney Elopement</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Charles Chaplin</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Jazz Singer</td>
+<td style="text-align: left;">Alan Crosland</td>
+<td style="text-align: left;">Alfred A. Cohn</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Barbary Coast</td>
+<td style="text-align: left;">Howard Hawks</td>
+<td style="text-align: left;">Ben Hecht</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">After the Thin Man</td>
+<td style="text-align: left;">W.S. Van Dyke</td>
+<td style="text-align: left;">Frances Goodrich</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">San Francisco</td>
+<td style="text-align: left;">W.S. Van Dyke</td>
+<td style="text-align: left;">Anita Loos</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">San Francisco</td>
+<td style="text-align: left;">W.S. Van Dyke</td>
+<td style="text-align: left;">Anita Loos</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="3" type="1">
+<li>In this example, we want to retrieve film names along with filming locations and release years. But we also want to restrict the output resultset so that we can retrieve only the film records released in 2001 and onwards (release years after 2001 including 2001).</li>
+</ol>
+<p><strong>Notice</strong> If we have a space in the column header, we need to use quotes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Title, Locations,<span class="ot">"Release Year"</span> <span class="kw">FROM</span> Film_Locations_in_San_Francisco</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> <span class="ot">"Release Year"</span> <span class="op">&gt;=</span><span class="dv">2001</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<colgroup>
+<col style="width: 24%">
+<col style="width: 63%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title</th>
+<th style="text-align: left;">Locations</th>
+<th style="text-align: right;">Release Year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">By Hook or By Crook</td>
+<td style="text-align: left;">The Lexington Club (3464 19th Street at Lexington)</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">By Hook or By Crook</td>
+<td style="text-align: left;">Royan Hotel (405 Valencia Street, Mission District)</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">By Hook or By Crook</td>
+<td style="text-align: left;">Department of Public Health (101 Grove Street at Polk, Civic Center)</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dr.&nbsp;Dolittle 2</td>
+<td style="text-align: left;">West Chrissy Field (Presidio, Golden Gate National Recreation Area)</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dr.&nbsp;Dolittle 2</td>
+<td style="text-align: left;">Sacramento St., Between Pierce &amp; Broderick Streets</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dr.&nbsp;Dolittle 2</td>
+<td style="text-align: left;">Hyde Street &amp; Lombard Street</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dr.&nbsp;Dolittle 2</td>
+<td style="text-align: left;">Building 924, Presidio (Golden Gate National Recreation Area)</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dr.&nbsp;Dolittle 2</td>
+<td style="text-align: left;">Broadway, Between Franklin &amp; Laguna Streets</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Haiku Tunnel</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mission (aka City of Bars)</td>
+<td style="text-align: left;">The 500 Club (500 Guerrero Street, Mission District)</td>
+<td style="text-align: right;">2001</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="4" type="1">
+<li>Retrieve the fun facts and filming locations of all films.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="ot">"Fun Facts"</span>,Locations <span class="kw">FROM</span> Film_Locations_in_San_Francisco</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<colgroup>
+<col style="width: 84%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Fun Facts</th>
+<th style="text-align: left;">Locations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">20th and Folsom Streets</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">During San Francisco’s Gold Rush era, the Park was part of an area designated as the “Great Sand Waste”.</td>
+<td style="text-align: left;">Golden Gate Park</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">In 1887, the Cliff House was severely damaged when the schooner Parallel, abandoned and loaded with dynamite, ran aground on the rocks below.</td>
+<td style="text-align: left;">Cliff House (1090 Point Lobos Avenue)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Bush and Sutter Streets</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Hayes Street at Laguna</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Coffee Dan’s (O’Farrell Street at Powell)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Tower was funded by a gift bequeathed by Lillie Hitchcock Coit, a socialite who reportedly liked to chase fires. Though the tower resembles a firehose nozzle, it was not designed this way.</td>
+<td style="text-align: left;">Coit Tower</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Barbary Coast was a red-light district that was largely destroyed in the 1906 earthquake. Though some of the establishments were rebuilt after the earthquake, an anti-vice campaign put the establishments out of business.</td>
+<td style="text-align: left;">The Barbary Coast</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The dome of SF’s City Hall is almost a foot taller than that of the US Capitol Building. In 1954, Joe DiMaggio and Marilyn Monroe married at the Beaux Arts-style building.</td>
+<td style="text-align: left;">City Hall</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="5" type="1">
+<li>Retrieve the names of all films released in the 20th century and before (release years before 2000 including 2000) that, along with filming locations and release years.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Title,Locations,<span class="ot">"Release Year"</span> <span class="kw">FROM</span> Film_Locations_in_San_Francisco</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> <span class="ot">"Release Year"</span> <span class="op">&lt;=</span> <span class="dv">2000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 56%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title</th>
+<th style="text-align: left;">Locations</th>
+<th style="text-align: right;">Release Year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A Jitney Elopement</td>
+<td style="text-align: left;">20th and Folsom Streets</td>
+<td style="text-align: right;">1915</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A Jitney Elopement</td>
+<td style="text-align: left;">Golden Gate Park</td>
+<td style="text-align: right;">1915</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: left;">Cliff House (1090 Point Lobos Avenue)</td>
+<td style="text-align: right;">1924</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: left;">Bush and Sutter Streets</td>
+<td style="text-align: right;">1924</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: left;">Hayes Street at Laguna</td>
+<td style="text-align: right;">1924</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Jazz Singer</td>
+<td style="text-align: left;">Coffee Dan’s (O’Farrell Street at Powell)</td>
+<td style="text-align: right;">1927</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Barbary Coast</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">1935</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">After the Thin Man</td>
+<td style="text-align: left;">Coit Tower</td>
+<td style="text-align: right;">1936</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">San Francisco</td>
+<td style="text-align: left;">The Barbary Coast</td>
+<td style="text-align: right;">1936</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">San Francisco</td>
+<td style="text-align: left;">City Hall</td>
+<td style="text-align: right;">1936</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="6" type="1">
+<li>Retrieve the names, production company names, filming locations, and release years of the films which are not written by James Cameron.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> Title,<span class="ot">"Production Company"</span>,Locations, <span class="ot">"Release Year"</span>, Writer <span class="kw">FROM</span> Film_Locations_in_San_Francisco</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> Writer <span class="op">&lt;&gt;</span> <span class="ot">"James Cameron"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<colgroup>
+<col style="width: 14%">
+<col style="width: 29%">
+<col style="width: 32%">
+<col style="width: 9%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title</th>
+<th style="text-align: left;">Production Company</th>
+<th style="text-align: left;">Locations</th>
+<th style="text-align: right;">Release Year</th>
+<th style="text-align: left;">Writer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A Jitney Elopement</td>
+<td style="text-align: left;">The Essanay Film Manufacturing Company</td>
+<td style="text-align: left;">20th and Folsom Streets</td>
+<td style="text-align: right;">1915</td>
+<td style="text-align: left;">Charles Chaplin</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A Jitney Elopement</td>
+<td style="text-align: left;">The Essanay Film Manufacturing Company</td>
+<td style="text-align: left;">Golden Gate Park</td>
+<td style="text-align: right;">1915</td>
+<td style="text-align: left;">Charles Chaplin</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Cliff House (1090 Point Lobos Avenue)</td>
+<td style="text-align: right;">1924</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Bush and Sutter Streets</td>
+<td style="text-align: right;">1924</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Hayes Street at Laguna</td>
+<td style="text-align: right;">1924</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Jazz Singer</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">Coffee Dan’s (O’Farrell Street at Powell)</td>
+<td style="text-align: right;">1927</td>
+<td style="text-align: left;">Alfred A. Cohn</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Barbary Coast</td>
+<td style="text-align: left;">The Samuel Goldwyn Company</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">1935</td>
+<td style="text-align: left;">Ben Hecht</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">After the Thin Man</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">Coit Tower</td>
+<td style="text-align: right;">1936</td>
+<td style="text-align: left;">Frances Goodrich</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">San Francisco</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">The Barbary Coast</td>
+<td style="text-align: right;">1936</td>
+<td style="text-align: left;">Anita Loos</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">San Francisco</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">City Hall</td>
+<td style="text-align: right;">1936</td>
+<td style="text-align: left;">Anita Loos</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="count-distinct-limit" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="count-distinct-limit"><span class="header-section-number">2.3</span> Count, Distinct, limit</h2>
+<section id="count" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="count"><span class="header-section-number">2.3.1</span> Count</h3>
+<ul>
+<li>Number of rows that meet target criteria</li>
+<li><code>select COUNT(*) from table</code> to get the total number of rows in a table</li>
+<li><code>select COUNT(COUNTRY) from Medals; where COUNTRY='Canada'</code>: Rows in the medals table were the country is Canada</li>
+</ul>
+</section>
+<section id="distinct" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="distinct"><span class="header-section-number">2.3.2</span> Distinct</h3>
+<ul>
+<li>Remove duplicate values</li>
+<li><code>select DISTINCT columnname from table</code>: retrieve unique values in a column</li>
+<li><code>select DISTINCT Country from Medals; where Medaltype == 'GOLD'</code>: get a list of unique countries that received gold medals</li>
+</ul>
+</section>
+<section id="limit" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="limit"><span class="header-section-number">2.3.3</span> Limit</h3>
+<ul>
+<li>Used to restrict the number of rows retrieved from a database</li>
+<li><code>select * from table LIMIT 10</code>: retrieve only the first 10 rows</li>
+<li><code>select * from Medals; where YEAR = 2018 LIMIT 5</code>: retrieve 5 rows in the Medals table for a specific year</li>
+</ul>
+<section id="exercises" class="level4" data-number="2.3.3.1">
+<h4 data-number="2.3.3.1" class="anchored" data-anchor-id="exercises"><span class="header-section-number">2.3.3.1</span> Exercises</h4>
+<ol type="1">
+<li>Retrieve the number of rows from the “FilmLocations” table.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">from</span> Film_Locations_in_San_Francisco</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">COUNT(*)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1976</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="2" type="1">
+<li>In this example, now we want to count the number of locations of the films. But we also want to restrict the output resultset in such a way that we only retrieve the number of locations of the films written by a certain writer. Retrieve the number of locations of the films which are written by James Cameron.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">COUNT</span>(Locations) <span class="kw">from</span> Film_Locations_in_San_Francisco</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> Writer <span class="op">=</span> <span class="ot">"James Cameron"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">COUNT(Locations)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">24</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Retrieve the number of locations of the films which are directed by Woody Allen.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">COUNT</span>(Locations) <span class="kw">from</span> Film_Locations_in_San_Francisco</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> Director <span class="op">=</span> <span class="ot">"Woody Allen"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">COUNT(Locations)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">31</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="4" type="1">
+<li>Retrieve the number of films shot at Russian Hill.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">COUNT</span>(Title) <span class="kw">from</span> Film_Locations_in_San_Francisco</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> Locations <span class="op">=</span> <span class="ot">"Russian Hill"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">COUNT(Title)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="5" type="1">
+<li>Retrieve the number of rows having a release year older than 1950 from the “FilmLocations” table.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">from</span> Film_Locations_in_San_Francisco</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> <span class="ot">"Release Year"</span> <span class="op">&gt;</span> <span class="dv">1950</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">COUNT(*)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1929</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="6" type="1">
+<li>In this example, we want to retrieve the title of all films in the table in such a way that duplicates will be discarded in the output resultset. Retrieve the name of all films without any repeated titles.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="kw">DISTINCT</span> Title <span class="kw">from</span> Film_Locations_in_San_Francisco</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A Jitney Elopement</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Greed</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Jazz Singer</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Barbary Coast</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">After the Thin Man</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">San Francisco</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Alexander’s Ragtime Band</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Shadow of the Thin Man</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Maltese Falcon</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gentleman Jim</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="7" type="1">
+<li>In this example, we want to retrieve the count of release years of the films produced by a specific company in such a way that duplicate release years of those films will be discarded in the count. Retrieve the number of release years of the films distinctly, produced by Warner Bros.&nbsp;Pictures.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> <span class="ot">"Release Year"</span>) <span class="kw">from</span> Film_Locations_in_San_Francisco</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> <span class="ot">"Production Company"</span> <span class="op">=</span> <span class="ot">"Warner Bros. Pictures"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">COUNT(DISTINCT “Release Year”)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">14</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="8" type="1">
+<li>Retrieve the name of all unique films released in the 21st century and onwards, along with their release years.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="kw">DISTINCT</span> Title, <span class="ot">"Release Year"</span> <span class="kw">from</span> Film_Locations_in_San_Francisco</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> <span class="ot">"Release Year"</span> <span class="op">&gt;=</span> <span class="dv">2001</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title</th>
+<th style="text-align: right;">Release Year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">By Hook or By Crook</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dr.&nbsp;Dolittle 2</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Haiku Tunnel</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mission (aka City of Bars)</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Never Die Twice</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Serendipity</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sweet November</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Princess Diaries</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Wedding Planner</td>
+<td style="text-align: right;">2001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">40 Days and 40 Nights</td>
+<td style="text-align: right;">2002</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="9" type="1">
+<li>Retrieve the names of all the directors and their distinct films shot at City Hall.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="kw">DISTINCT</span> Director, Title <span class="kw">from</span> Film_Locations_in_San_Francisco</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> Locations <span class="op">=</span> <span class="ot">"City Hall"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Director</th>
+<th style="text-align: left;">Title</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">W.S. Van Dyke</td>
+<td style="text-align: left;">San Francisco</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ted Post</td>
+<td style="text-align: left;">Magnum Force</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">James Fargo</td>
+<td style="text-align: left;">The Enforcer</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Colin Higgins</td>
+<td style="text-align: left;">Foul Play</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Philip Kaufman</td>
+<td style="text-align: left;">Invasion of the Body Snatchers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Philip Kaufman</td>
+<td style="text-align: left;">The Right Stuff</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">John Glen</td>
+<td style="text-align: left;">A View to a Kill</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Richard Marquand</td>
+<td style="text-align: left;">Jagged Edge</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Francis Ford Coppola</td>
+<td style="text-align: left;">Tucker: The Man and His Dream</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Michael Apted</td>
+<td style="text-align: left;">Class Action</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="10" type="1">
+<li>Retrieve the number of distributors distinctly who distributed films acted by Clint Eastwood as 1st actor.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">COUNT</span> (<span class="kw">DISTINCT</span> Distributor) <span class="kw">from</span> Film_Locations_in_San_Francisco</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> <span class="ot">"Actor 1"</span> <span class="op">=</span> <span class="ot">"Clint Eastwood"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">COUNT (DISTINCT Distributor)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="11" type="1">
+<li>In this example, let us retrieve a specific number of rows from the top of the table in such a way that rows other than those are not in the output resultset. Retrieve the first 25 rows from the “FilmLocations” table.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> Film_Locations_in_San_Francisco <span class="kw">Limit</span> <span class="dv">25</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<colgroup>
+<col style="width: 4%">
+<col style="width: 2%">
+<col style="width: 9%">
+<col style="width: 50%">
+<col style="width: 8%">
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 3%">
+<col style="width: 4%">
+<col style="width: 3%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title</th>
+<th style="text-align: right;">Release Year</th>
+<th style="text-align: left;">Locations</th>
+<th style="text-align: left;">Fun Facts</th>
+<th style="text-align: left;">Production Company</th>
+<th style="text-align: left;">Distributor</th>
+<th style="text-align: left;">Director</th>
+<th style="text-align: left;">Writer</th>
+<th style="text-align: left;">Actor 1</th>
+<th style="text-align: left;">Actor 2</th>
+<th style="text-align: left;">Actor 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A Jitney Elopement</td>
+<td style="text-align: right;">1915</td>
+<td style="text-align: left;">20th and Folsom Streets</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">The Essanay Film Manufacturing Company</td>
+<td style="text-align: left;">General Film Company</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Edna Purviance</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A Jitney Elopement</td>
+<td style="text-align: right;">1915</td>
+<td style="text-align: left;">Golden Gate Park</td>
+<td style="text-align: left;">During San Francisco’s Gold Rush era, the Park was part of an area designated as the “Great Sand Waste”.</td>
+<td style="text-align: left;">The Essanay Film Manufacturing Company</td>
+<td style="text-align: left;">General Film Company</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Charles Chaplin</td>
+<td style="text-align: left;">Edna Purviance</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: right;">1924</td>
+<td style="text-align: left;">Cliff House (1090 Point Lobos Avenue)</td>
+<td style="text-align: left;">In 1887, the Cliff House was severely damaged when the schooner Parallel, abandoned and loaded with dynamite, ran aground on the rocks below.</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Zasu Pitts</td>
+<td style="text-align: left;">Gibson Gowland</td>
+<td style="text-align: left;">Jean Hersholt</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: right;">1924</td>
+<td style="text-align: left;">Bush and Sutter Streets</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Zasu Pitts</td>
+<td style="text-align: left;">Gibson Gowland</td>
+<td style="text-align: left;">Jean Hersholt</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Greed</td>
+<td style="text-align: right;">1924</td>
+<td style="text-align: left;">Hayes Street at Laguna</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Metro-Goldwyn-Mayer (MGM)</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Eric von Stroheim</td>
+<td style="text-align: left;">Zasu Pitts</td>
+<td style="text-align: left;">Gibson Gowland</td>
+<td style="text-align: left;">Jean Hersholt</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Jazz Singer</td>
+<td style="text-align: right;">1927</td>
+<td style="text-align: left;">Coffee Dan’s (O’Farrell Street at Powell)</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">Alan Crosland</td>
+<td style="text-align: left;">Alfred A. Cohn</td>
+<td style="text-align: left;">Al Jolson</td>
+<td style="text-align: left;">May McAvoy</td>
+<td style="text-align: left;">Warner Oland</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Barbary Coast</td>
+<td style="text-align: right;">1935</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">The Samuel Goldwyn Company</td>
+<td style="text-align: left;">United Artists</td>
+<td style="text-align: left;">Howard Hawks</td>
+<td style="text-align: left;">Ben Hecht</td>
+<td style="text-align: left;">Mariam Hopkins</td>
+<td style="text-align: left;">Edward G. Robinson</td>
+<td style="text-align: left;">Joel McCrea</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">After the Thin Man</td>
+<td style="text-align: right;">1936</td>
+<td style="text-align: left;">Coit Tower</td>
+<td style="text-align: left;">The Tower was funded by a gift bequeathed by Lillie Hitchcock Coit, a socialite who reportedly liked to chase fires. Though the tower resembles a firehose nozzle, it was not designed this way.</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">W.S. Van Dyke</td>
+<td style="text-align: left;">Frances Goodrich</td>
+<td style="text-align: left;">William Powell</td>
+<td style="text-align: left;">Myrna Loy</td>
+<td style="text-align: left;">James Stewart</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">San Francisco</td>
+<td style="text-align: right;">1936</td>
+<td style="text-align: left;">The Barbary Coast</td>
+<td style="text-align: left;">The Barbary Coast was a red-light district that was largely destroyed in the 1906 earthquake. Though some of the establishments were rebuilt after the earthquake, an anti-vice campaign put the establishments out of business.</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">W.S. Van Dyke</td>
+<td style="text-align: left;">Anita Loos</td>
+<td style="text-align: left;">Clark Gable</td>
+<td style="text-align: left;">Jeanette MacDonald</td>
+<td style="text-align: left;">Spencer Tracy</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">San Francisco</td>
+<td style="text-align: right;">1936</td>
+<td style="text-align: left;">City Hall</td>
+<td style="text-align: left;">The dome of SF’s City Hall is almost a foot taller than that of the US Capitol Building. In 1954, Joe DiMaggio and Marilyn Monroe married at the Beaux Arts-style building.</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">W.S. Van Dyke</td>
+<td style="text-align: left;">Anita Loos</td>
+<td style="text-align: left;">Clark Gable</td>
+<td style="text-align: left;">Jeanette MacDonald</td>
+<td style="text-align: left;">Spencer Tracy</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="12" type="1">
+<li>In this example, let us take the first example to a more advanced level. Now we want to retrieve a specific number of rows from the table, but this time, not from the top of the table. This time we want to retrieve a specific number of rows starting from a specific row in the table. Retrieve the first 15 rows from the “FilmLocations” table starting from row 11. For this we use <strong>OFFSET</strong></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> Film_Locations_in_San_Francisco <span class="kw">Limit</span> <span class="dv">15</span> OFFSET <span class="dv">10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<colgroup>
+<col style="width: 4%">
+<col style="width: 2%">
+<col style="width: 13%">
+<col style="width: 47%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 3%">
+<col style="width: 5%">
+<col style="width: 3%">
+<col style="width: 2%">
+<col style="width: 2%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title</th>
+<th style="text-align: right;">Release Year</th>
+<th style="text-align: left;">Locations</th>
+<th style="text-align: left;">Fun Facts</th>
+<th style="text-align: left;">Production Company</th>
+<th style="text-align: left;">Distributor</th>
+<th style="text-align: left;">Director</th>
+<th style="text-align: left;">Writer</th>
+<th style="text-align: left;">Actor 1</th>
+<th style="text-align: left;">Actor 2</th>
+<th style="text-align: left;">Actor 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Alexander’s Ragtime Band</td>
+<td style="text-align: right;">1938</td>
+<td style="text-align: left;">Cliff House (1090 Point Lobos Avenue)</td>
+<td style="text-align: left;">In 1887, the Cliff House was severely damaged when the schooner Parallel, abandoned and loaded with dynamite, ran aground on the rocks below.</td>
+<td style="text-align: left;">Twentieth Century Fox Film Corporation</td>
+<td style="text-align: left;">Twentieth Century Fox Film Corporation</td>
+<td style="text-align: left;">Henry King</td>
+<td style="text-align: left;">Kathryn Scola</td>
+<td style="text-align: left;">Tyrone Power</td>
+<td style="text-align: left;">Alice Faye</td>
+<td style="text-align: left;">Don Ameche</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Alexander’s Ragtime Band</td>
+<td style="text-align: right;">1938</td>
+<td style="text-align: left;">San Francisco Bay</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Twentieth Century Fox Film Corporation</td>
+<td style="text-align: left;">Twentieth Century Fox Film Corporation</td>
+<td style="text-align: left;">Henry King</td>
+<td style="text-align: left;">Kathryn Scola</td>
+<td style="text-align: left;">Tyrone Power</td>
+<td style="text-align: left;">Alice Faye</td>
+<td style="text-align: left;">Don Ameche</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Alexander’s Ragtime Band</td>
+<td style="text-align: right;">1938</td>
+<td style="text-align: left;">Fairmont Hotel (950 Mason Street, Nob Hill)</td>
+<td style="text-align: left;">In 1945 the Fairmont hosted the United Nations Conference on International Organization as delegates arrived to draft a charter for the organization. The U.S. Secretary of State, Edward Stettinius drafted the charter in the hotel’s Garden Room.</td>
+<td style="text-align: left;">Twentieth Century Fox Film Corporation</td>
+<td style="text-align: left;">Twentieth Century Fox Film Corporation</td>
+<td style="text-align: left;">Henry King</td>
+<td style="text-align: left;">Kathryn Scola</td>
+<td style="text-align: left;">Tyrone Power</td>
+<td style="text-align: left;">Alice Faye</td>
+<td style="text-align: left;">Don Ameche</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Shadow of the Thin Man</td>
+<td style="text-align: right;">1941</td>
+<td style="text-align: left;">Bay Bridge</td>
+<td style="text-align: left;">Before opening in 1936, the bridge was blessed by Cardinal Secretary of State Eugenio Pacelli, who later became Pope Pius XII.</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">Metro-Goldwyn Mayer</td>
+<td style="text-align: left;">W.S. Van Dyke</td>
+<td style="text-align: left;">Harry Kurnitz</td>
+<td style="text-align: left;">William Powell</td>
+<td style="text-align: left;">Myrna Loy</td>
+<td style="text-align: left;">Barry Nelson</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Maltese Falcon</td>
+<td style="text-align: right;">1941</td>
+<td style="text-align: left;">Golden Gate Bridge</td>
+<td style="text-align: left;">With 23 miles of ladders and 300,000 rivets in each tower, the Golden Gate Bridge was the world’s longest span when it opened in 1937.</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">John Huston</td>
+<td style="text-align: left;">John Huston</td>
+<td style="text-align: left;">Humphrey Bogart</td>
+<td style="text-align: left;">Mary Astor</td>
+<td style="text-align: left;">Gladys George</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Maltese Falcon</td>
+<td style="text-align: right;">1941</td>
+<td style="text-align: left;">Ferry Building</td>
+<td style="text-align: left;">Every hour and half-hour, the clock bell atop the Ferry Building chimes portions of the Westminster Quarters.</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">John Huston</td>
+<td style="text-align: left;">John Huston</td>
+<td style="text-align: left;">Humphrey Bogart</td>
+<td style="text-align: left;">Mary Astor</td>
+<td style="text-align: left;">Gladys George</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Maltese Falcon</td>
+<td style="text-align: right;">1941</td>
+<td style="text-align: left;">Burritt Alley (Off Bush Street, between Powell and Stockton Streets)</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">John Huston</td>
+<td style="text-align: left;">John Huston</td>
+<td style="text-align: left;">Humphrey Bogart</td>
+<td style="text-align: left;">Mary Astor</td>
+<td style="text-align: left;">Gladys George</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gentleman Jim</td>
+<td style="text-align: right;">1942</td>
+<td style="text-align: left;">The Barbary Coast</td>
+<td style="text-align: left;">The Barbary Coast was a red-light district that was largely destroyed in the 1906 earthquake. Though some of the establishments were rebuilt after the earthquake, an anti-vice campaign put the establishments out of business.</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">Raoul Walsh</td>
+<td style="text-align: left;">Vincent Lawrence</td>
+<td style="text-align: left;">Errol Flynn</td>
+<td style="text-align: left;">Alexis Smith</td>
+<td style="text-align: left;">Jack Carson</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hello Frisco, Hello</td>
+<td style="text-align: right;">1943</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Twentieth Century Fox Film Corporation</td>
+<td style="text-align: left;">Twentieth Century Fox Film Corporation</td>
+<td style="text-align: left;">Bruce Humberstone</td>
+<td style="text-align: left;">Robert Ellis</td>
+<td style="text-align: left;">Alice Faye</td>
+<td style="text-align: left;">John Payne</td>
+<td style="text-align: left;">Jack Oakie</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dark Passage</td>
+<td style="text-align: right;">1947</td>
+<td style="text-align: left;">Golden Gate Bridge</td>
+<td style="text-align: left;">With 23 miles of ladders and 300,000 rivets in each tower, the Golden Gate Bridge was the world’s longest span when it opened in 1937.</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">Warner Bros.&nbsp;Pictures</td>
+<td style="text-align: left;">Delmer Daves</td>
+<td style="text-align: left;">Delmer Daves &amp; David Goodis</td>
+<td style="text-align: left;">Humphrey Bogart</td>
+<td style="text-align: left;">Lauren Bacal</td>
+<td style="text-align: left;">Bruce Bennett</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="13" type="1">
+<li>Retrieve the name of first 50 films distinctly.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="kw">Distinct</span> Title <span class="kw">from</span> Film_Locations_in_San_Francisco <span class="kw">Limit</span> <span class="dv">50</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A Jitney Elopement</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Greed</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Jazz Singer</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Barbary Coast</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">After the Thin Man</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">San Francisco</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Alexander’s Ragtime Band</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Shadow of the Thin Man</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The Maltese Falcon</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gentleman Jim</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="14" type="1">
+<li>Retrieve first 10 film names distinctly released in 2015.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="kw">Distinct</span> Title <span class="kw">from</span> Film_Locations_in_San_Francisco</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> <span class="ot">"Release Year"</span> <span class="op">=</span> <span class="dv">2015</span> <span class="kw">Limit</span> <span class="dv">10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Age of Adaline</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Americana</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ant-Man</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cardinal X</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">I Am Michael</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Looking Season 2 ep 202</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Looking Season 2 ep 203</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Looking Season 2 ep 204</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Looking Season 2 ep 205</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Looking Season 2 ep 206</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="15" type="1">
+<li>Retrieve the next 3 film names distinctly after first 5 films released in 2015.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="kw">Distinct</span> Title <span class="kw">from</span> Film_Locations_in_San_Francisco</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> <span class="ot">"Release Year"</span> <span class="op">=</span> <span class="dv">2015</span> <span class="kw">Limit</span> <span class="dv">3</span> OFFSET <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>3 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Looking Season 2 ep 202</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Looking Season 2 ep 203</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Looking Season 2 ep 204</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="insert" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="insert"><span class="header-section-number">2.4</span> Insert</h2>
+<ul>
+<li>The insert statement is used to add rows to a table</li>
+<li>Its a DML statement used to read and modify data</li>
+</ul>
+<p>I.e lets add something to the author table, ie a new author:</p>
+<pre><code>Insert into Author.db
+  (Author_ID, Lastname, Firstname)
+Values("A1", "Chong", "Raul")</code></pre>
+<ul>
+<li>Important: the number of provided values should equal the number of column names specified in the column name list</li>
+</ul>
+<p>We can insert multiple rows like this:</p>
+<pre><code>Insert into Author.db
+  (Author_ID, Lastname, Firstname)
+Values
+  ("A1", "Chong", "Raul")
+  ("A2", "Ahuja", "Rai")</code></pre>
+</section>
+<section id="update" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="update"><span class="header-section-number">2.5</span> Update</h2>
+<ul>
+<li>Update is used alter existing data in a table</li>
+<li>If we don’t specify the where statement, ALL rows in the table will be updated</li>
+</ul>
+<p>We want to update the Last and first Name for the author with the ID A2:</p>
+<pre><code>Update Author.db
+SET LastName="Katta"
+  Firstname="Lakshimi"
+  Where author_id='A2'</code></pre>
+</section>
+<section id="delete" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="delete"><span class="header-section-number">2.6</span> Delete</h2>
+<ul>
+<li>used to remove 1 or more rows</li>
+</ul>
+<p>We want to delete the rows for author ID A2 and A3</p>
+<pre><code>Delete from author.db
+  Where author_id IN ('A2', "A3")</code></pre>
+<section id="exercise-1" class="level3" data-number="2.6.1">
+<h3 data-number="2.6.1" class="anchored" data-anchor-id="exercise-1"><span class="header-section-number">2.6.1</span> Exercise</h3>
+<p>Prepare the data by copy/pasting the data from the online tutorial into excel and save as csv. It was converted to an sql database with <code>csvs-to-sqlite Instructor.csv Instructor.db</code></p>
+<p>Prep database for R</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>db2 <span class="ot">=</span> <span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="at">dbname =</span><span class="st">"Week1/Instructor.db"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol type="1">
+<li>First have a look at the database</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Select</span> <span class="op">*</span> <span class="kw">from</span> Instructor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">ins_id</th>
+<th style="text-align: left;">lastname</th>
+<th style="text-align: left;">firstname</th>
+<th style="text-align: left;">city</th>
+<th style="text-align: left;">country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ahuja</td>
+<td style="text-align: left;">Rav</td>
+<td style="text-align: left;">Markham</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Chong</td>
+<td style="text-align: left;">Raul</td>
+<td style="text-align: left;">Toronto</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Dhaka</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Ryan</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Varly</td>
+<td style="text-align: left;">GB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Sannareddy</td>
+<td style="text-align: left;">Ramesh</td>
+<td style="text-align: left;">Hyderabad</td>
+<td style="text-align: left;">IN</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Dhaka</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="2" type="1">
+<li>In this example, suppose we want to insert a new single row into the Instructor table. Insert a new instructor record with id 4 for Sandip Saha who lives in Edmonton, CA into the “Instructor” table.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Insert</span> <span class="kw">into</span> Instructor (ins_id, lastname, firstname, city, country)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> (<span class="ot">"4"</span>, <span class="ot">"Sandip"</span>, <span class="ot">"Saha"</span>, <span class="ot">"Edmonton"</span>, <span class="ot">"CA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Select</span> <span class="op">*</span> <span class="kw">from</span> Instructor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">ins_id</th>
+<th style="text-align: left;">lastname</th>
+<th style="text-align: left;">firstname</th>
+<th style="text-align: left;">city</th>
+<th style="text-align: left;">country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ahuja</td>
+<td style="text-align: left;">Rav</td>
+<td style="text-align: left;">Markham</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Chong</td>
+<td style="text-align: left;">Raul</td>
+<td style="text-align: left;">Toronto</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Dhaka</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Ryan</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Varly</td>
+<td style="text-align: left;">GB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Sannareddy</td>
+<td style="text-align: left;">Ramesh</td>
+<td style="text-align: left;">Hyderabad</td>
+<td style="text-align: left;">IN</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Dhaka</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="3" type="1">
+<li>n this example, suppose we want to insert some new multiple rows into the Instructor table. Insert two new instructor records into the “Instructor” table. First record with id 5 for John Doe who lives in Sydney, AU. Second record with id 6 for Jane Doe who lives in Dhaka, BD.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> Instructor(ins_id, lastname, firstname, city, country)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span>(<span class="dv">5</span>, <span class="st">'Doe'</span>, <span class="st">'John'</span>, <span class="st">'Sydney'</span>, <span class="st">'AU'</span>), (<span class="dv">6</span>, <span class="st">'Doe'</span>, <span class="st">'Jane'</span>, <span class="st">'Dhaka'</span>, <span class="st">'BD'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Select</span> <span class="op">*</span> <span class="kw">from</span> Instructor <span class="kw">Limit</span> <span class="dv">10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">ins_id</th>
+<th style="text-align: left;">lastname</th>
+<th style="text-align: left;">firstname</th>
+<th style="text-align: left;">city</th>
+<th style="text-align: left;">country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ahuja</td>
+<td style="text-align: left;">Rav</td>
+<td style="text-align: left;">Markham</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Chong</td>
+<td style="text-align: left;">Raul</td>
+<td style="text-align: left;">Toronto</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Dhaka</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Ryan</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Varly</td>
+<td style="text-align: left;">GB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Sannareddy</td>
+<td style="text-align: left;">Ramesh</td>
+<td style="text-align: left;">Hyderabad</td>
+<td style="text-align: left;">IN</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Dhaka</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="4" type="1">
+<li>Insert a new instructor record with id 7 for Antonio Cangiano who lives in Vancouver, CA into the “Instructor” table.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Insert</span> <span class="kw">into</span> Instructor(ins_id, lastname, firstname, city, country)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="kw">Values</span>(<span class="dv">7</span>, <span class="ot">"Cangiano"</span>, <span class="ot">"Antonio"</span>, <span class="ot">"Vancouver"</span>, <span class="ot">"CA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Select</span> <span class="op">*</span> <span class="kw">from</span> Instructor <span class="kw">Limit</span> <span class="dv">5</span> OFFSET <span class="dv">4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>5 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">ins_id</th>
+<th style="text-align: left;">lastname</th>
+<th style="text-align: left;">firstname</th>
+<th style="text-align: left;">city</th>
+<th style="text-align: left;">country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Ryan</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Varly</td>
+<td style="text-align: left;">GB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Sannareddy</td>
+<td style="text-align: left;">Ramesh</td>
+<td style="text-align: left;">Hyderabad</td>
+<td style="text-align: left;">IN</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Dhaka</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="5" type="1">
+<li>nsert two new instructor records into the “Instructor” table. First record with id 8 for Steve Ryan who lives in Barlby, GB. Second record with id 9 for Ramesh Sannareddy who lives in Hyderabad, IN.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Insert</span> <span class="kw">into</span> Instructor(ins_id, lastname, firstname, city, country)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="kw">Values</span>(<span class="dv">8</span>, <span class="ot">"Ryan"</span>, <span class="ot">"Steve"</span>, <span class="ot">"Varly"</span>, <span class="ot">"GB"</span>),(<span class="dv">9</span>, <span class="ot">"Sannareddy"</span>, <span class="ot">"Ramesh"</span>, <span class="ot">"Hyderabad"</span>, <span class="ot">"IN"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Select</span> <span class="op">*</span> <span class="kw">from</span> Instructor <span class="kw">Limit</span> <span class="dv">5</span> OFFSET <span class="dv">4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>5 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">ins_id</th>
+<th style="text-align: left;">lastname</th>
+<th style="text-align: left;">firstname</th>
+<th style="text-align: left;">city</th>
+<th style="text-align: left;">country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Ryan</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Varly</td>
+<td style="text-align: left;">GB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Sannareddy</td>
+<td style="text-align: left;">Ramesh</td>
+<td style="text-align: left;">Hyderabad</td>
+<td style="text-align: left;">IN</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Dhaka</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="6" type="1">
+<li>In this example, we want to update one column of an existing row of the table. Update the city for Sandip to Toronto.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Update</span> Instructor</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="kw">Set</span> city<span class="op">=</span><span class="ot">"Toronto"</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="kw">Where</span> lastname<span class="op">=</span><span class="ot">"Sandip"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Select</span> <span class="op">*</span> <span class="kw">from</span> Instructor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">ins_id</th>
+<th style="text-align: left;">lastname</th>
+<th style="text-align: left;">firstname</th>
+<th style="text-align: left;">city</th>
+<th style="text-align: left;">country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ahuja</td>
+<td style="text-align: left;">Rav</td>
+<td style="text-align: left;">Markham</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Chong</td>
+<td style="text-align: left;">Raul</td>
+<td style="text-align: left;">Toronto</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Toronto</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Ryan</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Varly</td>
+<td style="text-align: left;">GB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Sannareddy</td>
+<td style="text-align: left;">Ramesh</td>
+<td style="text-align: left;">Hyderabad</td>
+<td style="text-align: left;">IN</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Toronto</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="7" type="1">
+<li>Update the city and country for Doe with id 5 to Dubai and AE respectively.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Update</span> Instructor</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="kw">Set</span> city<span class="op">=</span><span class="ot">"Dubai"</span>, country<span class="op">=</span><span class="ot">"AE"</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="kw">Where</span> lastname<span class="op">=</span><span class="ot">"Doe"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Select</span> <span class="op">*</span> <span class="kw">from</span> Instructor <span class="kw">Limit</span> <span class="dv">5</span> Offset <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>5 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">ins_id</th>
+<th style="text-align: left;">lastname</th>
+<th style="text-align: left;">firstname</th>
+<th style="text-align: left;">city</th>
+<th style="text-align: left;">country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Toronto</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Ryan</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Varly</td>
+<td style="text-align: left;">GB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Sannareddy</td>
+<td style="text-align: left;">Ramesh</td>
+<td style="text-align: left;">Hyderabad</td>
+<td style="text-align: left;">IN</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="8" type="1">
+<li>Update the city of the instructor record to Markham whose id is 1.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Update</span> Instructor</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="kw">Set</span> city<span class="op">=</span><span class="ot">"Markham"</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="kw">Where</span> ins_id<span class="op">=</span><span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Select</span> <span class="op">*</span> <span class="kw">from</span> Instructor <span class="kw">Limit</span> <span class="dv">5</span> Offset <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>5 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">ins_id</th>
+<th style="text-align: left;">lastname</th>
+<th style="text-align: left;">firstname</th>
+<th style="text-align: left;">city</th>
+<th style="text-align: left;">country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ahuja</td>
+<td style="text-align: left;">Rav</td>
+<td style="text-align: left;">Markham</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Chong</td>
+<td style="text-align: left;">Raul</td>
+<td style="text-align: left;">Toronto</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Toronto</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="9" type="1">
+<li>Update the city and country for Sandip with id 4 to Dhaka and BD respectively.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Update</span> Instructor</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="kw">Set</span> city<span class="op">=</span><span class="ot">"Dhaka"</span>, country<span class="op">=</span><span class="ot">"DB"</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="kw">Where</span> ins_id<span class="op">=</span><span class="dv">4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Select</span> <span class="op">*</span> <span class="kw">from</span> Instructor <span class="kw">Limit</span> <span class="dv">5</span> Offset <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>5 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">ins_id</th>
+<th style="text-align: left;">lastname</th>
+<th style="text-align: left;">firstname</th>
+<th style="text-align: left;">city</th>
+<th style="text-align: left;">country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Chong</td>
+<td style="text-align: left;">Raul</td>
+<td style="text-align: left;">Toronto</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Dhaka</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Ryan</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Varly</td>
+<td style="text-align: left;">GB</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="10" type="1">
+<li>In this example, we want to remove a row from the table. Remove the instructor record of Doe whose id is 6.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Delete</span> <span class="kw">from</span> Instructor</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> ins_id<span class="op">=</span><span class="dv">6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Select</span> <span class="op">*</span> <span class="kw">from</span> Instructor <span class="kw">Limit</span> <span class="dv">5</span> Offset <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>5 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">ins_id</th>
+<th style="text-align: left;">lastname</th>
+<th style="text-align: left;">firstname</th>
+<th style="text-align: left;">city</th>
+<th style="text-align: left;">country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Ryan</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Varly</td>
+<td style="text-align: left;">GB</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Sannareddy</td>
+<td style="text-align: left;">Ramesh</td>
+<td style="text-align: left;">Hyderabad</td>
+<td style="text-align: left;">IN</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Dhaka</td>
+<td style="text-align: left;">DB</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="11" type="1">
+<li>Remove the instructor record of Hima.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Delete</span> <span class="kw">from</span> Instructor</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="kw">Where</span> firstname<span class="op">=</span><span class="ot">"Hima"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="kw">Select</span> <span class="op">*</span> <span class="kw">from</span> Instructor <span class="kw">Limit</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>5 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">ins_id</th>
+<th style="text-align: left;">lastname</th>
+<th style="text-align: left;">firstname</th>
+<th style="text-align: left;">city</th>
+<th style="text-align: left;">country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ahuja</td>
+<td style="text-align: left;">Rav</td>
+<td style="text-align: left;">Markham</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Chong</td>
+<td style="text-align: left;">Raul</td>
+<td style="text-align: left;">Toronto</td>
+<td style="text-align: left;">CA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sandip</td>
+<td style="text-align: left;">Saha</td>
+<td style="text-align: left;">Dhaka</td>
+<td style="text-align: left;">DB</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Doe</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Dubai</td>
+<td style="text-align: left;">AE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cangiano</td>
+<td style="text-align: left;">Antonio</td>
+<td style="text-align: left;">Vancouver</td>
+<td style="text-align: left;">CA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preamble</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Week2-Notes.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Relational databases</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

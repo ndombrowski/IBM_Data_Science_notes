@@ -1,0 +1,583 @@
+# Pre-processing of data in python
+
+## Introduction
+
+Data pre-processing is a necessary step in data analysis. It is the process of converting or mapping data from one raw form into another format to make it ready for further analysis. 
+
+Data pre-processing is often called data cleaning or data wrangling.
+
+- Identifying and handle missing values. A missing value condition occurs whenever a data entry is left empty.
+- Data formatting. Data from different sources maybe in various formats, in different units, or in various conventions. 
+- Data normalization (centering/scaling). Different columns of numerical data may have very different ranges and direct comparison is often not meaningful. Normalization is a way to bring all data into a similar range for more useful comparison.
+- Data binning. Binning creates bigger categories from a set of numerical values. It is particularly useful for comparison between groups of data.
+- Turning categorical values to numeric variables to make statistical modeling easier
+
+Let's start with loading our test data
+
+
+You can find the "Automobile Dataset" from the following link: https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data. We will be using this dataset throughout this course.
+
+```{python}
+import sys
+sys.executable
+```
+
+```{python}
+#load libs
+import pandas as pd
+import numpy as np
+
+#get the data url
+url = "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DA0101EN-SkillsNetwork/labs/Data%20files/auto.csv"
+
+#add a header
+headers = ["symboling","normalized-losses","make","fuel-type","aspiration", "num-of-doors","body-style","drive-wheels","engine-location","wheel-base", "length","width","height","curb-weight","engine-type","num-of-cylinders", "engine-size","fuel-system","bore","stroke","compression-ratio","horsepower","peak-rpm","city-mpg","highway-mpg","price"]
+
+#download data
+df = pd.read_csv(url, names = headers)
+df.head(5)
+```
+
+
+## Dealing with missing values
+
+- A missing value condition occurs whenever a data entry is left empty
+- Can be represented as: ?, N/A, 0 or a blank cell
+
+Typical options to consider to deal with missing data:
+
+- Check with the collection source to find missing values
+- Remove data were missing value is found, here we can do either drop the whole row or column (decide on what has the least amount of impact)
+    - drop the variable
+    - drop the data entry
+- Replace the missing values
+    - replace with the average (of similar data points)
+    - replace it by frequency
+    - replace it based on other functions
+- Leave it as missing data
+
+Next, let's first convert ? to NaN
+
+```{python}
+# replace "?" to NaN
+df.replace("?", np.nan, inplace = True)
+df.head(5)
+```
+
+### Using `dropna()`
+
+To remove data that contains missing values Panda's library has a built-in method called dropna. Essentially, with the dropna method, you can choose to drop rows or columns that contain missing values like NaN.
+
+- axis = 0 --> drop the entire row (default)
+- axis = 1 --> drop the entire column
+- inpalce = True --> modification is done on the dataset directly
+
+```
+dataframes.dropna()
+```
+
+If we want to remove rows based on a specific column
+
+```
+dataframes.dropna(subset = ['price'], axis = 0, inplace = True)
+```
+
+
+### Replace missing values using `replace()`
+
+```
+dataframe.replace(missing_value, new_value)
+```
+
+Replace a value with the mean of a column:
+
+```
+mean = df['prices'].mean()
+df['prices'].replace(np.nan, mean)
+```
+
+
+### Practical
+
+#### Identify missing data
+
+Now, let's find out if we have any missing data.
+
+The missing values are converted by default. We use the following functions to identify these missing values. There are two methods to detect missing data:
+
+- .isnull()
+- .notnull()
+
+The output is a boolean value indicating whether the value that is passed into the argument is in fact missing data. "True" means the value is a missing value while "False" means the value is not a missing value
+
+```{python}
+missing_data = df.isnull()
+missing_data.head(5)
+```
+
+Using a for loop in Python, we can quickly figure out the number of missing values in each column. As mentioned above, "True" represents a missing value and "False" means the value is present in the dataset. In the body of the for loop the method ".value_counts()" counts the number of "True" values.
+
+```{python}
+for column in missing_data.columns.values.tolist():
+    print(column)
+    print (missing_data[column].value_counts())
+    print("") 
+```
+
+Based on the summary above, each column has 205 rows of data and seven of the columns containing missing data:
+
+"normalized-losses": 41 missing data
+"num-of-doors": 2 missing data
+"bore": 4 missing data
+"stroke" : 4 missing data
+"horsepower": 2 missing data
+"peak-rpm": 2 missing data
+"price": 4 missing data
+
+Now, we have to decide what to do with this missing data. Whole columns should be dropped only if most entries in the column are empty. In our dataset, none of the columns are empty enough to drop entirely. We have some freedom in choosing which method to replace data; however, some methods may seem more reasonable than others. We will apply each method to many different columns:
+
+Replace by mean:
+
+- "normalized-losses": 41 missing data, replace them with mean
+- "stroke": 4 missing data, replace them with mean
+- "bore": 4 missing data, replace them with mean
+- "horsepower": 2 missing data, replace them with mean
+- "peak-rpm": 2 missing data, replace them with mean
+
+Replace by frequency:
+
+- "num-of-doors": 2 missing data, replace them with "four".
+    - Reason: 84% sedans is four doors. Since four doors is most frequent, it is most likely to occur
+
+Drop the whole row:
+
+- "price": 4 missing data, simply delete the whole row
+    - Reason: price is what we want to predict. Any data entry without price data cannot be used for prediction; therefore any row now without price data is not useful to us
+
+#### Deal with the "normalized-losses" column
+
+```{python}
+avg_norm_loss = df['normalized-losses'].astype('float').mean(axis = 0)
+print("Average of normalized losses:", avg_norm_loss)
+```
+
+```{python}
+df['normalized-losses'].replace(np.nan, avg_norm_loss, inplace = True)
+```
+
+
+
+#### Deal with the "bore" column¶
+
+```{python}
+avg_bore = df['bore'].astype('float').mean(axis = 0)
+print("Average of bore:", avg_bore)
+```
+
+```{python}
+df['bore'].replace(np.nan, avg_bore, inplace = True)
+```
+
+
+#### Deal with the "stroke" column
+
+```{python}
+avg_bore = df['bore'].astype('float').mean(axis = 0)
+print("Average of bore:", avg_bore)
+
+df['bore'].replace(np.nan, avg_bore, inplace = True)
+```
+
+
+#### Deal with the "horsepower" column
+
+```{python}
+avg_horsepower = df['horsepower'].astype('float').mean(axis = 0)
+print("Average of horsepower:", avg_horsepower)
+
+df['horsepower'].replace(np.nan, avg_horsepower, inplace = True)
+```
+
+
+
+#### Deal with the "peak-rpm" column
+
+```{python}
+avg_peakrpm = df['peak-rpm'].astype('float').mean(axis = 0)
+print("Average of peak-rpm:", avg_peakrpm)
+
+df['peak-rpm'].replace(np.nan, avg_peakrpm, inplace = True)
+```
+
+
+#### Replace missing door values with frequency
+
+To see which values are present in a particular column, we can use the `.value_counts()` method:
+
+```{python}
+df['num-of-doors'].value_counts()
+```
+
+We can see that four doors are the most common type. We can also use the ".idxmax()" method to calculate the most common type automatically:
+
+```{python}
+doors_to_replace = df['num-of-doors'].value_counts().idxmax()
+doors_to_replace
+```
+
+Now we can replace our missing values:
+
+```{python}
+df['num-of-doors'].replace(np.nan,doors_to_replace, inplace = True )
+```
+
+#### Drop rows for the price column
+
+```{python}
+#drop nan
+df.dropna(subset = ['price'], axis = 0 , inplace = True)
+
+#reset index, because we dropped two ros
+df.reset_index(drop = True, inplace = True)
+
+#view df
+df.head()
+```
+
+
+## Data formatting
+
+Data is usually collected from different places by different people which may be stored in different formats. Data formatting means bringing data into a common standard of expression that allows users to make meaningful comparisons.  As a part of dataset cleaning, data formatting ensures the data is consistent and easily understandable. 
+
+For example, people may use different expressions to represent New York City, such as uppercase N uppercase Y, uppercase N lowercase y, uppercase N uppercase Y and New York. 
+
+
+Formatted data is:
+
+- more clear
+- easier to aggregate
+- easier to compare
+
+
+### Incorrect data types
+
+Sometimes the wrong data type is assigned to a feature. For example a number might be stored in an object, thus we could not use the mean function, without correcting this.
+
+To identify a datatype:
+
+```
+df.dtypes()
+```
+
+To convert dataframes:
+
+```
+df.astype()
+```
+
+
+
+### Practical
+
+#### Deal with incorrect data types
+
+The last step in data cleaning is checking and making sure that all data is in the correct format (int, float, text or other).
+
+In Pandas, we use:
+
+- .dtype() to check the data type
+- .astype() to change the data type
+
+
+Let's check the data types for each column:
+
+```{python}
+df.dtypes
+```
+
+As we can see above, some columns are not of the correct data type. Numerical variables should have type 'float' or 'int', and variables with strings such as categories should have type 'object'. 
+
+For example, 'bore' and 'stroke' variables are numerical values that describe the engines, so we should expect them to be of the type 'float' or 'int'; however, they are shown as type 'object'. We have to convert data types into a proper format for each column using the "astype()" method.
+
+```{python}
+df[['bore', 'stroke']] = df[['bore', 'stroke']].astype('float')
+df[["normalized-losses"]] = df[["normalized-losses"]].astype("int")
+df[["price"]] = df[["price"]].astype("float")
+df[["peak-rpm"]] = df[["peak-rpm"]].astype("float")
+
+#check if that worked 
+df.dtypes
+```
+
+
+
+
+## Data normalization
+
+- Uniforms the features value with different ranges: if data are in different ranges, such as age 20-40 and income 10000 to 50000, are hard to compare and income will influence the result more but it might not be more important as a data predictor.
+- We could normalize all values to be in a range from 0-1
+
+There are several approches:
+
+- **Simple feature scaling**: divides each value by the maximum value for that feature. This makes the new values range between zero and one.
+    
+```
+df['length'] = df['length'] /df['length'].max()
+```
+
+- **Min-max**: each value X_old subtract it from the minimum value of that feature, then divides by the range of that feature
+
+```
+df['length'] = (df['length'] - df['length'].min())/
+                (df['length'].max()-df['length'].min())
+```
+
+- **Z-score**: for each value you subtract the mu which is the average of the feature, and then divide by the standard deviation sigma.
+
+```
+df['length'] = (df['length']-df['length'],mean()).df['length'].std()
+```
+
+### Practical
+
+#### Data Standardization
+
+In our dataset, the fuel consumption columns "city-mpg" and "highway-mpg" are represented by mpg (miles per gallon) unit. Assume we are developing an application in a country that accepts the fuel consumption with L/100km standard.
+
+We will need to apply data transformation to transform mpg into L/100km.
+
+The formula for unit conversion is:
+
+L/100km = 235 / mpg
+
+We can do many mathematical operations directly in Pandas.
+
+```{python}
+# Convert mpg to L/100km by mathematical operation (235 divided by mpg)
+df['city-L/100km'] = 235/df['city-mpg']
+
+#view transformed data
+df.head()
+```
+
+Next, transform mpg to L/100km in the column of "highway-mpg" and change the name of column to "highway-L/100km".
+
+```{python}
+# Convert mpg to L/100km by mathematical operation (235 divided by mpg)
+df['highway-L/100km'] = 235/df['highway-mpg']
+
+#view transformed data
+df.head()
+```
+
+#### Data normalization
+
+To demonstrate normalization, let's say we want to scale the columns "length", "width" and "height".
+
+Target: would like to normalize those variables so their value ranges from 0 to 1
+Approach: replace original value by (original value)/(maximum value)
+
+```{python}
+# replace (original value) by (original value)/(maximum value)
+df['length'] = df['length']/df['length'].max()
+df['width'] = df['width']/df['width'].max()
+df['height'] = df['height']/df['height'].max()
+
+
+df[['length','width', 'height']].head()
+```
+
+
+
+## Binning
+
+- Binning: Grouping values into bins, i.e. we can bin “age” into [0 to 5], [6 to 10], [11 to 15] and so on
+- Can sometimes increase the accuracy of models
+- Converts numeric into categorical variables, i.e. the different prices can be grouped into low, medium and high
+- Group a set of numerical values into a set of bins
+
+We can use the numpy function “linspace” to return the array “bins” that contains 4 equally spaced numbers over the specified interval of the price. We create a list “group_names “ that contains the different bin names. We use the pandas function ”cut” to segment and sort the data values into bins.
+
+```
+bin = np.linspace(min(df['price']),max(df['price']),4)
+group_names = ['Low', 'Medium', 'High']
+df['price_binned'] = pd.cut(df['price'], bins, labels = group_names, include_lowest = True)
+```
+
+The distribution of data can be visualized using histograms.
+
+### Practical
+
+#### Defining bins
+
+In our dataset, "horsepower" is a real valued variable ranging from 48 to 288 and it has 59 unique values. What if we only care about the price difference between cars with high horsepower, medium horsepower, and little horsepower (3 types)? Can we rearrange them into three ‘bins' to simplify analysis?
+
+```{python}
+#check data format
+print(df['horsepower'].dtypes)
+
+#convert the data to the correct format
+df['horsepower'] = df['horsepower'].astype(int, copy=True)
+```
+
+Let's plot the histogram of horsepower to see what the distribution of horsepower looks like.
+
+```{python}
+import matplotlib
+import matplotlib.pyplot as plt
+
+#define what we want to plot
+plt.hist(df["horsepower"])
+
+#set axis labels
+plt.xlabel("horsepower")
+plt.ylabel("count")
+plt.title("horsepower bins")
+
+#plot
+plt.show()
+plt.close()
+```
+
+
+We would like 3 bins of equal size bandwidth so we use numpy's linspace(start_value, end_value, numbers_generated function.
+
+- Since we want to include the minimum value of horsepower, we want to set start_value = min(df["horsepower"]).
+- Since we want to include the maximum value of horsepower, we want to set end_value = max(df["horsepower"]).
+-  Since we are building 3 bins of equal length, there should be 4 dividers, so numbers_generated = 4.
+
+We build a bin array with a minimum value to a maximum value by using the bandwidth calculated above. The values will determine when one bin ends and another begins.
+
+```{python}
+bins = np.linspace(min(df['horsepower']), max(df['horsepower']),4)
+bins
+```
+
+We set group names:
+
+```{python}
+group_names = ['Low' , 'Medium', 'High']
+```
+
+
+We apply the function "cut" to determine what each value of df['horsepower'] belongs to.
+
+```{python}
+df['horsepower-binned'] = pd.cut(df['horsepower'], bins, labels = group_names, include_lowest = True)
+df[['horsepower', 'horsepower-binned']].head(10)
+```
+Let's see the number of vehicles in each bin:
+
+```{python}
+df['horsepower-binned'].value_counts()
+```
+
+Let's plot the distribution of each bin:
+
+```{python}
+#define the bargraph
+plt.bar(group_names, df['horsepower-binned'].value_counts())
+
+#set labels
+plt.xlabel("horsepower")
+plt.ylabel("count")
+plt.title("horsepower bins")
+
+#print
+plt.show()
+plt.close()
+```
+
+#### Visualizing bins
+
+```{python}
+# draw historgram of attribute "horsepower" with bins = 3
+plt.hist(df["horsepower"], bins = 3)
+
+# set x/y labels and plot title
+plt.xlabel("horsepower")
+plt.ylabel("count")
+plt.title("horsepower bins")
+
+plt.show()
+plt.close()
+```
+
+
+## Turning categorical variables into quantitative variables
+
+- Most statistical models cannot take in objects or strings as input and for model training only take the numbers as inputs. 
+- We encode the values by adding new features corresponding to each unique element in the original feature we would like to encode. I.e if we have two unique values, gas and diesel, we create two new features and assign 0 and 1 to each category. This technique is also called one-hot encoding.
+- `pd.get_dummies()` method converts categorical variables to dummy variables, such as 0 and 1
+
+Indicator value: An indicator variable (or dummy variable) is a numerical variable used to label categories. They are called 'dummies' because the numbers themselves don't have inherent meaning.
+
+We use indicator variables so we can use categorical variables for regression analysis in the later modules.
+
+```
+pd.get_dummies(df['fuel'])
+```
+
+
+### Practical
+
+In this practical we want to answer the question: What is the fuel consumption (L/100k) rate for the diesel car?
+
+We see the column "fuel-type" has two unique values: "gas" or "diesel". Regression doesn't understand words, only numbers. To use this attribute in regression analysis, we convert "fuel-type" to indicator variables.
+
+We will use pandas' method 'get_dummies' to assign numerical values to different categories of fuel type.
+
+```{python}
+dummy_variable_1 = pd.get_dummies(df['fuel-type'])
+dummy_variable_1.head()
+```
+
+Change the column names for clarity
+
+```{python}
+dummy_variable_1.rename(columns={'gas':'fuel-type-gas', 'diesel':'fuel-type-diesel'}, inplace=True)
+dummy_variable_1.head()
+```
+Replace the dummy df with our original gas column
+
+```{python}
+# merge data frame "df" and "dummy_variable_1" 
+df = pd.concat([df, dummy_variable_1], axis = 1)
+df.head()
+```
+Drop original column "fuel-type" from "df"
+
+
+```{python}
+df.drop("fuel-type", axis = 1, inplace = True)
+df.head()
+```
+
+Similar to before, create an indicator variable for the column "aspiration"
+
+```{python}
+#create dummy
+dummy_variable_2 = pd.get_dummies(df['aspiration'])
+
+#change the columns
+dummy_variable_2.rename(columns = {'std': 'aspiration-std', 'turbo':'aspiration-turbo'}, inplace = True)
+
+print(dummy_variable_2.head())
+
+#combine with previous df
+df = pd.concat([df,dummy_variable_2], axis = 1)
+
+#drop original aspiration column
+df.drop('aspiration', axis = 1, inplace = True)
+
+print(df.head())
+```
+
+Store clean df
+
+```{python}
+df.to_csv("../data/clean_df.csv")
+```
+
+
+

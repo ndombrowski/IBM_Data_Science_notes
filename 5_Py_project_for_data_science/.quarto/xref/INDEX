@@ -1,0 +1,14 @@
+{
+  "index.qmd": {
+    "index.html": "f0420f3c"
+  },
+  "code/1_extract_stock_data.qmd": {
+    "1_extract_stock_data.html": "865714f8"
+  },
+  "code/2_extract_stock_data_w_webscraping.qmd": {
+    "2_extract_stock_data_w_webscraping.html": "f7fffa9c"
+  },
+  "code/3_exam.qmd": {
+    "3_exam.html": "fd231a09"
+  }
+}

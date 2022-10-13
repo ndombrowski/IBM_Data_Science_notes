@@ -1,0 +1,139 @@
+# What is data science
+
+## Fundamentals of data science
+
+- Data science = the study of data that has a large data analysis component
+- Data science is the field of exploring, manipulating, and analyzing data, and using data to answer questions or make recommendations.
+- Data science is the study of large quantities of data, which can reveal insights that help organizations make strategic choices.
+
+Data science can help to:
+
+- Understand environments
+- Analyse existing issues
+- Reveal previously hidden opportunities
+- add knowledge to an organization and use it to provide value to a business 
+
+Steps:
+
+- Clarify the question that needs to be answered
+- What data do we need to solve the problem and were does it come from?
+- Investigate patterns in the data
+- Investigate approach to answer the question
+- Communicate results to stakeholders via data visualization
+
+
+## Big data
+
+Definition: Big Data refers to the dynamic, large and disparate volumes of data being created by people, tools, and machines. It requires new, innovative, and scalable technology to collect, host, and analytically process the vast amount of data gathered in order to derive real-time business insights that relate to consumers, risk, profit, performance, productivity management, and enhanced shareholder value.
+
+The V's of big data:
+
+- Velocity: The speed at which data accumulates
+- Volume: The scale of the data or the increase in the amount of data stored
+- Variety: Diversity of the data, ie types (structured vs unstructured, text, videos, etc) and sources of data
+- Veracity: Quality and origin of the data. 80% of data is unstructured, how can we visualize this?
+- Value: Ability/need to turn data into value, i.e. profit/medical + social benefits, etc
+
+
+Data Mining Goals:
+
+- Set up goals for the exercise, identify key questions to be answered, the cost-benefit trade-off and the expected level of accuracy and usefulness of the results. 
+- Selecting data: is data already available, if not we have to identify sources of data/plan data collection initiatives. Also the data type, cost, frequency of collection <-> cost.
+- Preprocessing of data: Deal with erroneous and irrelevant data, deal with missing information. I.e. human error can result in incorrect parsing of the data. Thus integrity checks are key to this step as well as finding a method to ask whether missing data is missing randomly or systematically. If data is missing systematically, we might need to determine the impact of this missing data.
+- Transforming data: For this we need to find the right format for our data and reduce the number of attributes that could explain our phenomena. I.e. PCA can be used to reduce data complexity.
+- Storing data: Once the data is transformed we need a format that is useful for data mining, i.e. we want efficient reading from and writing to a database. Also were we store the data, i.e. servers, is important for data security. 
+- Mining data: Here we want to analyses our data using among others parametric and non-parametric methods and machine learning algorithms. Part of this is also to visualize our data to see trends hidden in our data.
+- Evaluating the results: This part can include the testing of predictive capabilities of the models on observed data to see if our algorithms are efficient and effective (= in-sample forecast). Also at this stage we want to be able share our data with stakeholders
+
+
+## Deep learning and machine learning
+
+**Data mining:** the process of automatically searching and analyzing data, discovering previously unrevealed patterns. It involves preprocessing the data to prepare it and transforming it into an appropriate format. Once this is done, insights and patterns are mined and extracted using various tools and techniques ranging from simple data visualization tools to machine learning and statistical models. 
+
+**Machine learning:**  a subset of AI that uses computer algorithms to analyze data and make intelligent decisions based on what it is learned without being explicitly programmed. Machine learning algorithms are trained with large sets of data and they learn from examples. They do not follow rules-based algorithms.
+
+**Deep learning:** A subset of machine learning that uses neural networks to simulate human-decision making. They allow to label and categorize data and identify patterns. 
+
+**Neural networks:** A neural network in AI is a collection of small computing units called neurons that take incoming data and learn to make decisions over time. Neural networks are often layer-deep and are the reason deep learning algorithms become more efficient as the data sets increase in volume, as opposed to other machine learning algorithms that may plateau as data increases. 
+
+Data Science is a broad term that encompasses the entire data processing methodology while **AI** includes everything that allows computers to learn how to solve problems and make intelligent decisions. Both AI and Data Science can involve the use of big data.
+
+
+## IBM Watson Study
+
+https://cloud.ibm.com/services/data-science-experience/crn%3Av1%3Abluemix%3Apublic%3Adata-science-experience%3Aeu-de%3Aa%2F97445e9750ae4feca4f2ef46da9ff2c4%3A571a01e7-9bb1-440d-835b-9201eb500edd%3A%3A?paneId=manage&new=true
+
+IBM cloude feature code: be6e33dfaa4a7dd3ecf98d0642b0f069
+nd_F+
+
+IBM Watson Studio is a service from IBM, that provides a suite of tools and a collaborative environment for data scientists, developers and domain experts. In this lab, you will use Watson Studio and explore different datasets. To use this, we log into the Login to IBM Cloud and under catalogue --> AI/Machine Learning (left hand side) --> Watson Studio
+
+Sample 1 in which you will learn about the dataset in which only numeric attributes are present.
+
+Sample 2 in which you will learn about the dataset in which numeric & text attributes are present.
+
+Sample 3 in which you will analyze how the Jupyter Notebooks look like. How a Data Scientist create the models?
+
+
+### Exercise 1: Launch Watson Studio for accessing Data Science Problems
+
+1. Login to IBM Cloud: https://cloud.ibm.com/login
+2. Scroll down and click Services given in Resource Summary.
+3. Click Watson study that we created and launch
+1. Click on Navigation Menu and on gallery 
+1. Select All Filters. From Format select Data and from Topic select Energy & Utilities, Environment and Industry Accelerator
+1. Click on UCI: Forest Fires, source data can be found [here](https://archive.ics.uci.edu/ml/datasets/forest+fires)
+1. Preview the data using the Preview option.
+
+Lets' look at some other data
+
+1. Use the All Filters. From Format select Data and from Topic select Economy and Business.
+2. Go to Airbnb Data for Analytics
+
+Lets find tools to find notebooks, ie jupyter:
+
+1. Use the All Filters. From Format select Notebook and select Finding optimal locations of new stores using Decision Optimization
+
+
+## Data science in buisness 
+
+- The ultimate purpose of analytics is to communicate findings to the concerned who might use these insights to formulate policy or strategy. 
+- Analytics summarize findings in tables and plots. 
+- The data scientist should then use the insights to build the narrative to communicate the findings.
+
+
+## Careers and recruiting in data science
+
+For women in data science: https://www.widsconference.org
+
+
+## Structure of reports
+
+A good format can be:  
+
+- Cover page: Include the title of the report, author names, affiliations and contacts, name of the institutional publisher and date of publication. 
+- Table of contents, which is a road map to prepare the reader
+- Abstract/Executive summary (even for short documents): With an intro section to set up the problem, which can be followed by a review of available relevant research. 
+- Methodology: to introduce research methods and data sources. If data was collected, explain the data collection exercise.
+- Results: to present the empirical findings and includes descriptive statistics and graphics
+- Discussion: to craft the main arguments based on the results presented and also potential caveats
+- Conclusion: to generalize our findings and take on a marketing approach. Can also identify future possible developments/applications that canr esult from the findings.
+- List of references
+- Acknowledgement section
+- Appendices (if needed)
+
+Check if your report fullfills the following points:
+
+- Have you told readers, at the outset, what they might gain by reading your paper?
+- Have you made the aim of your work clear?
+- Have you explained the significance of your contribution?
+- Have you set your work in the appropriate context by giving sufficient background (including a complete set of relevant references) to your work?
+- Have you addressed the question of practicality and usefulness?
+- Have you identified future developments that might result from your work?
+
+
+**Lit to check**
+
+- Rachel Schutt is the Chief Data Scientist at News Corp. She teaches a data science course at Columbia University. She is also the author of an excellent book, Doing Data Science
+
+

@@ -1,0 +1,332 @@
+# Introduction into data vis
+
+## The data used in this course
+
+Dataset Source: [International migration flows to and from selected countries - The 2015 revision](http://www.un.org/en/development/desa/population/migration/data/empirical2/migrationflows.shtml?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0101ENSkillsNetwork20297740-2021-01-01).
+
+The dataset contains annual data on the flows of international immigrants as recorded by the countries of destination. The data presents both inflows and outflows according to the place of birth, citizenship or place of previous / next residence both for foreigners and nationals. The current version presents data pertaining to 45 countries.
+
+In this lab, we will focus on the Canadian immigration data.
+
+The Canada Immigration dataset can be fetched from <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0101EN-SkillsNetwork/Data%20Files/Canada.xlsx?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0101ENSkillsNetwork20297740-2021-01-01">here</a>.
+
+### Read and clean the data
+
+```{python}
+#load libs
+import pandas as pd
+import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+```
+
+```{python}
+#load data
+df_can = pd.read_excel("../data/Canada.xlsx", sheet_name='Canada by Citizenship',skiprows=range(20), skipfooter=2)
+
+#check data
+df_can.head()
+```
+
+Let's first inspect the data frame, to get a feel for what we have:
+
+```{python}
+#get a summary
+df_can.info(verbose = False)
+```
+
+```{python}
+#get column headers
+df_can.columns
+```
+
+```{python}
+#view the dimensions of our data
+df_can.shape
+```
+
+Now, lets clean the data and remove some unnecessary columns using `drop()`
+
+```{python}
+df_can.drop(['AREA','REG','DEV','Type','Coverage'], axis = 1, inplace = True)
+df_can.head()
+```
+Let's rename the columns so that they make sense. We can use rename() method by passing in a dictionary of old and new names as follows:
+
+```{python}
+df_can.rename(columns = {'OdName':'Country', 'AreaName':'Continent', 'RegName':'Region'}, inplace = True)
+
+df_can.columns
+```
+
+We will also add a 'Total' column that sums up the total immigrants by country over the entire period 1980 - 2013, as follows
+
+```{python}
+df_can['Total'] = df_can.sum(axis = 1)
+df_can.head()
+```
+
+
+Check for null objects:
+
+```{python}
+df_can.isnull().sum()
+```
+
+Let's view a quick summary of each column in our dataframe using the describe() method.
+
+```{python}
+df_can.describe()
+```
+Before we proceed, notice that the default index of the dataset is a numeric range from 0 to 194. This makes it very difficult to do a query by a specific country. For example to search for data on Japan, we need to know the corresponding index value.
+
+This can be fixed very easily by setting the 'Country' column as the index using set_index() method.
+
+Tip: The opposite of set is reset. So to reset the index, we can use df_can.reset_index()
+
+```{python}
+df_can.set_index('Country', inplace = True)
+df_can.head()
+```
+
+Column names that are integers (such as the years) might introduce some confusion. For example, when we are referencing the year 2013, one might confuse that when the 2013th positional index.
+
+To avoid this ambuigity, let's convert the column names into strings: '1980' to '2013'.
+
+```{python}
+df_can.columns = list(map(str, df_can.columns))
+# [print (type(x)) for x in df_can.columns.values] #<-- uncomment to check type of column headers
+df_can.head()
+```
+Since we converted the years to string, let's declare a variable that will allow us to easily call upon the full range of years:
+
+```{python}
+years = list(map(str, range(1980, 2014)))
+years
+```
+
+
+Lets review the changes
+
+```{python}
+print('data dimensions:', df_can.shape)
+print(df_can.columns)
+```
+
+
+## Background into Matplotlib
+
+The primary plotting library we will explore in the course is [Matplotlib](http://matplotlib.org/?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0101ENSkillsNetwork20297740-2021-01-01).  As mentioned on their website:
+
+> Matplotlib is a Python 2D plotting library which produces publication quality figures in a variety of hardcopy formats and interactive environments across platforms. Matplotlib can be used in Python scripts, the Python and IPython shell, the jupyter notebook, web application servers, and four graphical user interface toolkits.
+
+If you are aspiring to create impactful visualization with python, Matplotlib is an essential tool to have at your disposal.
+
+
+### Layers
+
+Matplotlib's architecture is composed of three main layers: 
+
+#### Backend layer
+
+The **Back-end layer**, which comes with three build-in abstract interacted
+
+- Figure canvas: encompasses the area on which the figure is drawn
+- Renderer: knows how to draw the figure canvas
+- Event: which handels user inputs, such as keyboard strokes or mouse clicks
+
+
+#### Artist layer
+
+The **Artist layer** where much of the heavy lifting happens and is usually the appropriate programming paradigm when writing a web application server, or a UI application, or perhaps a script to be shared with other developers. Its composed of one main object, the **Artist**. The artist knows how to use the renderer to draw on the canvas. There are two types of artist objects:
+
+- Primitive: Line2D, rectangle, circle, text
+- Composite: Axes, Tick and figure
+
+
+#### Scripting layer
+
+The **Scripting layer**, which is the appropriate layer for everyday purposes and is considered a lighter scripting interface to simplify common tasks and for a quick and easy generation of graphics and plots. 
+
+This layer is mainly comprised of pyplot, a scripting interface that is lighter than the Artist layer. 
+
+
+
+## Matplotlib.Pyplot
+
+One of the core aspects of Matplotlib is matplotlib.pyplot, Matplotlib's scripting layer. It is a collection of command style functions that make Matplotlib work like MATLAB. Each pyplot function makes some change to a figure: e.g., creates a figure, creates a plotting area in a figure, plots some lines in a plotting area, decorates the plot with labels, etc. 
+
+
+For aesthetics we can check and apply styles in matplotlib as follows:
+
+```{python}
+print(plt.style.available)
+mpl.style.use(['ggplot']) # optional: for ggplot-like style
+```
+
+## Plotting in pandas
+
+Pandas has a built-in implementation of Matplotlib that we can use. Plotting in *pandas* is as simple as appending a `.plot()` method to a series or dataframe.
+
+Documentation:
+
+*   [Plotting with Series](http://pandas.pydata.org/pandas-docs/stable/api.html?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0101ENSkillsNetwork20297740-2021-01-01#plotting)<br>
+*   [Plotting with Dataframes](http://pandas.pydata.org/pandas-docs/stable/api.html?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0101ENSkillsNetwork20297740-2021-01-01#api-dataframe-plotting)
+
+
+## Line plots
+
+A line plot is a plot in the form of a series of data points connected by straight line segments.
+
+he best use case for a line plot is when you have a continuous dataset and you're interested in visualizing the data over a period of time.
+
+Line plot is a handy tool to display several dependent variables against one independent variable. However, it is recommended that no more than 5-10 lines on a single graph; any more than that and it becomes difficult to interpret.
+
+**A case study**
+
+In 2010, Haiti suffered a catastrophic magnitude 7.0 earthquake. The quake caused widespread devastation and loss of life and aout three million people were affected by this natural disaster. As part of Canada's humanitarian effort, the Government of Canada stepped up its effort in accepting refugees from Haiti. We can quickly visualize this effort using a Line plot:
+
+First, lets extract the data
+
+```{python}
+haiti = df_can.loc['Haiti', years]
+haiti.head()
+```
+
+Next, we can plot:
+
+```{python}
+haiti.plot()
+plt.show()
+plt.close()
+```
+
+pandas automatically populated the x-axis with the index values (years), and the y-axis with the column values (population). However, notice how the years were not displayed because they are of type string. Therefore, let's change the type of the index values to integer for plotting.
+
+Also, let's label the x and y axis using plt.title(), plt.ylabel(), and plt.xlabel() as follows:
+
+```{python}
+## let's change the index values of Haiti to type integer for plotting
+haiti.index = haiti.index.map(int)
+
+#plot
+haiti.plot(kind = 'line')
+
+#add labels
+plt.title("Immigration from Haiti")
+plt.ylabel("Number of immigrants")
+plt.xlabel("Years")
+
+plt.show()
+plt.close()
+```
+
+We can clearly notice how number of immigrants from Haiti spiked up from 2010 as Canada stepped up its efforts to accept refugees from Haiti. Let's annotate this spike in the plot by using the `plt.text()` method.
+
+
+```{python}
+#plot
+haiti.plot(kind = 'line')
+
+#add labels
+plt.title("Immigration from Haiti")
+plt.ylabel("Number of immigrants")
+plt.xlabel("Years")
+
+# annotate the 2010 Earthquake. 
+# syntax: plt.text(x, y, label)
+plt.text(2000, 6000, "2010 Earthquake")
+
+plt.show()
+plt.close()
+```
+
+
+Let's compare the number of immigrants from India and China from 1980 to 2013.
+
+Step 1: Get the data set for China and India, and display the dataframe.
+
+```{python}
+df_CI = df_can.loc[["China", "India"], years]
+df_CI.head()
+```
+
+Let's try plotting
+
+```{python}
+#plot
+df_CI.plot(kind = 'line')
+
+plt.show()
+plt.close()
+```
+
+That doesn't look right.
+
+Pandas plots the indices on the x-axis and the columns as individual lines on the y-axis. Since df_CI is a dataframe with the country as the index and years as the columns, we must first transpose the dataframe using `transpose()` method to swap the row and columns.
+
+```{python}
+df_CI = df_CI.transpose()
+df_CI.head()
+```
+
+```{python}
+#change the index values
+df_CI.index = df_CI.index.map(int)
+
+#plot
+df_CI.plot(kind = 'line')
+
+#add labels
+plt.title("Immigration from China and India")
+plt.ylabel("Number of immigrants")
+plt.xlabel("Years")
+
+plt.show()
+plt.close()
+```
+
+
+Question: Compare the trend of top 5 countries that contributed the most to immigration to Canada.
+
+To make the plot more readeable, we will change the size using the `figsize` parameter.
+
+```{python}
+#sort our data by the total column
+df_can.sort_values(by = "Total", ascending = False, axis = 0, inplace = True)
+
+#get top five hits
+df_top5 = df_can.head(5)
+
+#transpose the data
+df_top5 = df_top5[years].transpose()
+
+#change the index values
+df_top5.index = df_top5.index.map(int)
+
+#plot
+df_top5.plot(kind='line', figsize=(8, 8))
+
+#add labels
+plt.title("Immigration in the top 5 countries that contributed most to immigration")
+plt.xlabel("Years")
+plt.ylabel("Number of immigrants")
+
+
+plt.show()
+plt.close()
+```
+
+## Other Plots
+
+Congratulations! you have learned how to wrangle data with python and create a line plot with Matplotlib. There are many other plotting styles available other than the default Line plot, all of which can be accessed by passing kind keyword to plot(). The full list of available plots are as follows:
+
+bar for vertical bar plots
+barh for horizontal bar plots
+hist for histogram
+box for boxplot
+kde or density for density plots
+area for area plots
+pie for pie plots
+scatter for scatter plots
+hexbin for hexbin plot

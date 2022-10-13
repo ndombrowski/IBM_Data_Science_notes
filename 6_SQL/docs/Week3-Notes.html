@@ -1,0 +1,3406 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.168">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introduction to SQL - 4&nbsp; Using String Patterns</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Week4_Python_a_IBM.html" rel="next">
+<link href="./Week2-Notes.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Using String Patterns</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./" class="sidebar-logo-link">
+      <img src="./images/tree_of_life.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to SQL</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preamble</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week1-Notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Basic SQL</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week2-Notes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Relational databases</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week3-Notes.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Using String Patterns</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week4_Python_a_IBM.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SQL and python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Week5_RealData.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Working with real world data</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#using-ranges" id="toc-using-ranges" class="nav-link active" data-scroll-target="#using-ranges"><span class="toc-section-number">5</span>  Using Ranges</a></li>
+  <li><a href="#using-a-set-of-values" id="toc-using-a-set-of-values" class="nav-link" data-scroll-target="#using-a-set-of-values"><span class="toc-section-number">6</span>  Using a set of values</a></li>
+  <li><a href="#sorting-result-sets" id="toc-sorting-result-sets" class="nav-link" data-scroll-target="#sorting-result-sets"><span class="toc-section-number">7</span>  Sorting result sets</a></li>
+  <li><a href="#grouping-result-sets" id="toc-grouping-result-sets" class="nav-link" data-scroll-target="#grouping-result-sets"><span class="toc-section-number">8</span>  Grouping result sets</a>
+  <ul class="collapse">
+  <li><a href="#eliminating-duplicates-using-the-distinct-clause" id="toc-eliminating-duplicates-using-the-distinct-clause" class="nav-link" data-scroll-target="#eliminating-duplicates-using-the-distinct-clause"><span class="toc-section-number">8.1</span>  Eliminating duplicates using the DISTINCT clause</a></li>
+  <li><a href="#grouping-results-with-the-group-by-clause" id="toc-grouping-results-with-the-group-by-clause" class="nav-link" data-scroll-target="#grouping-results-with-the-group-by-clause"><span class="toc-section-number">8.2</span>  Grouping results with the Group by clause</a></li>
+  <li><a href="#restricting-the-results-set-using-the-having-clause" id="toc-restricting-the-results-set-using-the-having-clause" class="nav-link" data-scroll-target="#restricting-the-results-set-using-the-having-clause"><span class="toc-section-number">8.3</span>  Restricting the results set using the HAVING clause</a></li>
+  </ul></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise"><span class="toc-section-number">9</span>  Exercise</a></li>
+  <li><a href="#build-in-database-functions" id="toc-build-in-database-functions" class="nav-link" data-scroll-target="#build-in-database-functions"><span class="toc-section-number">10</span>  Build in database functions</a>
+  <ul class="collapse">
+  <li><a href="#aggregate-or-column-functions" id="toc-aggregate-or-column-functions" class="nav-link" data-scroll-target="#aggregate-or-column-functions"><span class="toc-section-number">10.1</span>  Aggregate or Column functions</a></li>
+  <li><a href="#scalar-and-string-functions" id="toc-scalar-and-string-functions" class="nav-link" data-scroll-target="#scalar-and-string-functions"><span class="toc-section-number">10.2</span>  Scalar and string functions</a></li>
+  <li><a href="#date-and-time-build-in-functions" id="toc-date-and-time-build-in-functions" class="nav-link" data-scroll-target="#date-and-time-build-in-functions"><span class="toc-section-number">10.3</span>  Date and time build-in functions</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1"><span class="toc-section-number">10.4</span>  Exercise</a></li>
+  </ul></li>
+  <li><a href="#sub-queries-and-nested-selects" id="toc-sub-queries-and-nested-selects" class="nav-link" data-scroll-target="#sub-queries-and-nested-selects"><span class="toc-section-number">11</span>  Sub-queries and nested selects</a></li>
+  <li><a href="#nested-select-statement" id="toc-nested-select-statement" class="nav-link" data-scroll-target="#nested-select-statement"><span class="toc-section-number">12</span>  Nested select statement</a>
+  <ul class="collapse">
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples"><span class="toc-section-number">12.1</span>  Examples</a></li>
+  </ul></li>
+  <li><a href="#working-with-multiple-tables" id="toc-working-with-multiple-tables" class="nav-link" data-scroll-target="#working-with-multiple-tables"><span class="toc-section-number">13</span>  Working with multiple tables</a>
+  <ul class="collapse">
+  <li><a href="#accessing-tables-using-sub-queries" id="toc-accessing-tables-using-sub-queries" class="nav-link" data-scroll-target="#accessing-tables-using-sub-queries"><span class="toc-section-number">13.1</span>  Accessing tables using sub-queries</a></li>
+  <li><a href="#accessing-tables-with-an-implicit-join" id="toc-accessing-tables-with-an-implicit-join" class="nav-link" data-scroll-target="#accessing-tables-with-an-implicit-join"><span class="toc-section-number">13.2</span>  Accessing tables with an implicit join</a></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2"><span class="toc-section-number">13.3</span>  Exercise</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Using String Patterns</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<ul>
+<li>What if we don’t know exactly what to specify in the where clause?</li>
+<li>A where clause always requires a predicate, i.e.&nbsp;an expression that evaluates to true, false or unknown</li>
+<li>We can use the <code>LIKE</code> predicate with string patterns for searching a pattern in a column</li>
+<li>For example we only remember that the authors first name starts with R we can do</li>
+</ul>
+<pre><code>select firstname from Author
+where firstname LIKE R%</code></pre>
+<section id="using-ranges" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Using Ranges</h1>
+<ul>
+<li>The percent sign (a wildcard character used to substitute other characters) can be placed before the pattern, after the pattern, or both before and after the pattern</li>
+<li>Now lets retrieve the list of books whose number of pages is more than 290, but less than 300 to find a range</li>
+</ul>
+<pre><code>select title,pages from Author
+where pages &gt;=290 AND pages &lt;= 300</code></pre>
+<ul>
+<li>Alternatively, we can use a range of numbers to specify a condition</li>
+</ul>
+<pre><code>select title,pages from Author
+where pages between 290 AND 300</code></pre>
+</section>
+<section id="using-a-set-of-values" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Using a set of values</h1>
+<ul>
+<li>In some cases, there are data values that cannot be grouped under ranges</li>
+<li>I.e. retrieve authors from AU or Brasil</li>
+</ul>
+<pre><code>select firstname,lastname,country from Author
+where country='AU' OR country='BR'</code></pre>
+<ul>
+<li>How to we retrieve authors from india, australia and china without having a where clause that becomes too long? For this we can use the <code>IN</code> operator that allows us to specifiy a list of expressions</li>
+</ul>
+<pre><code>select firstname,lastname,country from Author
+where country IN ('AU','BR')</code></pre>
+</section>
+<section id="sorting-result-sets" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Sorting result sets</h1>
+<ul>
+<li>We can for example display the results of a search in alphabetical order to make it easier to read via the <code>order by</code> clause</li>
+<li>By default ascending order is used</li>
+</ul>
+<pre><code>select title from Book
+Order by title</code></pre>
+<ul>
+<li>descending order using the <code>DESC</code> keyword</li>
+</ul>
+<pre><code>select title from Book
+Order by title DESC</code></pre>
+<ul>
+<li>Order by column sequence number, i.e.&nbsp;select by the 2nd column</li>
+</ul>
+<pre><code>select title,pages from Book
+Order by 2</code></pre>
+</section>
+<section id="grouping-result-sets" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Grouping result sets</h1>
+<section id="eliminating-duplicates-using-the-distinct-clause" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="eliminating-duplicates-using-the-distinct-clause"><span class="header-section-number">8.1</span> Eliminating duplicates using the DISTINCT clause</h2>
+<ul>
+<li>This would list all countries our authors come from but including duplicates</li>
+</ul>
+<pre><code>select country from Author
+Order by 1</code></pre>
+<ul>
+<li>This would list all countries our authors without duplocates</li>
+</ul>
+<pre><code>select distinct(country) from Author</code></pre>
+</section>
+<section id="grouping-results-with-the-group-by-clause" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="grouping-results-with-the-group-by-clause"><span class="header-section-number">8.2</span> Grouping results with the Group by clause</h2>
+<ul>
+<li>How many authors come from the same country?</li>
+</ul>
+<pre><code>select country, count(country) from author
+Group by country</code></pre>
+<ul>
+<li>we can assign a column name to the result set. We do this using the “as” keyword</li>
+</ul>
+<pre><code>select country, count(country) as Count from author
+Group by country</code></pre>
+</section>
+<section id="restricting-the-results-set-using-the-having-clause" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="restricting-the-results-set-using-the-having-clause"><span class="header-section-number">8.3</span> Restricting the results set using the HAVING clause</h2>
+<ul>
+<li>Lets check if there are more than 4 authors from the same country</li>
+</ul>
+<pre><code>select country, count(country) from author
+Group by country
+Having count(country) &gt; 4</code></pre>
+</section>
+</section>
+<section id="exercise" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Exercise</h1>
+<ol type="1">
+<li>Load hr_data database</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RSQLite)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>db <span class="ot">=</span> <span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="at">dbname =</span><span class="st">"Week3/tables/employees.db"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#set connection for each chunk, other wise we would need `{sql, connection="db"}`</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">connection =</span> <span class="st">"db"</span>, <span class="at">max.print =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li>Retrieve all employees whose address is in Elgin,IL. view the table as is too see how to do this</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> employees</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<colgroup>
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 3%">
+<col style="width: 27%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">emp_id</th>
+<th style="text-align: left;">f_name</th>
+<th style="text-align: left;">l_name</th>
+<th style="text-align: right;">ssn</th>
+<th style="text-align: left;">b_date</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: left;">address</th>
+<th style="text-align: right;">job_id</th>
+<th style="text-align: right;">salary</th>
+<th style="text-align: right;">manager_id</th>
+<th style="text-align: right;">dep_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">100000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1002</td>
+<td style="text-align: left;">Alice</td>
+<td style="text-align: left;">James</td>
+<td style="text-align: right;">123457</td>
+<td style="text-align: left;">1972-07-31</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">980 Berry ln, Elgin,IL</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">80000</td>
+<td style="text-align: right;">30002</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1003</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Wells</td>
+<td style="text-align: right;">123458</td>
+<td style="text-align: left;">1980-08-10</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">291 Springs, Gary,IL</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">50000</td>
+<td style="text-align: right;">30002</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1004</td>
+<td style="text-align: left;">Santosh</td>
+<td style="text-align: left;">Kumar</td>
+<td style="text-align: right;">123459</td>
+<td style="text-align: left;">1985-07-20</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">511 Aurora Av, Aurora,IL</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">30004</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1005</td>
+<td style="text-align: left;">Ahmed</td>
+<td style="text-align: left;">Hussain</td>
+<td style="text-align: right;">123410</td>
+<td style="text-align: left;">1960-07-20</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">216 Oak Tree, Geneva,IL</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1006</td>
+<td style="text-align: left;">Nancy</td>
+<td style="text-align: left;">Allen</td>
+<td style="text-align: right;">123411</td>
+<td style="text-align: left;">1960-07-21</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">111 Green Pl, Elgin,IL</td>
+<td style="text-align: right;">600</td>
+<td style="text-align: right;">90000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1007</td>
+<td style="text-align: left;">Mary</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123412</td>
+<td style="text-align: left;">1960-07-22</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">100 Rose Pl, Gary,IL</td>
+<td style="text-align: right;">650</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1008</td>
+<td style="text-align: left;">Bharath</td>
+<td style="text-align: left;">Gupta</td>
+<td style="text-align: right;">123413</td>
+<td style="text-align: left;">1960-07-23</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">145 Berry Ln, Naperville,IL</td>
+<td style="text-align: right;">660</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1009</td>
+<td style="text-align: left;">Andrea</td>
+<td style="text-align: left;">Jones</td>
+<td style="text-align: right;">123414</td>
+<td style="text-align: left;">1960-07-24</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">120 Fall Creek, Gary,IL</td>
+<td style="text-align: right;">234</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1010</td>
+<td style="text-align: left;">Ann</td>
+<td style="text-align: left;">Jacob</td>
+<td style="text-align: right;">123415</td>
+<td style="text-align: left;">1960-07-25</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">111 Britany Springs,Elgin,IL</td>
+<td style="text-align: right;">220</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30004</td>
+<td style="text-align: right;">5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> employees</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> address <span class="kw">like</span> <span class="ot">"%Elgin,IL"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>3 records</caption>
+<colgroup>
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 3%">
+<col style="width: 27%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">emp_id</th>
+<th style="text-align: left;">f_name</th>
+<th style="text-align: left;">l_name</th>
+<th style="text-align: right;">ssn</th>
+<th style="text-align: left;">b_date</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: left;">address</th>
+<th style="text-align: right;">job_id</th>
+<th style="text-align: right;">salary</th>
+<th style="text-align: right;">manager_id</th>
+<th style="text-align: right;">dep_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">E1002</td>
+<td style="text-align: left;">Alice</td>
+<td style="text-align: left;">James</td>
+<td style="text-align: right;">123457</td>
+<td style="text-align: left;">1972-07-31</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">980 Berry ln, Elgin,IL</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">80000</td>
+<td style="text-align: right;">30002</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1006</td>
+<td style="text-align: left;">Nancy</td>
+<td style="text-align: left;">Allen</td>
+<td style="text-align: right;">123411</td>
+<td style="text-align: left;">1960-07-21</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">111 Green Pl, Elgin,IL</td>
+<td style="text-align: right;">600</td>
+<td style="text-align: right;">90000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1010</td>
+<td style="text-align: left;">Ann</td>
+<td style="text-align: left;">Jacob</td>
+<td style="text-align: right;">123415</td>
+<td style="text-align: left;">1960-07-25</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">111 Britany Springs,Elgin,IL</td>
+<td style="text-align: right;">220</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30004</td>
+<td style="text-align: right;">5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Retrieve all employees who were born during the 1970’s.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> employees</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> b_date <span class="kw">like</span> <span class="st">'%/197%'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table style="width:100%;">
+<caption>0 records</caption>
+<colgroup>
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 5%">
+<col style="width: 9%">
+<col style="width: 5%">
+<col style="width: 10%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 14%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">emp_id</th>
+<th style="text-align: left;">f_name</th>
+<th style="text-align: left;">l_name</th>
+<th style="text-align: right;">ssn</th>
+<th style="text-align: left;">b_date</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: left;">address</th>
+<th style="text-align: right;">job_id</th>
+<th style="text-align: right;">salary</th>
+<th style="text-align: right;">manager_id</th>
+<th style="text-align: right;">dep_id</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Retrieve all employees in department 5 whose salary is between 60000 and 70000.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> employees</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> dep_id <span class="op">=</span> <span class="dv">5</span> <span class="kw">and</span> (salary <span class="kw">between</span> <span class="dv">60000</span> <span class="kw">and</span> <span class="dv">70000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>2 records</caption>
+<colgroup>
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 3%">
+<col style="width: 27%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">emp_id</th>
+<th style="text-align: left;">f_name</th>
+<th style="text-align: left;">l_name</th>
+<th style="text-align: right;">ssn</th>
+<th style="text-align: left;">b_date</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: left;">address</th>
+<th style="text-align: right;">job_id</th>
+<th style="text-align: right;">salary</th>
+<th style="text-align: right;">manager_id</th>
+<th style="text-align: right;">dep_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">E1004</td>
+<td style="text-align: left;">Santosh</td>
+<td style="text-align: left;">Kumar</td>
+<td style="text-align: right;">123459</td>
+<td style="text-align: left;">1985-07-20</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">511 Aurora Av, Aurora,IL</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">30004</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1010</td>
+<td style="text-align: left;">Ann</td>
+<td style="text-align: left;">Jacob</td>
+<td style="text-align: right;">123415</td>
+<td style="text-align: left;">1960-07-25</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">111 Britany Springs,Elgin,IL</td>
+<td style="text-align: right;">220</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30004</td>
+<td style="text-align: right;">5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="4" type="1">
+<li>Retrieve a list of employees ordered by department ID.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> f_name,dep_id <span class="kw">from</span> employees</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">order</span> <span class="kw">by</span> dep_id</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">f_name</th>
+<th style="text-align: right;">dep_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">John</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ahmed</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nancy</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Alice</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Steve</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Santosh</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ann</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mary</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bharath</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Andrea</td>
+<td style="text-align: right;">7</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="5" type="1">
+<li>Retrieve a list of employees ordered in descending order by department ID and within each department ordered alphabetically in descending order by last name.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> f_name,l_name,dep_id <span class="kw">from</span> employees</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">order</span> <span class="kw">by</span> dep_id <span class="kw">DESC</span>, l_name <span class="kw">desc</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">f_name</th>
+<th style="text-align: left;">l_name</th>
+<th style="text-align: right;">dep_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Mary</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Andrea</td>
+<td style="text-align: left;">Jones</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bharath</td>
+<td style="text-align: left;">Gupta</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Wells</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Santosh</td>
+<td style="text-align: left;">Kumar</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Alice</td>
+<td style="text-align: left;">James</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ann</td>
+<td style="text-align: left;">Jacob</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ahmed</td>
+<td style="text-align: left;">Hussain</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nancy</td>
+<td style="text-align: left;">Allen</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="6" type="1">
+<li>Retrieve a list of employees ordered in descending order by department ID and within each department ordered alphabetically in descending order by last name. BUT use department name instead of department ID. Retrieve a list of employees ordered by department name, and within each department ordered alphabetically in descending order by last name.</li>
+</ol>
+<p><strong>Notice</strong> In the SQL Query above, D and E are aliases for the table names. Once you define an alias like D in your query, you can simply write D.COLUMN_NAME rather than the full form DEPARTMENTS.COLUMN_NAME.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> d.dep_name,e.f_name,e.l_name <span class="kw">from</span> employees <span class="kw">as</span> E, departments <span class="kw">as</span> D</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> e.dep_id <span class="op">=</span> d.dep_id</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">dep_name</th>
+<th style="text-align: left;">f_name</th>
+<th style="text-align: left;">l_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Architect Group</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Software Group</td>
+<td style="text-align: left;">Alice</td>
+<td style="text-align: left;">James</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Software Group</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Wells</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Software Group</td>
+<td style="text-align: left;">Santosh</td>
+<td style="text-align: left;">Kumar</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Architect Group</td>
+<td style="text-align: left;">Ahmed</td>
+<td style="text-align: left;">Hussain</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Architect Group</td>
+<td style="text-align: left;">Nancy</td>
+<td style="text-align: left;">Allen</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Design Team</td>
+<td style="text-align: left;">Mary</td>
+<td style="text-align: left;">Thomas</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Design Team</td>
+<td style="text-align: left;">Bharath</td>
+<td style="text-align: left;">Gupta</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Design Team</td>
+<td style="text-align: left;">Andrea</td>
+<td style="text-align: left;">Jones</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Software Group</td>
+<td style="text-align: left;">Ann</td>
+<td style="text-align: left;">Jacob</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="7" type="1">
+<li>For each department ID retrieve the number of employees in the department.</li>
+</ol>
+<p>select country, count(country) from author Group by country</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> dep_id, <span class="fu">count</span>(<span class="op">*</span>) <span class="kw">from</span> employees</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">group</span> <span class="kw">by</span> dep_id</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>3 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">dep_id</th>
+<th style="text-align: right;">count(*)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="8" type="1">
+<li>For each department retrieve the number of employees in the department, and the average employee salary in the department..</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> dep_id, <span class="fu">count</span>(f_name),<span class="fu">avg</span>(salary) <span class="kw">from</span> employees</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="kw">group</span> <span class="kw">by</span> dep_id</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>3 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">dep_id</th>
+<th style="text-align: right;">count(f_name)</th>
+<th style="text-align: right;">avg(salary)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">86666.67</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">65000.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">66666.67</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="9" type="1">
+<li>Label the computed columns in the result set of SQL problem 8 as NUM_EMPLOYEES and AVG_SALARY.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> dep_id, <span class="fu">count</span>(f_name) <span class="kw">as</span> <span class="ot">"num_employees"</span> ,<span class="fu">avg</span>(salary) <span class="kw">as</span> <span class="ot">"avg_salary"</span> <span class="kw">from</span> employees</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">group</span> <span class="kw">by</span> dep_id</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>3 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">dep_id</th>
+<th style="text-align: right;">num_employees</th>
+<th style="text-align: right;">avg_salary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">86666.67</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">65000.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">66666.67</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="10" type="1">
+<li>In SQL problem 9., order the result set by Average Salary..</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> dep_id, <span class="fu">count</span>(f_name) <span class="kw">as</span> <span class="ot">"num_employees"</span> ,<span class="fu">avg</span>(salary) <span class="kw">as</span> <span class="ot">"avg_salary"</span> <span class="kw">from</span> employees</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">group</span> <span class="kw">by</span> dep_id</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">order</span> <span class="kw">by</span> avg_salary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>3 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">dep_id</th>
+<th style="text-align: right;">num_employees</th>
+<th style="text-align: right;">avg_salary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">65000.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">66666.67</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">86666.67</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="11" type="1">
+<li>In SQL problem 10, limit the result to departments with fewer than 4 employees.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> dep_id, <span class="fu">count</span>(f_name) <span class="kw">as</span> <span class="ot">"num_employees"</span> ,<span class="fu">avg</span>(salary) <span class="kw">as</span> <span class="ot">"avg_salary"</span> <span class="kw">from</span> employees</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="kw">group</span> <span class="kw">by</span> dep_id</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="kw">having</span> <span class="fu">count</span>(<span class="op">*</span>) <span class="op">&lt;</span> <span class="dv">4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>2 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">dep_id</th>
+<th style="text-align: right;">num_employees</th>
+<th style="text-align: right;">avg_salary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">86666.67</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">66666.67</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="build-in-database-functions" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Build in database functions</h1>
+<ul>
+<li>Database functions can reduce the amount of data that needs to be retrieved and thus reducing network traffic and bandwidth use</li>
+<li>Its also possible to define your own functions</li>
+</ul>
+<section id="aggregate-or-column-functions" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="aggregate-or-column-functions"><span class="header-section-number">10.1</span> Aggregate or Column functions</h2>
+<ul>
+<li>An aggregate function takes a collection of like values, such as all of the values in a column, as input, and returns a single value or null</li>
+<li>Examples for an aggregate function:
+<ul>
+<li>sum(): add up all values i.e.&nbsp;to add all values in the cost column</li>
+</ul>
+<pre><code>select SUM(cost) from petrescue</code></pre>
+<pre><code>#use `as` to name the resulting output column 
+select SUM(cost) as sum_of_cost
+from petrescue</code></pre>
+<ul>
+<li>min(): returns the lowest value</li>
+<li>max(): returns the highest value; i.e.&nbsp;lets get the maximum quantity of an animal:</li>
+</ul>
+<pre><code>select Max(quantity) from petrescue</code></pre>
+<pre><code>#get the min value off the ID column for only a subset of the data, i.e. only dogs
+select min(id) from petrescue
+where Animal='dog'</code></pre>
+<ul>
+<li>avg(): return the average or mean value; i.e.&nbsp;specify the average cost</li>
+</ul>
+<pre><code>select avg(cost) from petrescue</code></pre>
+<pre><code>#we can also perform math operations between columns
+#i.e. we can calulate the avg cost per dog
+select avg(cost) from petrescue
+select avg(cost/quantity) from petrescue
+where animal='dog'</code></pre>
+<ul>
+<li>etc():</li>
+</ul></li>
+</ul>
+</section>
+<section id="scalar-and-string-functions" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="scalar-and-string-functions"><span class="header-section-number">10.2</span> Scalar and string functions</h2>
+<ul>
+<li>Scalar: perform operations on every input value</li>
+<li>Examples:
+<ul>
+<li>round(): ie. round up/down every value in the cost column we do:</li>
+</ul>
+<pre><code>select round(cost) from petrescue</code></pre>
+<ul>
+<li>length(): for example retrieve the length of each value in the animal column. If we have strings, we perform a string function.</li>
+</ul>
+<pre><code>select length(animal) from petrescue</code></pre>
+<ul>
+<li>ucase/lcase(): return upper or lower case values of string. I.e. if we want to retrieve the values in the animal column in uppercase:</li>
+</ul>
+<pre><code>select upcase(animal) from petrescue</code></pre>
+<pre><code>#if we want to lower case value for the cat in the animal column, we can add a where clause
+select * from petrescue
+where lcase(animal)='cat'</code></pre>
+<pre><code>#use disting to get unique values for the animal colum
+select distinct(ucase(animal)) from petrescue</code></pre></li>
+</ul>
+</section>
+<section id="date-and-time-build-in-functions" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="date-and-time-build-in-functions"><span class="header-section-number">10.3</span> Date and time build-in functions</h2>
+<ul>
+<li>Most databases contain special datatypes for dates and times</li>
+<li>I.e. DB2 contains types for:
+<ul>
+<li>Date: YYYYMMDD</li>
+<li>Time: HHMMSS</li>
+<li>Timestamp: YYYYXXDDHHMMSSZZZZZZ</li>
+</ul></li>
+<li>Functions to extract dates/times:
+<ul>
+<li>year()</li>
+<li>month()</li>
+<li>day()</li>
+<li>dayofmonth()<br>
+</li>
+<li>dayofweek()</li>
+<li>dayofyear()</li>
+<li>week()</li>
+<li>hour()</li>
+<li>minute()</li>
+<li>second()</li>
+</ul></li>
+</ul>
+<p>I.e. get the day portion from each rescue date</p>
+<pre><code>select day(rescuedate) from petrescue
+where animal = 'cat'</code></pre>
+<p>I.e. get the number of rescues during the month of may</p>
+<pre><code>select count(*) from petrescue
+where month(rescuedate)='05'</code></pre>
+<p>I.e. what date is it 3d after each rescue date</p>
+<pre><code>select (rescuedate + 3 days) from petrescue</code></pre>
+<ul>
+<li>Special registers:
+<ul>
+<li>current_date</li>
+<li>current_time</li>
+<li>i.e.&nbsp;find out how many days have passed since each rescuedate till now. The result will be in YMMDD</li>
+</ul>
+<pre><code>select (current_date - rescuedate) from petrescue</code></pre></li>
+</ul>
+</section>
+<section id="exercise-1" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="exercise-1"><span class="header-section-number">10.4</span> Exercise</h2>
+<ol type="1">
+<li>Load hr_data database</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>db3 <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="st">":memory:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Create the PETRESCUE table</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> PETRESCUE (</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">ID</span> <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>        ANIMAL <span class="dt">VARCHAR</span>(<span class="dv">20</span>),</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>        QUANTITY <span class="dt">INTEGER</span>,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">COST</span> <span class="dt">DECIMAL</span>(<span class="dv">6</span>,<span class="dv">2</span>),</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>        RESCUEDATE <span class="dt">DATE</span>,</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">PRIMARY</span> <span class="kw">KEY</span> (<span class="kw">ID</span>)</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>        );</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Insert sample data into PETRESCUE table</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="kw">insert</span> <span class="kw">into</span> PETRESCUE <span class="kw">values</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>        (<span class="dv">1</span>,<span class="st">'Cat'</span>,<span class="dv">9</span>,<span class="fl">450.09</span>,<span class="st">'2018-05-29'</span>),</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>        (<span class="dv">2</span>,<span class="st">'Dog'</span>,<span class="dv">3</span>,<span class="fl">666.66</span>,<span class="st">'2018-06-01'</span>),</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>        (<span class="dv">3</span>,<span class="st">'Dog'</span>,<span class="dv">1</span>,<span class="fl">100.00</span>,<span class="st">'2018-06-04'</span>),</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>        (<span class="dv">4</span>,<span class="st">'Parrot'</span>,<span class="dv">2</span>,<span class="fl">50.00</span>,<span class="st">'2018-06-04'</span>),</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>        (<span class="dv">5</span>,<span class="st">'Dog'</span>,<span class="dv">1</span>,<span class="fl">75.75</span>,<span class="st">'2018-06-10'</span>),</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>        (<span class="dv">6</span>,<span class="st">'Hamster'</span>,<span class="dv">6</span>,<span class="fl">60.60</span>,<span class="st">'2018-06-11'</span>),</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>        (<span class="dv">7</span>,<span class="st">'Cat'</span>,<span class="dv">1</span>,<span class="fl">44.44</span>,<span class="st">'2018-06-11'</span>),</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>        (<span class="dv">8</span>,<span class="st">'Goldfish'</span>,<span class="dv">24</span>,<span class="fl">48.48</span>,<span class="st">'2018-06-14'</span>),</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>        (<span class="dv">9</span>,<span class="st">'Dog'</span>,<span class="dv">2</span>,<span class="fl">222.22</span>,<span class="st">'2018-06-15'</span>)</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> petrescue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>9 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">ID</th>
+<th style="text-align: left;">ANIMAL</th>
+<th style="text-align: right;">QUANTITY</th>
+<th style="text-align: right;">COST</th>
+<th style="text-align: left;">RESCUEDATE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Cat</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">450.09</td>
+<td style="text-align: left;">2018-05-29</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">Dog</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">666.66</td>
+<td style="text-align: left;">2018-06-01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">Dog</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.00</td>
+<td style="text-align: left;">2018-06-04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">Parrot</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">50.00</td>
+<td style="text-align: left;">2018-06-04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">Dog</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">75.75</td>
+<td style="text-align: left;">2018-06-10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">Hamster</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">60.60</td>
+<td style="text-align: left;">2018-06-11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">Cat</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">44.44</td>
+<td style="text-align: left;">2018-06-11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">8</td>
+<td style="text-align: left;">Goldfish</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">48.48</td>
+<td style="text-align: left;">2018-06-14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">9</td>
+<td style="text-align: left;">Dog</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">222.22</td>
+<td style="text-align: left;">2018-06-15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Enter a function that calculates the total cost of all animal rescues in the PETRESCUE table.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">sum</span>(<span class="kw">cost</span>) <span class="kw">from</span> petrescue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">sum(cost)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1718.24</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Enter a function that displays the total cost of all animal rescues in the PETRESCUE table in a column called SUM_OF_COST.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">sum</span>(<span class="kw">cost</span>) <span class="kw">as</span> SUM_OF_COST <span class="kw">from</span> petrescue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">SUM_OF_COST</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1718.24</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Enter a function that displays the maximum quantity of animals rescued.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">max</span>(quantity) <span class="kw">from</span> petrescue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">max(quantity)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">24</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="4" type="1">
+<li>Enter a function that displays the average cost of animals rescued</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">avg</span>(<span class="kw">cost</span>) <span class="kw">from</span> petrescue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">avg(cost)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">190.9156</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="5" type="1">
+<li>Enter a function that displays the average cost of rescuing a dog.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">AVG</span>(<span class="kw">COST</span><span class="op">/</span>QUANTITY) <span class="kw">from</span> PETRESCUE</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> animal<span class="op">=</span><span class="st">'Dog'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">AVG(COST/QUANTITY)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">127.27</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="6" type="1">
+<li>Enter a function that displays the rounded cost of each rescue.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">round</span>(<span class="kw">cost</span>) <span class="kw">from</span> petrescue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>9 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">round(cost)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">450</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">667</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">100</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">76</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">61</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">44</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">48</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">222</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="6" type="1">
+<li>Enter a function that displays the length of each animal name.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="kw">distinct</span>(animal), <span class="fu">length</span>(animal) <span class="kw">from</span> petrescue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>5 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">ANIMAL</th>
+<th style="text-align: right;">length(animal)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cat</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dog</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Parrot</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hamster</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Goldfish</td>
+<td style="text-align: right;">8</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="7" type="1">
+<li>Enter a function that displays the animal name in each rescue in uppercase.</li>
+</ol>
+<p><strong>Notice: ucase becomes upper in SQlite</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">upper</span>(animal) <span class="kw">from</span> petrescue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>9 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">upper(animal)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CAT</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">DOG</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">DOG</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PARROT</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">DOG</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HAMSTER</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CAT</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GOLDFISH</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">DOG</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="8" type="1">
+<li>Enter a function that displays the animal name in each rescue in uppercase without duplications.</li>
+</ol>
+<p><strong>Notice: ucase becomes upper in SQlite</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="kw">distinct</span>(<span class="fu">upper</span>(animal)) <span class="kw">from</span> petrescue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>5 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">(upper(animal))</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CAT</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">DOG</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PARROT</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HAMSTER</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GOLDFISH</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="9" type="1">
+<li>Enter a query that displays all the columns from the PETRESCUE table, where the animal(s) rescued are cats. Use cat in lower case in the query.</li>
+</ol>
+<p><strong>Notice: lcase becomes lower in SQlite</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> petrescue</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> <span class="fu">lower</span>(animal)<span class="op">=</span><span class="st">'cat'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>2 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">ID</th>
+<th style="text-align: left;">ANIMAL</th>
+<th style="text-align: right;">QUANTITY</th>
+<th style="text-align: right;">COST</th>
+<th style="text-align: left;">RESCUEDATE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Cat</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">450.09</td>
+<td style="text-align: left;">2018-05-29</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cat</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">44.44</td>
+<td style="text-align: left;">2018-06-11</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="10" type="1">
+<li>Enter a function that displays the day of the month when cats have been rescued.</li>
+</ol>
+<p><strong>Notice: SQlite uses a different syntax for finding time</strong></p>
+<pre><code>select day(rescuedate) from petrescue
+where lower(animal)='cat'</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> strftime(<span class="st">'%d'</span>, RESCUEDATE)  <span class="kw">from</span> petrescue</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> <span class="fu">lower</span>(animal)<span class="op">=</span><span class="st">'cat'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>2 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">strftime(‘%d’, RESCUEDATE)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">29</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">11</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="11" type="1">
+<li>Enter a function that displays the number of rescues on the 5th month. <strong>Notice: SQlite uses a different syntax for finding time</strong></li>
+</ol>
+<pre><code>select sum(quantity) from petrescue
+where month(rescuedate)='05'</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">sum</span>(quantity) <span class="kw">from</span> petrescue</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> strftime(<span class="st">'%m'</span>, RESCUEDATE)<span class="op">=</span><span class="st">'05'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">sum(quantity)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="12" type="1">
+<li>Enter a function that displays the number of rescues on the 14th day of the month.</li>
+</ol>
+<p><strong>Notice: SQlite uses a different syntax for finding time</strong></p>
+<pre><code>select count(*) from petrescue
+where day(rescuedate)='14'</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="fu">sum</span>(quantity) <span class="kw">from</span> petrescue</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> strftime(<span class="st">'%d'</span>, RESCUEDATE)<span class="op">=</span><span class="st">'14'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">sum(quantity)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">24</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="13" type="1">
+<li>Animals rescued should see the vet within three days of arrivals. Enter a function that displays the third day from each rescue.</li>
+</ol>
+<p><strong>Notice: SQlite uses a different syntax for finding time</strong></p>
+<pre><code>select (rescuedate+3) from petrescue</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="kw">id</span>,<span class="dt">date</span>(rescuedate, <span class="st">'+3 day'</span>) <span class="kw">from</span> petrescue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>9 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">ID</th>
+<th style="text-align: left;">date(rescuedate, ‘+3 day’)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">2018-06-01</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">2018-06-04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">2018-06-07</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">2018-06-07</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">2018-06-13</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">2018-06-14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">2018-06-14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">8</td>
+<td style="text-align: left;">2018-06-17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">9</td>
+<td style="text-align: left;">2018-06-18</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="14" type="1">
+<li>Enter a function that displays the length of time the animals have been rescued; the difference between today<e2>&lt;80&gt;&lt;99&gt;s date and the rescue date.</e2></li>
+</ol>
+<p><strong>Notice: SQlite uses a different syntax for finding time</strong></p>
+<pre><code>select (current_date - rescuedate) from petrescue</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="dt">date</span>(rescuedate <span class="op">-</span> <span class="st">'now'</span> ) <span class="kw">from</span> PETRESCUE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>9 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">date(rescuedate - ‘now’ )</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">-4707-06-03</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">-4707-06-03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">-4707-06-03</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">-4707-06-03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">-4707-06-03</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">-4707-06-03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">-4707-06-03</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">-4707-06-03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">-4707-06-03</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="sub-queries-and-nested-selects" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Sub-queries and nested selects</h1>
+<ul>
+<li>Sub-query: a query inside a query</li>
+</ul>
+<pre><code>select column1 from table
+where column2 = select(max(column2) from table)</code></pre>
+<p>i.e.&nbsp;retrieve the list of employees who earn more than the avg salary. For this we can not use <code>where salary &gt; avg(salary)</code> since aggregate functions can not always be used in a where clause. However, we can use a sub-select experession</p>
+<pre><code>select emp_id, f_name,salary from employees
+where salary &lt;(select avg(salary) from employees)</code></pre>
+<p>The sub-select clause doesn’t have to be in the where clause, we can also use it on the list of columns to be selected. <strong>Column expressions</strong> = substitute column names with a sub-query. I.e. compare the salary of each employee with the average salary</p>
+<pre><code>select emp_id,salary, (select avg(salary) from employees) as avg_salary from employees</code></pre>
+<p>We can also make sub-queries a part of the FROM clause to substitute the table name with a sub-query = <strong>derived tables or table expressions</strong>. I.e. lets make a derived table with only 3 columns</p>
+<pre><code>select * from (select emp_id, f_name, l_name from employees) as EMP4ALL</code></pre>
+</section>
+<section id="nested-select-statement" class="level1" data-number="12">
+<h1 data-number="12"><span class="header-section-number">12</span> Nested select statement</h1>
+<pre><code>SELECT column_name [, column_name ]
+FROM table1 [, table2 ]
+WHERE column_name OPERATOR
+   (SELECT column_name [, column_name ]
+   FROM table1 [, table2 ]
+   WHERE condition);</code></pre>
+<section id="examples" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="examples"><span class="header-section-number">12.1</span> Examples</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> employees</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<colgroup>
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 3%">
+<col style="width: 27%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">emp_id</th>
+<th style="text-align: left;">f_name</th>
+<th style="text-align: left;">l_name</th>
+<th style="text-align: right;">ssn</th>
+<th style="text-align: left;">b_date</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: left;">address</th>
+<th style="text-align: right;">job_id</th>
+<th style="text-align: right;">salary</th>
+<th style="text-align: right;">manager_id</th>
+<th style="text-align: right;">dep_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">100000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1002</td>
+<td style="text-align: left;">Alice</td>
+<td style="text-align: left;">James</td>
+<td style="text-align: right;">123457</td>
+<td style="text-align: left;">1972-07-31</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">980 Berry ln, Elgin,IL</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">80000</td>
+<td style="text-align: right;">30002</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1003</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Wells</td>
+<td style="text-align: right;">123458</td>
+<td style="text-align: left;">1980-08-10</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">291 Springs, Gary,IL</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">50000</td>
+<td style="text-align: right;">30002</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1004</td>
+<td style="text-align: left;">Santosh</td>
+<td style="text-align: left;">Kumar</td>
+<td style="text-align: right;">123459</td>
+<td style="text-align: left;">1985-07-20</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">511 Aurora Av, Aurora,IL</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">30004</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1005</td>
+<td style="text-align: left;">Ahmed</td>
+<td style="text-align: left;">Hussain</td>
+<td style="text-align: right;">123410</td>
+<td style="text-align: left;">1960-07-20</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">216 Oak Tree, Geneva,IL</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1006</td>
+<td style="text-align: left;">Nancy</td>
+<td style="text-align: left;">Allen</td>
+<td style="text-align: right;">123411</td>
+<td style="text-align: left;">1960-07-21</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">111 Green Pl, Elgin,IL</td>
+<td style="text-align: right;">600</td>
+<td style="text-align: right;">90000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1007</td>
+<td style="text-align: left;">Mary</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123412</td>
+<td style="text-align: left;">1960-07-22</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">100 Rose Pl, Gary,IL</td>
+<td style="text-align: right;">650</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1008</td>
+<td style="text-align: left;">Bharath</td>
+<td style="text-align: left;">Gupta</td>
+<td style="text-align: right;">123413</td>
+<td style="text-align: left;">1960-07-23</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">145 Berry Ln, Naperville,IL</td>
+<td style="text-align: right;">660</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1009</td>
+<td style="text-align: left;">Andrea</td>
+<td style="text-align: left;">Jones</td>
+<td style="text-align: right;">123414</td>
+<td style="text-align: left;">1960-07-24</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">120 Fall Creek, Gary,IL</td>
+<td style="text-align: right;">234</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1010</td>
+<td style="text-align: left;">Ann</td>
+<td style="text-align: left;">Jacob</td>
+<td style="text-align: right;">123415</td>
+<td style="text-align: left;">1960-07-25</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">111 Britany Springs,Elgin,IL</td>
+<td style="text-align: right;">220</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30004</td>
+<td style="text-align: right;">5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol type="1">
+<li>Execute a failing query (i.e.&nbsp;one which gives an error) to retrieve all employees records whose salary is lower than the average salary.</li>
+</ol>
+<pre><code>select * from employees
+where salary &lt; avg(salary)</code></pre>
+<ol start="2" type="1">
+<li>Execute a working query using a sub-select to retrieve all employees records whose salary is lower than the average salary.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> employees</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> salary <span class="op">&lt;</span>(<span class="kw">select</span> <span class="fu">avg</span>(salary) <span class="kw">from</span> employees)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>7 records</caption>
+<colgroup>
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 3%">
+<col style="width: 27%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">emp_id</th>
+<th style="text-align: left;">f_name</th>
+<th style="text-align: left;">l_name</th>
+<th style="text-align: right;">ssn</th>
+<th style="text-align: left;">b_date</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: left;">address</th>
+<th style="text-align: right;">job_id</th>
+<th style="text-align: right;">salary</th>
+<th style="text-align: right;">manager_id</th>
+<th style="text-align: right;">dep_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">E1003</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Wells</td>
+<td style="text-align: right;">123458</td>
+<td style="text-align: left;">1980-08-10</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">291 Springs, Gary,IL</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">50000</td>
+<td style="text-align: right;">30002</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1004</td>
+<td style="text-align: left;">Santosh</td>
+<td style="text-align: left;">Kumar</td>
+<td style="text-align: right;">123459</td>
+<td style="text-align: left;">1985-07-20</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">511 Aurora Av, Aurora,IL</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">30004</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1005</td>
+<td style="text-align: left;">Ahmed</td>
+<td style="text-align: left;">Hussain</td>
+<td style="text-align: right;">123410</td>
+<td style="text-align: left;">1960-07-20</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">216 Oak Tree, Geneva,IL</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1007</td>
+<td style="text-align: left;">Mary</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123412</td>
+<td style="text-align: left;">1960-07-22</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">100 Rose Pl, Gary,IL</td>
+<td style="text-align: right;">650</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1008</td>
+<td style="text-align: left;">Bharath</td>
+<td style="text-align: left;">Gupta</td>
+<td style="text-align: right;">123413</td>
+<td style="text-align: left;">1960-07-23</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">145 Berry Ln, Naperville,IL</td>
+<td style="text-align: right;">660</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1009</td>
+<td style="text-align: left;">Andrea</td>
+<td style="text-align: left;">Jones</td>
+<td style="text-align: right;">123414</td>
+<td style="text-align: left;">1960-07-24</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">120 Fall Creek, Gary,IL</td>
+<td style="text-align: right;">234</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1010</td>
+<td style="text-align: left;">Ann</td>
+<td style="text-align: left;">Jacob</td>
+<td style="text-align: right;">123415</td>
+<td style="text-align: left;">1960-07-25</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">111 Britany Springs,Elgin,IL</td>
+<td style="text-align: right;">220</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30004</td>
+<td style="text-align: right;">5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Execute a Column Expression that retrieves all employees records with EMP_ID, SALARY and maximum salary as MAX_SALARY in every row.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> emp_id,salary,(<span class="kw">select</span> <span class="fu">max</span>(salary)<span class="kw">from</span> employees) <span class="kw">as</span> max_salary <span class="kw">from</span> employees</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">emp_id</th>
+<th style="text-align: right;">salary</th>
+<th style="text-align: right;">max_salary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: right;">100000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1002</td>
+<td style="text-align: right;">80000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1003</td>
+<td style="text-align: right;">50000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1004</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1005</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1006</td>
+<td style="text-align: right;">90000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1007</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1008</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1009</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1010</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="4" type="1">
+<li>Execute a Table Expression for the EMPLOYEES table that excludes columns with sensitive employee data (i.e.&nbsp;does not include columns: SSN, B_DATE, SEX, ADDRESS, SALARY).</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> ( <span class="kw">select</span> EMP_ID, F_NAME, L_NAME <span class="kw">from</span> employees) <span class="kw">AS</span> EMP4ALL;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">EMP_ID</th>
+<th style="text-align: left;">F_NAME</th>
+<th style="text-align: left;">L_NAME</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1002</td>
+<td style="text-align: left;">Alice</td>
+<td style="text-align: left;">James</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1003</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Wells</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1004</td>
+<td style="text-align: left;">Santosh</td>
+<td style="text-align: left;">Kumar</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1005</td>
+<td style="text-align: left;">Ahmed</td>
+<td style="text-align: left;">Hussain</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1006</td>
+<td style="text-align: left;">Nancy</td>
+<td style="text-align: left;">Allen</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1007</td>
+<td style="text-align: left;">Mary</td>
+<td style="text-align: left;">Thomas</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1008</td>
+<td style="text-align: left;">Bharath</td>
+<td style="text-align: left;">Gupta</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1009</td>
+<td style="text-align: left;">Andrea</td>
+<td style="text-align: left;">Jones</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1010</td>
+<td style="text-align: left;">Ann</td>
+<td style="text-align: left;">Jacob</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="working-with-multiple-tables" class="level1" data-number="13">
+<h1 data-number="13"><span class="header-section-number">13</span> Working with multiple tables</h1>
+<p>Ways to access multiple tables in the same query are: 1. Sub-queries 2. Implicit join 3. Join operators, such as inner join, outer join, …</p>
+<section id="accessing-tables-using-sub-queries" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="accessing-tables-using-sub-queries"><span class="header-section-number">13.1</span> Accessing tables using sub-queries</h2>
+<ul>
+<li>I.e. lets only retrieve employee records for which a dep_id exists in the Departments table</li>
+</ul>
+<pre><code>select * from employee
+where dep_id in (select dep_id from departments)</code></pre>
+<ul>
+<li>I.e. lets only retrieve employees from a specific location via the location id found in the departments table</li>
+</ul>
+<pre><code>select * from employee
+where dep_id in (select dep_id from departments where loc_id="L0002")</code></pre>
+<ul>
+<li>I.e. lets retrieve the dep_id and name for employees who earn more than 70,000 dollars</li>
+</ul>
+<pre><code>select dep_id,dep_name from departments
+where dep_id in (select dep_id from employees where salary &gt; 70000)</code></pre>
+</section>
+<section id="accessing-tables-with-an-implicit-join" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="accessing-tables-with-an-implicit-join"><span class="header-section-number">13.2</span> Accessing tables with an implicit join</h2>
+<ul>
+<li>I.e. we can specify two tables in the FROM clause as shown below. This results in a table join without using the join operator. This action below is called a full join, or a cartesian join, because every row in the first table is joined with every row in the 2nd table</li>
+</ul>
+<pre><code>select * from employees,departments</code></pre>
+<ul>
+<li>We can use additional operands to limit the results set. I.e. only show rows with matching dep_ids. Below we prefix the name of the column with the name of the table, i.e.&nbsp;we use employees.dep_id.</li>
+</ul>
+<pre><code>select * from employees, department
+where employees.dep_id = departments.dep_id</code></pre>
+<ul>
+<li>If the table names are long we also can use aliases. I.e. we can use the alias E for the employee table and then use these aliases in the where clause</li>
+</ul>
+<pre><code>select * from employees E, department D
+where E.dep_id = D.dep_id</code></pre>
+<ul>
+<li>lets now see the department name for each employee</li>
+</ul>
+<pre><code>select emp_id, dep_name from employees E, department D
+where E.dep_id = D.dep_id</code></pre>
+<ul>
+<li>We can also for the example above fix the column names using aliases</li>
+</ul>
+<pre><code>select e.emp_id, d.dep_name from employees E, department D
+where E.dep_id = D.dep_id</code></pre>
+</section>
+<section id="exercise-2" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="exercise-2"><span class="header-section-number">13.3</span> Exercise</h2>
+<ol type="1">
+<li>Retrieve only the EMPLOYEES records that correspond to jobs in the JOBS table.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> jobs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">job_id</th>
+<th style="text-align: left;">job_title</th>
+<th style="text-align: right;">min_sal</th>
+<th style="text-align: right;">max_sal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">100</td>
+<td style="text-align: left;">Sr.&nbsp;Architect</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">200</td>
+<td style="text-align: left;">Sr.Software Developer</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">8e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">300</td>
+<td style="text-align: left;">Jr.Software Developer</td>
+<td style="text-align: right;">40000</td>
+<td style="text-align: right;">6e+04</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">400</td>
+<td style="text-align: left;">Jr.Software Developer</td>
+<td style="text-align: right;">40000</td>
+<td style="text-align: right;">6e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">Jr.&nbsp;Architect</td>
+<td style="text-align: right;">50000</td>
+<td style="text-align: right;">7e+04</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">600</td>
+<td style="text-align: left;">Lead Architect</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">650</td>
+<td style="text-align: left;">Jr.&nbsp;Designer</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">7e+04</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">660</td>
+<td style="text-align: left;">Jr.&nbsp;Designer</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">7e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">234</td>
+<td style="text-align: left;">Sr.&nbsp;Designer</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">9e+04</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">220</td>
+<td style="text-align: left;">Sr.&nbsp;Designer</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">9e+04</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> employees</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> job_id <span class="kw">in</span> (<span class="kw">select</span> job_id <span class="kw">from</span> jobs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<colgroup>
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 3%">
+<col style="width: 27%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">emp_id</th>
+<th style="text-align: left;">f_name</th>
+<th style="text-align: left;">l_name</th>
+<th style="text-align: right;">ssn</th>
+<th style="text-align: left;">b_date</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: left;">address</th>
+<th style="text-align: right;">job_id</th>
+<th style="text-align: right;">salary</th>
+<th style="text-align: right;">manager_id</th>
+<th style="text-align: right;">dep_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">100000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1002</td>
+<td style="text-align: left;">Alice</td>
+<td style="text-align: left;">James</td>
+<td style="text-align: right;">123457</td>
+<td style="text-align: left;">1972-07-31</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">980 Berry ln, Elgin,IL</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">80000</td>
+<td style="text-align: right;">30002</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1003</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Wells</td>
+<td style="text-align: right;">123458</td>
+<td style="text-align: left;">1980-08-10</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">291 Springs, Gary,IL</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">50000</td>
+<td style="text-align: right;">30002</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1004</td>
+<td style="text-align: left;">Santosh</td>
+<td style="text-align: left;">Kumar</td>
+<td style="text-align: right;">123459</td>
+<td style="text-align: left;">1985-07-20</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">511 Aurora Av, Aurora,IL</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">30004</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1005</td>
+<td style="text-align: left;">Ahmed</td>
+<td style="text-align: left;">Hussain</td>
+<td style="text-align: right;">123410</td>
+<td style="text-align: left;">1960-07-20</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">216 Oak Tree, Geneva,IL</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1006</td>
+<td style="text-align: left;">Nancy</td>
+<td style="text-align: left;">Allen</td>
+<td style="text-align: right;">123411</td>
+<td style="text-align: left;">1960-07-21</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">111 Green Pl, Elgin,IL</td>
+<td style="text-align: right;">600</td>
+<td style="text-align: right;">90000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1007</td>
+<td style="text-align: left;">Mary</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123412</td>
+<td style="text-align: left;">1960-07-22</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">100 Rose Pl, Gary,IL</td>
+<td style="text-align: right;">650</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1008</td>
+<td style="text-align: left;">Bharath</td>
+<td style="text-align: left;">Gupta</td>
+<td style="text-align: right;">123413</td>
+<td style="text-align: left;">1960-07-23</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">145 Berry Ln, Naperville,IL</td>
+<td style="text-align: right;">660</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1009</td>
+<td style="text-align: left;">Andrea</td>
+<td style="text-align: left;">Jones</td>
+<td style="text-align: right;">123414</td>
+<td style="text-align: left;">1960-07-24</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">120 Fall Creek, Gary,IL</td>
+<td style="text-align: right;">234</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1010</td>
+<td style="text-align: left;">Ann</td>
+<td style="text-align: left;">Jacob</td>
+<td style="text-align: right;">123415</td>
+<td style="text-align: left;">1960-07-25</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">111 Britany Springs,Elgin,IL</td>
+<td style="text-align: right;">220</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30004</td>
+<td style="text-align: right;">5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Retrieve only the list of employees whose JOB_TITLE is Jr.&nbsp;Designer.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> employees</span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> job_id <span class="kw">in</span> (<span class="kw">select</span> job_id <span class="kw">from</span> jobs <span class="kw">where</span> job_title<span class="op">=</span><span class="ot">"Jr. Designer"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>2 records</caption>
+<colgroup>
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 3%">
+<col style="width: 26%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">emp_id</th>
+<th style="text-align: left;">f_name</th>
+<th style="text-align: left;">l_name</th>
+<th style="text-align: right;">ssn</th>
+<th style="text-align: left;">b_date</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: left;">address</th>
+<th style="text-align: right;">job_id</th>
+<th style="text-align: right;">salary</th>
+<th style="text-align: right;">manager_id</th>
+<th style="text-align: right;">dep_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">E1007</td>
+<td style="text-align: left;">Mary</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123412</td>
+<td style="text-align: left;">1960-07-22</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">100 Rose Pl, Gary,IL</td>
+<td style="text-align: right;">650</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1008</td>
+<td style="text-align: left;">Bharath</td>
+<td style="text-align: left;">Gupta</td>
+<td style="text-align: right;">123413</td>
+<td style="text-align: left;">1960-07-23</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">145 Berry Ln, Naperville,IL</td>
+<td style="text-align: right;">660</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Retrieve JOB information and who earn more than $70,000.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> jobs</span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> job_id <span class="kw">in</span> (<span class="kw">select</span> job_id <span class="kw">from</span> employees <span class="kw">where</span> salary <span class="op">&gt;</span> <span class="dv">70000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>3 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">job_id</th>
+<th style="text-align: left;">job_title</th>
+<th style="text-align: right;">min_sal</th>
+<th style="text-align: right;">max_sal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">100</td>
+<td style="text-align: left;">Sr.&nbsp;Architect</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">200</td>
+<td style="text-align: left;">Sr.Software Developer</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">8e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">600</td>
+<td style="text-align: left;">Lead Architect</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="4" type="1">
+<li>Retrieve JOB information and whose birth year is after 1976.</li>
+</ol>
+<p>Mysql</p>
+<pre><code>select * from jobs
+where job_id in (select job_id from employees where year(b_date)&gt;1976)</code></pre>
+<p>SQlite</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> jobs</span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> job_id <span class="kw">in</span> (<span class="kw">select</span> job_id <span class="kw">from</span> employees <span class="kw">where</span> strftime(<span class="st">'%Y'</span>, employees.b_date) <span class="op">&gt;</span> <span class="st">'1976'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>2 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">job_id</th>
+<th style="text-align: left;">job_title</th>
+<th style="text-align: right;">min_sal</th>
+<th style="text-align: right;">max_sal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">300</td>
+<td style="text-align: left;">Jr.Software Developer</td>
+<td style="text-align: right;">40000</td>
+<td style="text-align: right;">60000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">400</td>
+<td style="text-align: left;">Jr.Software Developer</td>
+<td style="text-align: right;">40000</td>
+<td style="text-align: right;">60000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="5" type="1">
+<li>Retrieve JOB information for female employees whose birth year is after 1976.</li>
+</ol>
+<p>Mysql</p>
+<pre><code>select JOB_TITLE, MIN_SALARY,MAX_SALARY,JOB_IDENT from jobs 
+where JOB_IDENT IN (select JOB_ID from employees where YEAR(B_DATE)&gt;1976 and SEX='F' );</code></pre>
+<p>SQlite</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> JOB_TITLE, min_sal,max_sal,job_id <span class="kw">from</span> jobs </span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> job_id <span class="kw">IN</span> (<span class="kw">select</span> JOB_ID <span class="kw">from</span> employees <span class="kw">where</span> strftime(<span class="st">'%Y'</span>, employees.b_date) <span class="op">&lt;</span> <span class="st">'1961'</span>  <span class="kw">and</span> SEX<span class="op">=</span><span class="st">'F'</span> );</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>4 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">job_title</th>
+<th style="text-align: right;">min_sal</th>
+<th style="text-align: right;">max_sal</th>
+<th style="text-align: right;">job_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Lead Architect</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">1e+05</td>
+<td style="text-align: right;">600</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jr.&nbsp;Designer</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">7e+04</td>
+<td style="text-align: right;">650</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sr.&nbsp;Designer</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">9e+04</td>
+<td style="text-align: right;">234</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sr.&nbsp;Designer</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">9e+04</td>
+<td style="text-align: right;">220</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="6" type="1">
+<li>Perform an implicit cartesian/cross join between EMPLOYEES and JOBS tables.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> employees,jobs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<colgroup>
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 7%">
+<col style="width: 2%">
+<col style="width: 15%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 7%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 15%">
+<col style="width: 5%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">emp_id</th>
+<th style="text-align: left;">f_name</th>
+<th style="text-align: left;">l_name</th>
+<th style="text-align: right;">ssn</th>
+<th style="text-align: left;">b_date</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: left;">address</th>
+<th style="text-align: right;">job_id</th>
+<th style="text-align: right;">salary</th>
+<th style="text-align: right;">manager_id</th>
+<th style="text-align: right;">dep_id</th>
+<th style="text-align: right;">job_id</th>
+<th style="text-align: left;">job_title</th>
+<th style="text-align: right;">min_sal</th>
+<th style="text-align: right;">max_sal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">1e+05</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: left;">Sr.&nbsp;Architect</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">1e+05</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: left;">Sr.Software Developer</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">8e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">1e+05</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: left;">Jr.Software Developer</td>
+<td style="text-align: right;">40000</td>
+<td style="text-align: right;">6e+04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">1e+05</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: left;">Jr.Software Developer</td>
+<td style="text-align: right;">40000</td>
+<td style="text-align: right;">6e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">1e+05</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">Jr.&nbsp;Architect</td>
+<td style="text-align: right;">50000</td>
+<td style="text-align: right;">7e+04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">1e+05</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">600</td>
+<td style="text-align: left;">Lead Architect</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">1e+05</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">650</td>
+<td style="text-align: left;">Jr.&nbsp;Designer</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">7e+04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">1e+05</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">660</td>
+<td style="text-align: left;">Jr.&nbsp;Designer</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">7e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">1e+05</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">234</td>
+<td style="text-align: left;">Sr.&nbsp;Designer</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">9e+04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">1e+05</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">220</td>
+<td style="text-align: left;">Sr.&nbsp;Designer</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">9e+04</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="7" type="1">
+<li>Retrieve only the EMPLOYEES records that correspond to jobs in the JOBS table.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> <span class="op">*</span> <span class="kw">from</span> employees e,jobs j</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> e.job_id <span class="op">=</span> j.job_id</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<colgroup>
+<col style="width: 4%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 7%">
+<col style="width: 2%">
+<col style="width: 19%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 7%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 14%">
+<col style="width: 5%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">emp_id</th>
+<th style="text-align: left;">f_name</th>
+<th style="text-align: left;">l_name</th>
+<th style="text-align: right;">ssn</th>
+<th style="text-align: left;">b_date</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: left;">address</th>
+<th style="text-align: right;">job_id</th>
+<th style="text-align: right;">salary</th>
+<th style="text-align: right;">manager_id</th>
+<th style="text-align: right;">dep_id</th>
+<th style="text-align: right;">job_id</th>
+<th style="text-align: left;">job_title</th>
+<th style="text-align: right;">min_sal</th>
+<th style="text-align: right;">max_sal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123456</td>
+<td style="text-align: left;">1976-09-01</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">5631 Rice, OakPark,IL</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">100000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: left;">Sr.&nbsp;Architect</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1002</td>
+<td style="text-align: left;">Alice</td>
+<td style="text-align: left;">James</td>
+<td style="text-align: right;">123457</td>
+<td style="text-align: left;">1972-07-31</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">980 Berry ln, Elgin,IL</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">80000</td>
+<td style="text-align: right;">30002</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: left;">Sr.Software Developer</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">8e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1003</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Wells</td>
+<td style="text-align: right;">123458</td>
+<td style="text-align: left;">1980-08-10</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">291 Springs, Gary,IL</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">50000</td>
+<td style="text-align: right;">30002</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: left;">Jr.Software Developer</td>
+<td style="text-align: right;">40000</td>
+<td style="text-align: right;">6e+04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1004</td>
+<td style="text-align: left;">Santosh</td>
+<td style="text-align: left;">Kumar</td>
+<td style="text-align: right;">123459</td>
+<td style="text-align: left;">1985-07-20</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">511 Aurora Av, Aurora,IL</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">30004</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: left;">Jr.Software Developer</td>
+<td style="text-align: right;">40000</td>
+<td style="text-align: right;">6e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1005</td>
+<td style="text-align: left;">Ahmed</td>
+<td style="text-align: left;">Hussain</td>
+<td style="text-align: right;">123410</td>
+<td style="text-align: left;">1960-07-20</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">216 Oak Tree, Geneva,IL</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">Jr.&nbsp;Architect</td>
+<td style="text-align: right;">50000</td>
+<td style="text-align: right;">7e+04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1006</td>
+<td style="text-align: left;">Nancy</td>
+<td style="text-align: left;">Allen</td>
+<td style="text-align: right;">123411</td>
+<td style="text-align: left;">1960-07-21</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">111 Green Pl, Elgin,IL</td>
+<td style="text-align: right;">600</td>
+<td style="text-align: right;">90000</td>
+<td style="text-align: right;">30001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">600</td>
+<td style="text-align: left;">Lead Architect</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">1e+05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1007</td>
+<td style="text-align: left;">Mary</td>
+<td style="text-align: left;">Thomas</td>
+<td style="text-align: right;">123412</td>
+<td style="text-align: left;">1960-07-22</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">100 Rose Pl, Gary,IL</td>
+<td style="text-align: right;">650</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">650</td>
+<td style="text-align: left;">Jr.&nbsp;Designer</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">7e+04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1008</td>
+<td style="text-align: left;">Bharath</td>
+<td style="text-align: left;">Gupta</td>
+<td style="text-align: right;">123413</td>
+<td style="text-align: left;">1960-07-23</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">145 Berry Ln, Naperville,IL</td>
+<td style="text-align: right;">660</td>
+<td style="text-align: right;">65000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">660</td>
+<td style="text-align: left;">Jr.&nbsp;Designer</td>
+<td style="text-align: right;">60000</td>
+<td style="text-align: right;">7e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1009</td>
+<td style="text-align: left;">Andrea</td>
+<td style="text-align: left;">Jones</td>
+<td style="text-align: right;">123414</td>
+<td style="text-align: left;">1960-07-24</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">120 Fall Creek, Gary,IL</td>
+<td style="text-align: right;">234</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30003</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">234</td>
+<td style="text-align: left;">Sr.&nbsp;Designer</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">9e+04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1010</td>
+<td style="text-align: left;">Ann</td>
+<td style="text-align: left;">Jacob</td>
+<td style="text-align: right;">123415</td>
+<td style="text-align: left;">1960-07-25</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">111 Britany Springs,Elgin,IL</td>
+<td style="text-align: right;">220</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">30004</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">220</td>
+<td style="text-align: left;">Sr.&nbsp;Designer</td>
+<td style="text-align: right;">70000</td>
+<td style="text-align: right;">9e+04</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ol start="8" type="1">
+<li>Redo the previous query, but retrieve only the Employee ID, Employee Name and Job Title.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span> e.emp_id,e.f_name,j.job_title <span class="kw">from</span> employees e,jobs j</span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span> e.job_id <span class="op">=</span> j.job_id</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="knitsql-table">
+<table class="table table-sm table-striped">
+<caption>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">emp_id</th>
+<th style="text-align: left;">f_name</th>
+<th style="text-align: left;">job_title</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">E1001</td>
+<td style="text-align: left;">John</td>
+<td style="text-align: left;">Sr.&nbsp;Architect</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1002</td>
+<td style="text-align: left;">Alice</td>
+<td style="text-align: left;">Sr.Software Developer</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1003</td>
+<td style="text-align: left;">Steve</td>
+<td style="text-align: left;">Jr.Software Developer</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1004</td>
+<td style="text-align: left;">Santosh</td>
+<td style="text-align: left;">Jr.Software Developer</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1005</td>
+<td style="text-align: left;">Ahmed</td>
+<td style="text-align: left;">Jr.&nbsp;Architect</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1006</td>
+<td style="text-align: left;">Nancy</td>
+<td style="text-align: left;">Lead Architect</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1007</td>
+<td style="text-align: left;">Mary</td>
+<td style="text-align: left;">Jr.&nbsp;Designer</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1008</td>
+<td style="text-align: left;">Bharath</td>
+<td style="text-align: left;">Jr.&nbsp;Designer</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E1009</td>
+<td style="text-align: left;">Andrea</td>
+<td style="text-align: left;">Sr.&nbsp;Designer</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E1010</td>
+<td style="text-align: left;">Ann</td>
+<td style="text-align: left;">Sr.&nbsp;Designer</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Week2-Notes.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Relational databases</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Week4_Python_a_IBM.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SQL and python</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,14 @@
+{
+  "hash": "3b9df1605021936d6e42ee45721f928a",
+  "result": {
+    "markdown": "# Test R setup\n\n\n::: {.cell}\n\n```{.r .cell-code}\nx = 1+1\nx\n## [1] 2\n```\n:::\n\n::: {.cell}\n\n```{.python .cell-code}\n#ensure that plots get rendered, will give a warning, but nothing to worry about\nimport os\nimport matplotlib\nimport pandas as pd\nimport plotly\nimport plotly.graph_objects as go\nfrom plotly.offline import iplot\nimport requests\nfrom bs4 import BeautifulSoup\n```\n:::\n\n::: {.cell}\n\n```{.python .cell-code}\nx = 1+1\nx\n## 2\n```\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

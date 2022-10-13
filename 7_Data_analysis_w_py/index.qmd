@@ -1,0 +1,25 @@
+# Data analysis with Python
+
+In this module, you will learn how to understand data and learn about how to use the libraries in Python to help you import data from multiple sources. You will then learn how to perform some basic tasks to start exploring and analyzing the imported data set.
+
+
+```{python}
+#|  echo: false
+
+#in terminal set python path for R:
+#nano $HOME/.Renviron
+#RETICULATE_PYTHON="/opt/anaconda3/bin/python3.7"
+
+#set reticulate py version
+#ibrary("reticulate")
+#repl_python()
+
+#make sure in the global options -> markdown -> to set the wdir to project
+#also make the mark at show output inline for all r markdown docs to be able to execute bash/sql
+
+#install for R internal py
+#/Users/ninadombrowski/Library/r-miniconda/envs/r-reticulate/bin/python -m pip install -U seaborn
+
+#install via terminal
+#/opt/anaconda3/bin/python3.7 -m pip install -U yfinance
+```

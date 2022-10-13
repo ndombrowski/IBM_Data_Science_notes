@@ -1,0 +1,75 @@
+---
+title: "Data Science Methodology"
+author: "Nina Dombrowski"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    toc_depth: 5  
+    highlight: kate
+    code_folding: hide
+---
+
+# From Understanding to preparation
+
+## Data Understanding
+
+- Activities relating to constructing the data set
+- Is our data Representative of the problem we want to answer?
+- What does it mean to prepare and clean the data?
+- Descriptive statistics, histograms to understand value/variable distributions
+- Looking at data quality: Missing value, invalid or misleading values
+- Does mean missing mean sth: We don't know or 0?
+
+
+
+## Data preparation
+
+- Cleansing data to remove imperfections
+- Most time consuming, up to 70-90% of project time
+- Getting data into a state were it is easier to work with
+- What are ways data is prepared? 
+- How do we work with missing values or duplicates
+- Feature engineering: Process using domain knowledge of the data to create features that make the machine learning algorithms work. Feature = A characteristic in the data that might help solve the problem
+- Text analysis
+- Case study:
+  - Define what congestive heart failure (CHF) is. What diagnosis group codes to we include? 
+  - Defining readmission criteria, what is the exact time window?
+  - Aggregating records for the same patient --> 1 record per patient and different columns with info in transactions (i.e. doctor visits, prescriptions, ...)
+  - Literature review for factors for CHF readmission
+  - Merge all patient data 
+
+
+# From Modeling to evaluation
+
+- Here we answer: What is the purpose of data modeling? What are some characteristics of this process?
+- In what way can we visualize the data to get our answer 
+- Used models:
+  - Descriptive: if a person did this, then they're likely to prefer that
+  - Predictive: Yes/No or stop go type answers
+- Training set for modeling: Set of data were we know th answers
+- Test set: Set of data we use to quality check our model on
+- The success depends on understanding the question and selecting the correct analytic approach as well as the obtaining/understanding and preparation of the data
+- Case study:
+  - Build an initial tree decision tree classification model 
+  - Initial model had low accuracy on the yes outcome
+  - How can we improve?
+  - Reduce false-positives/Type I errors while not increasing false-negatives
+  - We can set the relative cost for yes to now higher, i.e. cost of missclassifications of type I vs II errors, and see if that improves accuracy
+  
+
+# Evaluation
+
+- Model and evaluation step are done iteratively since they highly depend on each other
+- Does the model used really answer the initial question or do we need to adjust it?
+- Can have two main phases
+  - Diagnostic measures phase were we ensure the model is working as intended. 
+  - Statistical significance testing to ensure that the data is correctly interpreted within the model
+- Case study:
+  - 4 models with 4 different missclassification costs
+  - ROC curve
+
+
+
+
+
+

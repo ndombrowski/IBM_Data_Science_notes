@@ -1,0 +1,778 @@
+# Advanced visualization tools
+
+## Notebook setup
+
+```{python}
+#load libs
+import pandas as pd
+import numpy as np
+import seaborn as sns
+from PIL import Image
+import json
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches # needed for waffle Charts
+
+import folium
+```
+
+
+```{python}
+#load data
+df_can = pd.read_excel("../data/Canada.xlsx", sheet_name='Canada by Citizenship',skiprows=range(20), skipfooter=2)
+
+#check data
+print(df_can.head(3))
+```
+```{python}
+# clean up the dataset to remove unnecessary columns (eg. REG) 
+df_can.drop(['AREA','REG','DEV','Type','Coverage'], axis = 1, inplace = True)
+
+# let's rename the columns so that they make sense
+df_can.rename (columns = {'OdName':'Country', 'AreaName':'Continent','RegName':'Region'}, inplace = True)
+
+# for sake of consistency, let's also make all column labels of type string
+df_can.columns = list(map(str, df_can.columns))
+
+# set the country name as index - useful for quickly looking up countries using .loc method
+df_can.set_index('Country', inplace = True)
+
+# years that we will be using in this lesson - useful for plotting later on
+years = list(map(str, range(1980, 2014)))
+
+# add total column
+df_can['Total'] =  df_can[years].sum (axis = 1)
+
+#control dimensions
+print ('data dimensions:', df_can.shape)
+```
+
+
+
+## Waffle charts
+
+A waffle chart is a great way to visualize data in relation to a whole or to highlight progress against a given threshold.
+
+Let's revisit the previous case study about Denmark, Norway, and Sweden.
+
+```{python}
+df_dsn = df_can.loc[['Denmark', 'Norway', 'Sweden']]
+df_dsn.head()
+```
+Unfortunately, unlike R, waffle charts are not built into any of the Python visualization libraries. Therefore, we will learn how to create them from scratch.
+
+Step 1. The first step into creating a waffle chart is determining the proportion of each category with respect to the total.
+
+```{python}
+#compute the proportion of each category with respect to the total
+total_values = df_dsn['Total'].sum()
+category_proportions = df_dsn['Total'] / total_values
+
+# print out proportions
+pd.DataFrame({"Category Proportion": category_proportions})
+```
+
+Step 2. The second step is defining the overall size of the waffle chart.
+
+```{python}
+width=40
+height=10
+
+total_num_tiles = width * height
+
+print(f'Total number of tiles is {total_num_tiles}.')
+```
+
+Step 3. The third step is using the proportion of each category to determe it respective number of tiles
+
+```{python}
+tiles_per_category = (category_proportions * total_num_tiles).round().astype(int)
+
+# print out number of tiles per category
+pd.DataFrame({"Number of tiles": tiles_per_category})
+```
+
+Based on the calculated proportions, Denmark will occupy 129 tiles of the waffle chart, Norway will occupy 77 tiles, and Sweden will occupy 194 tiles.
+
+Step 4. The fourth step is creating a matrix that resembles the waffle chart and populating it.
+
+```{python}
+# initialize the waffle chart as an empty matrix
+waffle_chart = np.zeros((height, width), dtype = np.uint)
+
+# define indices to loop through waffle chart
+category_index = 0
+tile_index = 0
+```
+
+```{python}
+# populate the waffle chart
+for col in range(width):
+    for row in range(height):
+        tile_index += 1
+        # if the number of tiles populated for the current category is equal to its corresponding allocated tiles...
+        if tile_index > sum(tiles_per_category[0:category_index]):
+            # ...proceed to the next category
+            category_index += 1       
+        # set the class value to an integer, which increases with class
+        waffle_chart[row, col] = category_index
+print ('Waffle chart populated!')
+```
+
+```{python}
+#view chart
+waffle_chart
+```
+As expected, the matrix consists of three categories and the total number of each category's instances matches the total number of tiles allocated to each category.
+
+Step 5. Map the waffle chart matrix into a visual.
+
+```{python}
+# instantiate a new figure object
+fig = plt.figure()
+
+# use matshow to display the waffle chart
+colormap = plt.cm.coolwarm
+plt.matshow(waffle_chart, cmap=colormap)
+plt.colorbar()
+
+plt.show()
+plt.close()
+```
+Prettify
+
+```{python}
+# instantiate a new figure object
+fig = plt.figure()
+
+# use matshow to display the waffle chart
+colormap = plt.cm.coolwarm
+plt.matshow(waffle_chart, cmap=colormap)
+plt.colorbar()
+
+# get the axis
+ax = plt.gca()
+
+# set minor ticks
+ax.set_xticks(np.arange(-.5, (width), 1), minor=True)
+ax.set_yticks(np.arange(-.5, (height), 1), minor=True)
+    
+# add gridlines based on minor ticks
+ax.grid(which='minor', color='w', linestyle='-', linewidth=2)
+
+plt.xticks([])
+plt.yticks([])
+plt.show()
+plt.close()
+```
+Step 7. Create a legend and add it to chart.
+
+```{python}
+# instantiate a new figure object
+fig = plt.figure()
+
+# use matshow to display the waffle chart
+colormap = plt.cm.coolwarm
+plt.matshow(waffle_chart, cmap=colormap)
+plt.colorbar()
+
+# get the axis
+ax = plt.gca()
+
+# set minor ticks
+ax.set_xticks(np.arange(-.5, (width), 1), minor=True)
+ax.set_yticks(np.arange(-.5, (height), 1), minor=True)
+    
+# add gridlines based on minor ticks
+ax.grid(which='minor', color='w', linestyle='-', linewidth=2)
+
+plt.xticks([])
+plt.yticks([])
+
+# compute cumulative sum of individual categories to match color schemes between chart and legend
+values_cumsum = np.cumsum(df_dsn['Total'])
+total_values = values_cumsum[len(values_cumsum) - 1]
+
+# create legend
+legend_handles = []
+for i, category in enumerate(df_dsn.index.values):
+    label_str = category + ' (' + str(df_dsn['Total'][i]) + ')'
+    color_val = colormap(float(values_cumsum[i])/total_values)
+    legend_handles.append(mpatches.Patch(color=color_val, label=label_str))
+
+# add legend to chart
+plt.legend(handles=legend_handles,
+           loc='lower center', 
+           ncol=len(df_dsn.index.values),
+           bbox_to_anchor=(0., -0.2, 0.95, .1)
+          )
+plt.show()
+
+plt.close()
+```
+Now it would very inefficient to repeat these seven steps every time we wish to create a `waffle` chart. So let's combine all seven steps into one function called *create_waffle_chart*. This function would take the following parameters as input:
+
+1.  **categories**: Unique categories or classes in dataframe.
+2.  **values**: Values corresponding to categories or classes.
+3.  **height**: Defined height of waffle chart.
+4.  **width**: Defined width of waffle chart.
+5.  **colormap**: Colormap class
+6.  **value_sign**: In order to make our function more generalizable, we will add this parameter to address signs that could be associated with a value such as %, $, and so on. **value_sign** has a default value of empty string.
+
+```{python}
+def create_waffle_chart(categories, values, height, width, colormap, value_sign=''):
+
+    # compute the proportion of each category with respect to the total
+    total_values = sum(values)
+    category_proportions = [(float(value) / total_values) for value in values]
+
+    # compute the total number of tiles
+    total_num_tiles = width * height # total number of tiles
+    print ('Total number of tiles is', total_num_tiles)
+    
+    # compute the number of tiles for each catagory
+    tiles_per_category = [round(proportion * total_num_tiles) for proportion in category_proportions]
+
+    # print out number of tiles per category
+    for i, tiles in enumerate(tiles_per_category):
+        print (df_dsn.index.values[i] + ': ' + str(tiles))
+    
+    # initialize the waffle chart as an empty matrix
+    waffle_chart = np.zeros((height, width))
+
+    # define indices to loop through waffle chart
+    category_index = 0
+    tile_index = 0
+
+    # populate the waffle chart
+    for col in range(width):
+        for row in range(height):
+            tile_index += 1
+
+            # if the number of tiles populated for the current category 
+            # is equal to its corresponding allocated tiles...
+            if tile_index > sum(tiles_per_category[0:category_index]):
+                # ...proceed to the next category
+                category_index += 1       
+            
+            # set the class value to an integer, which increases with class
+            waffle_chart[row, col] = category_index
+    
+    # instantiate a new figure object
+    fig = plt.figure()
+
+    # use matshow to display the waffle chart
+    colormap = plt.cm.coolwarm
+    plt.matshow(waffle_chart, cmap=colormap)
+    plt.colorbar()
+
+    # get the axis
+    ax = plt.gca()
+
+    # set minor ticks
+    ax.set_xticks(np.arange(-.5, (width), 1), minor=True)
+    ax.set_yticks(np.arange(-.5, (height), 1), minor=True)
+    
+    # add dridlines based on minor ticks
+    ax.grid(which='minor', color='w', linestyle='-', linewidth=2)
+
+    plt.xticks([])
+    plt.yticks([])
+
+    # compute cumulative sum of individual categories to match color schemes between chart and legend
+    values_cumsum = np.cumsum(values)
+    total_values = values_cumsum[len(values_cumsum) - 1]
+
+    # create legend
+    legend_handles = []
+    for i, category in enumerate(categories):
+        if value_sign == '%':
+            label_str = category + ' (' + str(values[i]) + value_sign + ')'
+        else:
+            label_str = category + ' (' + value_sign + str(values[i]) + ')'
+            
+        color_val = colormap(float(values_cumsum[i])/total_values)
+        legend_handles.append(mpatches.Patch(color=color_val, label=label_str))
+
+    # add legend to chart
+    plt.legend(
+        handles=legend_handles,
+        loc='lower center', 
+        ncol=len(categories),
+        bbox_to_anchor=(0., -0.2, 0.95, .1)
+    )
+    plt.show()
+    plt.close()
+```
+Now to create a waffle chart, all we have to do is call the function create_waffle_chart. Let's define the input parameters:
+
+```{python}
+width = 40 # width of chart
+height = 10 # height of chart
+
+categories = df_dsn.index.values # categories
+values = df_dsn['Total'] # correponding values of categories
+
+colormap = plt.cm.coolwarm # color map class
+```
+
+And now let's call our function to create a waffle chart.
+
+```{python}
+create_waffle_chart(categories, values, height, width, colormap)
+plt.close()
+```
+
+There seems to be a new Python package for generating `waffle charts` called [PyWaffle](https://github.com/ligyxy/PyWaffle), but it looks like the repository is still being built. But feel free to check it out and play with it.
+
+
+
+## Word clouds
+
+A word cloud is simply a depiction of the importance of different words in the body of text. A word cloud works in a simple way; the more a specific word appears in a source of textual data the bigger and bolder it appears in the world cloud. 
+
+Luckily, a Python package already exists in Python for generating `word` clouds. The package, called `word_cloud` was developed by **Andreas Mueller**. You can learn more about the package by following this [link](https://github.com/amueller/word_cloud/).
+
+
+
+## Seaborn and regression plots
+
+Seaborn is another data visualization library, based on Matplotlib. It was built primarily to provide a high-level interface for drawing attractive statistical graphics, such as regression plots, box plots, ... in a more efficient way.
+
+In lab *Pie Charts, Box Plots, Scatter Plots, and Bubble Plots*, we learned how to create a scatter plot and then fit a regression line. It took \~20 lines of code to create the scatter plot along with the regression fit. In this final section, we will explore *seaborn* and see how efficient it is to create regression lines and fits using this library!
+
+Create a new dataframe that stores that total number of landed immigrants to Canada per year from 1980 to 2013.
+
+```{python}
+#get the total poulation per year
+df_tot = pd.DataFrame(df_can[years].sum(axis=0))
+
+#change the years to fload
+df_tot.index = map(float, df_tot.index)
+
+#reset the index and put it back as a column in the df
+df_tot.reset_index(inplace = True)
+
+#rename columns
+df_tot.columns = ['year', 'total']
+
+#view df
+df_tot.head()
+```
+With seaborn, generating a regression plot is as simple as calling the regplot function.
+
+```{python}
+sns.regplot(x='year', y='total', data = df_tot)
+plt.show()
+plt.close()
+```
+This is not magic; it is seaborn! You can also customize the color of the scatter plot and regression line. Let's change the color to green.
+
+```{python}
+sns.regplot(x='year', y='total', data = df_tot, color = 'green')
+plt.show()
+plt.close()
+```
+
+You can always customize the marker shape, so instead of circular markers, let's use +.
+
+```{python}
+sns.regplot(x='year', y='total', data = df_tot, color = 'green', marker = '+')
+plt.show()
+plt.close()
+```
+
+Let's blow up the plot a little so that it is more appealing to the sight.
+
+```{python}
+plt.figure(figsize=(8, 6))
+sns.regplot(x='year', y='total', data = df_tot, color = 'green', marker = '+')
+plt.show()
+plt.close()
+```
+
+And let's increase the size of markers so they match the new size of the figure, and add a title and x- and y-labels.
+
+```{python}
+plt.figure(figsize=(8, 6))
+
+sns.set(font_scale=1.2)
+
+sns.regplot(x='year', y='total', data = df_tot, color = 'green', marker = '+', scatter_kws={'s':200})
+ax.set(xlabel = 'Year', ylabel = 'Total Immigration')
+ax.set_title('Total Immigration to Canada from 1980 to 2013')
+
+plt.show()
+plt.close()
+```
+
+Amazing! A complete scatter plot with a regression fit with 5 lines of code only. Isn't this really amazing?
+
+If you are not a big fan of the purple background, you can easily change the style to a white plain background.
+
+
+```{python}
+plt.figure(figsize=(8, 6))
+
+sns.set(font_scale=1.2)
+sns.set_style('ticks')
+
+sns.regplot(x='year', y='total', data = df_tot, color = 'green', marker = '+', scatter_kws={'s':200})
+ax.set(xlabel = 'Year', ylabel = 'Total Immigration')
+ax.set_title('Total Immigration to Canada from 1980 to 2013')
+
+plt.show()
+plt.close()
+```
+
+Or to a white background with gridlines.
+
+```{python}
+plt.figure(figsize=(8, 6))
+
+sns.set(font_scale=1.2)
+sns.set_style('whitegrid')
+
+sns.regplot(x='year', y='total', data = df_tot, color = 'green', marker = '+', scatter_kws={'s':200})
+ax.set(xlabel = 'Year', ylabel = 'Total Immigration')
+ax.set_title('Total Immigration to Canada from 1980 to 2013')
+
+plt.show()
+plt.close()
+```
+
+
+## Folium
+
+Folium is a powerful data visualization library in Python that was built primarily to help people visualize geospatial data. What is nice about Folium is that it was developed for the sole purpose of visualizing geospatial data. While other libraries are available to visualize geospatial data, such as plotly, they might have a cap on how many API calls you can make within a defined time frame. Folium, on the other hand, is completely free.
+
+
+Datasets:
+
+1.  San Francisco Police Department Incidents for the year 2016 - [Police Department Incidents](https://data.sfgov.org/Public-Safety/Police-Department-Incidents-Previous-Year-2016-/ritf-b9ki?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0101ENSkillsNetwork20297740-2021-01-01) from San Francisco public data portal. Incidents derived from San Francisco Police Department (SFPD) Crime Incident Reporting system. Updated daily, showing data for the entire year of 2016. Address and location has been anonymized by moving to mid-block or to an intersection.
+
+2.  Immigration to Canada from 1980 to 2013 - [International migration flows to and from selected countries - The 2015 revision](http://www.un.org/en/development/desa/population/migration/data/empirical2/migrationflows.shtml?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0101ENSkillsNetwork20297740-2021-01-01) from United Nation's website. The dataset contains annual data on the flows of international migrants as recorded by the countries of destination. The data presents both inflows and outflows according to the place of birth, citizenship or place of previous / next residence both for foreigners and nationals. For this lesson, we will focus on the Canadian Immigration data
+
+Generating the world map is straightforward in **Folium**. You simply create a **Folium** *Map* object, and then you display it. What is attractive about **Folium** maps is that they are interactive, so you can zoom into any region of interest despite the initial zoom level.
+
+```{python}
+#define world map
+world_map = folium.Map()
+
+#display map
+world_map
+```
+
+You can customize this default definition of the world map by specifying the centre of your map, and the initial zoom level.
+
+All locations on a map are defined by their respective Latitude and Longitude values. So you can create a map and pass in a center of Latitude and Longitude values of [0, 0].
+
+For a defined center, you can also define the initial zoom level into that location when the map is rendered. The higher the zoom level the more the map is zoomed into the center.
+
+Let's create a map centered around Canada and play with the zoom level to see how it affects the rendered map. As The higher the zoom level the more the map is zoomed into the given center.
+
+```{python}
+#define world map
+world_map = folium.Map(location=[56.130, -106.35], zoom_start=4)
+
+#display map
+world_map
+```
+
+
+### Stamen Toner maps
+
+These are high-contrast B+W (black and white) maps. They are perfect for data mashups and exploring river meanders and coastal zones.
+
+Let's create a Stamen Toner map of canada with a zoom level of 4.
+
+
+```{python}
+#define world map
+world_map = folium.Map(location=[56.130, -106.35], zoom_start=4, tiles = 'Stamen Toner')
+
+#display map
+world_map
+```
+
+
+### Stamen Terrain maps
+
+These are maps that feature hill shading and natural vegetation colors. They showcase advanced labeling and linework generalization of dual-carriageway roads.
+
+```{python}
+#define world map
+world_map = folium.Map(location=[56.130, -106.35], zoom_start=4, tiles = 'Stamen Terrain')
+
+#display map
+world_map
+```
+
+
+
+### Maps with markers
+
+Let's download and import the data on police department incidents using pandas read_csv() method.
+
+```{python}
+#load data
+df_incidents = pd.read_csv("../data/Police_Department_Incidents_-_Previous_Year__2016_.csv")
+
+#check data
+print(df_incidents.head(3))
+```
+So each row consists of 13 features:
+
+1.  **IncidntNum**: Incident Number
+2.  **Category**: Category of crime or incident
+3.  **Descript**: Description of the crime or incident
+4.  **DayOfWeek**: The day of week on which the incident occurred
+5.  **Date**: The Date on which the incident occurred
+6.  **Time**: The time of day on which the incident occurred
+7.  **PdDistrict**: The police department district
+8.  **Resolution**: The resolution of the crime in terms whether the perpetrator was arrested or not
+9.  **Address**: The closest address to where the incident took place
+10. **X**: The longitude value of the crime location
+11. **Y**: The latitude value of the crime location
+12. **Location**: A tuple of the latitude and the longitude values
+13. **PdId**: The police department ID
+
+The dataframe consists of 150,500 crimes, which took place in the year 2016. In order to reduce computational cost, let's just work with the first 100 incidents in this dataset.
+
+```{python}
+limit = 100
+df_incidents = df_incidents.iloc[0:limit,:]
+df_incidents.shape
+```
+
+Now that we reduced the data a little, let's visualize where these crimes took place in the city of San Francisco. We will use the default style, and we will initialize the zoom level to 12.
+
+```{python}
+# San Francisco latitude and longitude values
+latitude = 37.77
+longitude = -122.42
+
+
+# create map and display it
+sanfran_map = folium.Map(location=[latitude, longitude], zoom_start=12)
+
+# display the map of San Francisco
+sanfran_map
+```
+
+Now let's superimpose the locations of the crimes onto the map. The way to do that in Folium is to create a feature group with its own features and style and then add it to the sanfran_map.
+
+```{python}
+# | error: false
+
+# instantiate a feature group for the incidents in the dataframe
+incidents = folium.map.FeatureGroup()
+
+# loop through the 100 crimes and add each to the incidents feature group
+for lat, lng, in zip(df_incidents.Y, df_incidents.X):
+    incidents.add_child(
+        folium.features.CircleMarker(
+            [lat, lng],
+            radius=5, # define how big you want the circle markers to be
+            color='yellow',
+            fill=True,
+            fill_color='blue',
+            fill_opacity=0.6
+        )
+    )
+
+# add incidents to map
+sanfran_map.add_child(incidents)
+```
+
+
+You can also add some pop-up text that would get displayed when you hover over a marker. Let's make each marker display the category of the crime when hovered over.
+
+```{python}
+# instantiate a feature group for the incidents in the dataframe
+incidents = folium.map.FeatureGroup()
+
+# loop through the 100 crimes and add each to the incidents feature group
+for lat, lng, in zip(df_incidents.Y, df_incidents.X):
+    incidents.add_child(
+        folium.features.CircleMarker(
+            [lat, lng],
+            radius=5, # define how big you want the circle markers to be
+            color='yellow',
+            fill=True,
+            fill_color='blue',
+            fill_opacity=0.6
+        )
+    )
+
+# add pop-up text to each marker on the map
+latitudes = list(df_incidents.Y)
+longitudes = list(df_incidents.X)
+labels = list(df_incidents.Category)
+
+for lat, lng, label in zip(latitudes, longitudes, labels):
+    folium.Marker([lat, lng], popup=label).add_to(sanfran_map)    
+    
+# add incidents to map
+sanfran_map.add_child(incidents)
+```
+
+If you find the map to be so congested will all these markers, there are two remedies to this problem. The simpler solution is to remove these location markers and just add the text to the circle markers themselves as follows:
+
+```{python}
+# create map and display it
+sanfran_map = folium.Map(location=[latitude, longitude], zoom_start=12)
+
+# loop through the 100 crimes and add each to the map
+for lat, lng, label in zip(df_incidents.Y, df_incidents.X, df_incidents.Category):
+    folium.features.CircleMarker(
+        [lat, lng],
+        radius=5, # define how big you want the circle markers to be
+        color='yellow',
+        fill=True,
+        popup=label,
+        fill_color='blue',
+        fill_opacity=0.6
+    ).add_to(sanfran_map)
+
+# show map
+sanfran_map
+```
+
+The other proper remedy is to group the markers into different clusters. Each cluster is then represented by the number of crimes in each neighborhood. These clusters can be thought of as pockets of San Francisco which you can then analyze separately.
+
+To implement this, we start off by instantiating a MarkerCluster object and adding all the data points in the dataframe to this object.
+
+```{python}
+from folium import plugins
+
+# let's start again with a clean copy of the map of San Francisco
+sanfran_map = folium.Map(location = [latitude, longitude], zoom_start = 12)
+
+# instantiate a mark cluster object for the incidents in the dataframe
+incidents = plugins.MarkerCluster().add_to(sanfran_map)
+
+# loop through the dataframe and add each data point to the mark cluster
+for lat, lng, label, in zip(df_incidents.Y, df_incidents.X, df_incidents.Category):
+    folium.Marker(
+        location=[lat, lng],
+        icon=None,
+        popup=label,
+    ).add_to(incidents)
+
+# display map
+sanfran_map
+```
+
+Notice how when you zoom out all the way, all markers are grouped into one cluster, the global cluster, of 100 markers or crimes, which is the total number of crimes in our dataframe. Once you start zooming in, the global cluster will start breaking up into smaller clusters. Zooming in all the way will result in individual markers.
+
+
+### Choropleth maps
+
+A Choropleth map is a thematic map in which areas are shaded or patterned in proportion to the measurement of the statistical variable being displayed on the map, such as population density or per-capita income. The choropleth map provides an easy way to visualize how a measurement varies across a geographic area, or it shows the level of variability within a region. 
+
+Now, let's create our own Choropleth map of the world depicting immigration from various countries to Canada.
+
+Download the Canadian Immigration dataset and read it into a pandas dataframe.
+
+
+```{python}
+#load data
+df_can = pd.read_excel("../data/Canada.xlsx", sheet_name='Canada by Citizenship',skiprows=range(20), skipfooter=2)
+
+#check data
+print(df_can.head(3))
+```
+
+```{python}
+# clean up the dataset to remove unnecessary columns (eg. REG) 
+df_can.drop(['AREA','REG','DEV','Type','Coverage'], axis=1, inplace=True)
+
+# let's rename the columns so that they make sense
+df_can.rename(columns={'OdName':'Country', 'AreaName':'Continent','RegName':'Region'}, inplace=True)
+
+# for sake of consistency, let's also make all column labels of type string
+df_can.columns = list(map(str, df_can.columns))
+
+# years that we will be using in this lesson - useful for plotting later on
+years = list(map(str, range(1980, 2014)))
+
+# add total column
+df_can['Total'] = df_can[years].sum(axis=1)
+
+#control dimensions
+print ('data dimensions:', df_can.shape)
+```
+
+In order to create a Choropleth map, we need a GeoJSON file that defines the areas/boundaries of the state, county, or country that we are interested in. In our case, since we are endeavoring to create a world map, we want a GeoJSON that defines the boundaries of all world countries. For your convenience, we will be providing you with this file, so let's go ahead and load it.
+
+```{python}
+import io
+import json
+
+# Opening JSON file
+f = open('../data/world_countries.json',)
+world_geo = json.load(f)
+f.close()
+```
+
+```{python}
+# create a plain world map
+world_map = folium.Map(location=[0, 0], zoom_start=2)
+```
+
+And now to create a `Choropleth` map, we will use the *choropleth* method with the following main parameters:
+
+1.  `geo_data`, which is the GeoJSON file.
+2.  `data`, which is the dataframe containing the data.
+3.  `columns`, which represents the columns in the dataframe that will be used to create the `Choropleth` map.
+4.  `key_on`, which is the key or variable in the GeoJSON file that contains the name of the variable of interest. To determine that, you will need to open the GeoJSON file using any text editor and note the name of the key or variable that contains the name of the countries, since the countries are our variable of interest. In this case, **name** is the key in the GeoJSON file that contains the name of the countries. Note that this key is case_sensitive, so you need to pass exactly as it exists in the GeoJSON file.
+
+```{python}
+# generate choropleth map using the total immigration of each country to Canada from 1980 to 2013
+world_map.choropleth(
+    geo_data=world_geo,
+    data=df_can,
+    columns=['Country', 'Total'],
+    key_on='feature.properties.name',
+    fill_color='YlOrRd', 
+    fill_opacity=0.7, 
+    line_opacity=0.2,
+    legend_name='Immigration to Canada'
+)
+
+# display map
+world_map
+```
+
+
+As per our Choropleth map legend, the darker the color of a country and the closer the color to red, the higher the number of immigrants from that country. Accordingly, the highest immigration over the course of 33 years (from 1980 to 2013) was from China, India, and the Philippines, followed by Poland, Pakistan, and interestingly, the US.
+
+Notice how the legend is displaying a negative boundary or threshold. Let's fix that by defining our own thresholds and starting with 0 instead of -6,918
+
+
+```{python}
+# create a numpy array of length 6 and has linear spacing from the minimum total immigration to the maximum total immigration
+threshold_scale = np.linspace(df_can['Total'].min(),
+                              df_can['Total'].max(),
+                              6, dtype=int)
+threshold_scale = threshold_scale.tolist() # change the numpy array to a list
+threshold_scale[-1] = threshold_scale[-1] + 1 # make sure that the last value of the list is greater than the maximum immigration
+
+# let Folium determine the scale.
+world_map = folium.Map(location=[0, 0], zoom_start=2)
+world_map.choropleth(
+    geo_data=world_geo,
+    data=df_can,
+    columns=['Country', 'Total'],
+    key_on='feature.properties.name',
+    threshold_scale=threshold_scale,
+    fill_color='YlOrRd', 
+    fill_opacity=0.7, 
+    line_opacity=0.2,
+    legend_name='Immigration to Canada',
+    reset=True
+)
+world_map
+```

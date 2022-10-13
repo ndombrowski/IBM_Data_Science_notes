@@ -1,0 +1,36 @@
+# Preamble
+
+For this project, you will assume the role of a Data Scientist / Data Analyst working for a new startup investment firm that helps customers invest their money in stocks. Your job is to extract financial data like historical share price and quarterly revenue reportings from various sources using Python libraries and webscraping on popular stocks. After collecting this data you will visualize it in a dashboard to identify patterns or trends. The stocks we will work with are Tesla, Amazon, AMD, and GameStop.
+
+
+```{python}
+#|  echo: false
+
+#in terminal set python path for R:
+#nano $HOME/.Renviron
+#RETICULATE_PYTHON="/opt/anaconda3/bin/python3.7"
+
+#set reticulate py version
+#ibrary("reticulate")
+#repl_python()
+
+#make sure in the global options -> markdown -> to set the wdir to project
+#also make the mark at show output inline for all r markdown docs to be able to execute bash/sql
+
+#install for R internal py
+#/Users/ninadombrowski/Library/r-miniconda/envs/r-reticulate/bin/python -m pip install -U seaborn
+
+#install via terminal
+#/opt/anaconda3/bin/python3.7 -m pip install -U yfinance
+
+#watson:
+#https://eu-de.dataplatform.cloud.ibm.com/projects/c0e22bcd-1461-4381-a45a-9b55ee8d6643?context=cpdaas
+
+#notebook for watson
+#https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0220EN-SkillsNetwork/labs/project/Final%20Assignment.ipynb
+
+#https://eu-de.dataplatform.cloud.ibm.com/analytics/notebooks/v2/effc3192-d2ca-402c-836b-ae2bc252ffbf?projectid=c0e22bcd-1461-4381-a45a-9b55ee8d6643&context=cpdaas
+
+#link to finished notebook
+#https://eu-de.dataplatform.cloud.ibm.com/analytics/notebooks/v2/effc3192-d2ca-402c-836b-ae2bc252ffbf/view?access_token=eafb0019d830bd9df164400db6de2b78e94c787f6ed81b1c096396abfac40ab2
+```

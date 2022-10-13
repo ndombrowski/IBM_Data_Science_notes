@@ -1,0 +1,38 @@
+{
+  "index.qmd": {
+    "index.html": "6ca60e77"
+  },
+  "Week1-Basics.qmd": {
+    "Week1-Basics.html": "47c85a42"
+  },
+  "Week2-Lists_Tuples.qmd": {
+    "Week2-Lists_Tuples.html": "4415670e"
+  },
+  "Week3_Conditions_a_branching.qmd": {
+    "Week3_Conditions_a_branching.html": "903c1adc"
+  },
+  "Week4_Files_Pandas_Numpy.qmd": {
+    "Week4_Files_Pandas_Numpy.html": "797f7a38"
+  },
+  "Week5_API_and_Data_collection.qmd": {
+    "Week5_API_and_Data_collection.html": "acd3d899"
+  },
+  "code/Week2-Lists_Tuples.qmd": {
+    "Week2-Lists_Tuples.html": "322d0c2f"
+  },
+  "code/Week5_API_and_Data_collection.qmd": {
+    "Week5_API_and_Data_collection.html": "3bd274fa"
+  },
+  "code/test.qmd": {
+    "test.html": "46c345d3"
+  },
+  "code/Week1-Basics.qmd": {
+    "Week1-Basics.html": "8212c194"
+  },
+  "code/Week3_Conditions_a_branching.qmd": {
+    "Week3_Conditions_a_branching.html": "d924f45b"
+  },
+  "code/Week4_Files_Pandas_Numpy.qmd": {
+    "Week4_Files_Pandas_Numpy.html": "acc23fb7"
+  }
+}

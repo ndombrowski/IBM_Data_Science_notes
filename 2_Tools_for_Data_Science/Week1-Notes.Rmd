@@ -1,0 +1,332 @@
+---
+title: "Tools for data Science"
+author: "Nina Dombrowski"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    toc_depth: 5  
+    highlight: kate
+    code_folding: hide
+---
+
+
+# Tools for Data Science
+
+## 1. Languages of Data Science
+
+### Intro to Python
+
+- Open-source
+- most popular programming language for data science (in ~75% of job ads)
+- general purpose language
+- large standard library useful for very different tasks
+- good available languages, such as pandas, nump, scipy, scikit-learn, etc
+- Clear, readable syntax
+- Uses generally less code than other languages
+- huge global community, and wealth of documentation
+- Useful for many situations: Data science, AI, web development, etc
+- Existence of a code of conduct
+
+*Pyladies**: Mentorship group for ladies
+
+
+### Intro to R
+
+- Free-software (similar licenses + supportive for collaborative as open-source but free software is more focused on a set of values and open source is more business focused )
+-  Allows for public collaboration, private and commercial use
+- Array-oriented syntax makes it easier to translate from math to code
+- Largest repository of statistical knowledge
+- More than 15,000 released packages
+- Integrates well with C++ , Java, Python
+
+
+*R-communities**
+
+- useR!
+- WhyR?
+- SatRdays
+- R-Ladies
+- R-project website (for conferecnes and events)
+
+
+### Intro to SQL
+
+- SQL = Structured query language
+- Scope is queering and managing data
+- Simple and powerful
+- useful to handle structured data, ie relational databases (formed by collections of 2 dimensional tables, each of which is formed by a fixed number of columns and rows)
+- Data ca be accessed directly, it does not need to be copied beforehand, and thus speeds things up. 
+- SQL is an ANSI standard, so you can apply the knowledge easily to other databases
+- Many sql databases available, such as mysql, oracle, mariaDB, ...
+
+
+
+### Other languages
+
+- Scala: General purpose programming language that provides support for functional programming. Interoperable with Java. Scala comes from scalable language. Apache spark is an example that uses scala.
+- Java: General purpose object oriented language. Fast and scalable. Hadoop is an example to store and process big data
+- C++: General purpose language and an extension of C. Improves processing speed and gives broad control over applications. Used for programs that feed data to customers in real time. I.e. the tensorflow library, for deep learning, was written in C++. 
+- Julia: Designed at MIT for high-performance numerical analysis. Its compiled and has refined parallelism. 
+- Javascript: Technology for the world wide web. General purpose language. Not related to Java. 
+
+-------------------------------------------------------
+
+## 2. Data science tools
+
+### Categories of data science tools
+
+- Data management: Process of persisting and retrieving data
+- Data integration and transformation: process of retrieving data from remote data management systems
+- Data vis: Initial data exploration and part of a final deliverable
+- Model building: Process of creating a machine learning or deep learning model using an appropriate model
+- Model deployment: Make machine learning or deep learning model available to third-party applications
+- Model monitoring and assessment: Ensures performance checks on the employed models and are key for accuracy, fairness and robustness
+- Code asset management: Uses versioning and other features to facilitate teamwork as well as replication, backup and access rights managements
+- Development environments: Tools were data processing, model training an deployment take place.
+
+### Open source tools for data science tasks
+
+#### Tools for data management:
+
+- Relational databases such as MySQL or postSQL or nonSQWL databases such as mongoDB, couchDB or cassandra and file based tools such as hadoop or ceph. Elastic search is used for storing text data
+
+
+#### Tools for data integration and transformation:
+
+- ETL: task of integration and transformation in the classic data warehousing world, = extract, transform and load
+- Data refining and cleaning
+- Apache airflow, kubeflow, kafka, nifi, spark sql, node-red (also has a visual editor and uses little resources)
+
+
+#### Tools for data integration and transformation:
+
+- Hue (create vis from sql queries), kibana (web-based vis tool), superset (data exploration and visualization web application)
+
+
+#### Tools for model deployment:
+
+- PredictionIO, Seldom, mleap, tensorflow service, tensor flow lite, tensorflow.js
+
+
+#### Tools for model monitoring:
+
+- ModelDB, Prometheus, IBM research trusted AI to detect bias in machine learning processes, Adversarial robustness 360 toolbox, AI explainability 360
+
+
+#### Tools for code assessment management (or version control:
+
+- git, which is supported by github, gitlab, bitbucket
+
+Tools for data asses management:
+
+- Data has to be versioned and annotated with metadata. Tools that do this are ApacheAtlas, ODPi egeria, Kylo
+
+
+#### Tools for data development:
+
+- Jupyter: First tool for integrative python managing but now supports multiple languages via kernels.
+- Jupyter lab: Next version of jupyter notebooks
+- Apache Zeppelin with integrative visualization ability 
+- RStudio
+- Spyder
+- Apache Spark, or other cluster executing environments. Key property is linear scalability. Batch data processing engine that processes huge amounts of data file by file. 
+- Apache Flink: Difference to Spark is stream processing imagine that processes real-time data feeds.
+- Riselab Ray: Focus on large-scale deep model training
+
+
+
+#### Open source tools that are fully integrated and visual:
+
+- With these tools no programming knowledge is necessary
+- Integrates data integration/transformation, visualization and model building
+- KNIME
+- Orange
+
+
+#### Commercial tools for data science:
+
+- Data for data management is often stored in oracle databases, microsoft sql servers or IBM DB2 and are considered an industry standard. Key is the availability of commercial support
+- Data integration/transformation: Informative and IBM infosphere datastage, talend, watson studio desktop.
+- Data vis: Tablaeu, microsoft power bi and IBM cognos analytics, IBM Watson studio desktop
+- Model building: SPSS modeler and SAS, watson studio
+- Model deployment: IBM SPSS Collaboration and deployment services
+- Model monitoring: No tools available so far
+- Code Asset management: No tools available so far
+- Development environments: Watson study (desktop)
+- fully integrated tool: Watson study (desktop), H20.ai
+
+
+
+
+#### Data science tools available on the cloud
+
+- Generally integrate multiple tasks into one software
+- These clusters are composed of multiple server machines, transparently for the user, in the background.
+- Fully integrated visual tools and platforms: I.e. Watson Studio, Watson openscale, Azure Machine Learning, H20.ai. The later is a bit special Since operations and maintenance are not done by the cloud provider, as is the case with Watson Studio, Open Scale, and Azure Machine Learning, this delivery model should not be confused with Platform or Software as a Service -- PaaS or SaaS. SaaS = **SaaS** stands for “software as a service.”
+
+
+Tools for Data management:
+- AWS Amazon DynanomDB
+- Cloudant
+- Db2
+
+Data integration/transformation:
+
+- Informatice
+- IBM data refinery 
+
+Data vis:
+
+- Datameer
+- IBM Cognos Analytics
+
+Model building:
+
+- Watson machine learning
+- Google Cloud
+
+
+Model deployment:
+
+- IBM SPSS
+- Watson machine learning
+
+Model monitoring and assessement: 
+
+- Amazon SageMaker Model Monitor
+- Watson OpenScale
+
+
+
+-------------------------------------------------------
+
+## 3. Packages, APIs, Data sets and models
+
+### Libraries for data science
+
+Libraries: Provide a collection of functions and methods that enable us to perform a wide variety of actions without us having to write the code.
+
+- Scientific computing libraries: 
+    - Data transformation:Pandas (based on dataframes), Numpy (based on arrays), 
+    - Data vis: Matplotlib, Seaborn
+    - Machine learning: Scikit-learn (machine learning), Keras (deep learning neutral networks)
+    - Deep learning: TensorFlow, Pytorch
+    - Apache Spark as a general computing framework
+        
+- Scala-libraries:
+    - Vegas
+    - Big DL
+
+- R-libraries:
+    - Ggplot2 (data vis)
+    - Libraries that integrate with Keras and TensorFLow
+        
+        
+### Application Programming Interface (API)   
+
+What is API: 
+
+- APIs let two pieces of software talk to each other. For example, an API can let our program communicate with other software components. API only refers to the interface, or the part of the library that you see. The “library” refers to the whole thing. 
+- Consider the pandas library. Pandas is actually a set of software components, many of which are not even written in Python. You have some data. You have a set of software components. We use the pandas API to process the data by communicating with the other software components.
+
+REST APIs:
+
+- Enable us to communicate using the internet, taking advantage of storage, greater data access, artificial intelligence algorithms, etc. 
+- **Re**presentational **S**tate **T**ransfer
+- In rest the program is called the client and the API communicates with a webservice that we call through the internet. And a set of rules control the communication
+- Client = Me/My code. The client finds the service through an endpoint. The client sends the request to the resource and the response to the client.
+- The webservice is referred to as a resource
+- HTTP methods are a way of transmitting data over the internet We tell the REST APIs what to do by sending a request. The request is usually communicated through an HTTP message. The HTTP message usually contains a JSON file, which contains instructions for the operation we would like the service to perform
+- Example of rest API is Watson Speech to Text API, which converts speech to text
+
+
+### Data sets powering data science
+
+#### What is a dataset?
+
+- A structured collection of data
+- might be represented as text, numbers, or media such as images, audio, or video files
+    - Tabular data (i.e. csv)
+    - Hierarchical data, usually used to represent relations among data
+    - Network data is usually presented in a tree like structure
+    - raw data files, i.e. images
+    
+#### Data ownership
+
+- Private data that is confidential, has private/personal information and is commercially sensitive, thus is generally not shared publicly
+- Open data that is publicly available
+
+#### Finding open data:
+
+- datacatalogs.org
+- Governmental, organization websites
+    - data.un.org (UN)
+    - data.gov (US)
+    - europeanddataportal.eu
+- Kaggle
+- Google datasetsearch
+
+
+#### Community data license agreement
+
+- Data might be restricted by its licensing terms. 
+- Community Data License Agreement (CDLA): Collaborative license to enable access, sharing and use of data openly among individuals and organizations. 
+- CDLA-Sharing: Permission to use and modify data; publication only under the same terms. No restriction on results
+- CDLA-Permissive: Permission to use and modify data, no obligations. No restriction on results
+
+
+
+### Sharing enterprise data - Data asset exchange
+
+- Created by IGM
+- Provided a source to find ready-to-use datasets from a wide range of domains
+- Usually uses variants of the CDLAs
+- Also provide tutorials in the format of notebooks
+- Compressed data set canbe downloaded, explored, the metadata explored and we can preview parts of the dataset
+- Most data sets are complemented with jupyter notebooks that run as is in Watson Studio
+
+
+### Machine learning models
+
+- What is a model: Machine learning uses algorithms to identify patterns in data. This is especially useful with large, otherwise hard to handle, datasets.  
+- **Model training**: the process by which the model learns these patterns from data is called 
+- Once a model is trained we can use it to make predictions on new data based on past data
+- Types:
+    - **Supervised learning**: Data is labeled and model is trained to make the correct predictions. Most commonly used mode. A human provides the input data and the correct output, the model then tries to make correlations between the provided input and output. Often used to solve **regression** problems (i.e. used to predict real numeric values, ie predictions about home sales) or **classification** problems (i.e. classify things into categories, i.e. images, spam vs no spam mails)
+    - **Unsupervised learning**: Data is not labelled by a human and the model must identify patterns without external help. **Cluster detection**: divide each record of a data set into one of a small number of similar groups. **Anomalies detection** identifies outliers in a data set, ie fraudulent credit card transactions. **Reinforcement learning** is loosely based on human language learning processes. 
+- **Deep learning** is a specialized type of machine learning that tries to loosely emulate how the human brain works. Ie used to analyse language patterns or image/video data as well as time series forecasting. Generally requires large datasets of labeled data and thus is compute intensive
+- **Deep learning models** can be build using different frameworks including TensorFlow, Pytorch, Keras. You can download pre-trained state-of-the-art models from repositories that are commonly referred to as model "zoos."m ie. ONNX
+    - Prepare data --> build model from scratch or use existing model  -->  train model (repeat until the model performance meets requirements)  -->  deploy model  -->  use model
+
+
+
+
+###  The model asset exchange (MAX)
+
+-  Available via the IBM developer resource
+- Pretrained models can reduce the time to value 
+- Free open source repository of deep learning microservices (can use pre-trained or custom-trainable models that have been tested and can be employed quickly, approved for personal/commercial use)
+- Models for different domains
+- Components: Pre-trained model, code that post-processes the model output, a standardized public API to make the service functionality available to applications.
+- Build and distributed as docker images. **Docker** = container platform that makes it easy to build applications and to deploy them in a development, test, or production environment. The Docker image source is published on GitHub and can be downloaded, customized as needed, and used in personal or commercial environments 
+- Images can be deployed and run in a test or production environment using Kubernetes (i.e. Redhead OpenShip), an open-source system for automating deployment, scaling, and management of containerized applications in private, hybrid, or public clouds
+- Model-serving microservice REST API
+
+
+
+### Explore Datasets and Modules
+
+1. For this we will have a look at [weather data on IBM]( https://developer.ibm.com/exchanges/data/all/jfk-weather-data/?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDS0105ENSkillsNetwork20083975-2022-01-01)
+2. Deep learning models can be explored with http://ml-exchange.org/models and we specifically want to look at the object detector model. This model recognizes the objects present in an image. The model consists of a deep convolutional net base model for image feature extraction, together with additional convolutional layers specialized for the task of object detection, that was trained on the COCO data set. The input to the model is an image, and the output is a extracted objects from the image, appropriately labelled.
+
+
+
+
+
+
+
+
+
+
+
+
